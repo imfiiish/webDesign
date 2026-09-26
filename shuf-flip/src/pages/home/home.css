@@ -250,6 +250,7 @@ a.tile {
 }
 
 .panel.panel-preview .login-page,
+.panel.panel-preview .shelf,
 .panel.panel-preview .flip,
 .panel.panel-preview .rating {
   min-height: 100%;

@@ -408,54 +408,6 @@
   -webkit-user-select: none;
 }
 
-/* buttons */
-.btn {
-  font: inherit;
-  cursor: pointer;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  transition: transform 160ms ease, background 160ms ease,
-    box-shadow 160ms ease, opacity 200ms ease;
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: var(--on-accent);
-  font-size: 1.05rem;
-  font-weight: 600;
-  padding: 12px 44px;
-  box-shadow: 0 6px 18px var(--accent-ring);
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 22px var(--accent-ring);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-.btn-ghost {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 1rem;
-  padding: 12px 24px;
-}
-
-.btn-ghost:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
 /* small pop when the button goes from disabled to ready */
 @keyframes btn-ready {
   0% {

@@ -1,0 +1,365 @@
+/* Shelf page: the book-spine shelf, plus the book detail dialog. */
+
+.shelf {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.bookshelf {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bookshelf-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 12px;
+}
+
+.book-item {
+  position: relative;
+  width: 188px;
+}
+
+.book-item .book {
+  width: 100%;
+}
+
+/* delete button: appears on hover / focus */
+.book-del {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: var(--card-active);
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 140ms ease, transform 180ms ease, color 140ms ease,
+    background 140ms ease, border-color 140ms ease;
+}
+
+.book-item:hover .book-del,
+.book-del:focus-visible {
+  opacity: 1;
+}
+
+.book-item:hover .book-del {
+  transform: translateY(-3px);
+}
+
+.book-del:hover {
+  color: var(--on-danger);
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+/* second click confirms */
+.book-del.confirm {
+  color: var(--on-danger);
+  background: var(--danger);
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger-ring);
+}
+
+.book-del:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--danger-ring);
+}
+
+.book {
+  position: relative;
+  width: 188px;
+  aspect-ratio: 2 / 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 20px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px 14px 14px 8px;
+  background: var(--card);
+  color: var(--text);
+  text-align: center;
+  font: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 10px 24px -14px rgba(66, 48, 25, 0.45);
+  transition: transform 180ms ease, box-shadow 180ms ease,
+    border-color 180ms ease, color 180ms ease;
+}
+
+/* spine: base = not met (paper), yellow = met, green = revealed, bottom-up */
+.spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 9px;
+  background: var(--border);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.spine-yellow,
+.spine-green {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform-origin: bottom;
+  animation: spine-grow 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.spine-yellow {
+  background: linear-gradient(
+    to top,
+    var(--rate-y-solid) calc(100% - 12px),
+    transparent
+  );
+}
+
+.spine-green {
+  background: linear-gradient(
+    to top,
+    var(--rate-g) calc(100% - 12px),
+    transparent
+  );
+}
+
+@keyframes spine-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* inner spine shading, for binding thickness */
+.book::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 9px;
+  width: 7px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.14), transparent);
+  pointer-events: none;
+}
+
+/* page edges on the right, like a stack of paper */
+.book::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  right: 0;
+  width: 4px;
+  background: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--border) 85%, transparent) 0 1px,
+    transparent 1px 3px
+  );
+  border-radius: 0 3px 3px 0;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.book:hover,
+.book-item:hover .book {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 18px 38px -14px var(--accent-ring),
+    0 8px 18px -10px rgba(66, 48, 25, 0.32);
+}
+
+:root[data-theme='dark'] .book {
+  box-shadow: 0 10px 24px -14px rgba(6, 10, 4, 0.6);
+}
+
+:root[data-theme='dark'] .book:hover,
+:root[data-theme='dark'] .book-item:hover .book {
+  box-shadow: 0 18px 38px -14px var(--accent-ring),
+    0 8px 18px -10px rgba(6, 10, 4, 0.55);
+}
+
+.book:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.book-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.book-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* empty "add" slot: dashed outline + centered plus */
+.book-add {
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-style: dashed;
+  background: transparent;
+  color: var(--muted);
+  box-shadow: none;
+}
+
+.book-add::after {
+  display: none;
+}
+
+.book-add:hover {
+  color: var(--accent);
+}
+
+/* ---- book detail dialog ---- */
+.book-modal {
+  max-width: 900px;
+  align-items: stretch;
+}
+
+.book-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 176px;
+  grid-template-rows: auto auto;
+  gap: 8px 20px;
+  width: 100%;
+}
+
+.book-list-head {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.book-list {
+  grid-column: 1;
+  grid-row: 2;
+  height: min(46vh, 420px);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--list-bg);
+}
+
+.word-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px 7px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: padding-left 140ms ease;
+}
+
+.copied-tag {
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+  animation: fade-in 160ms ease-out;
+}
+
+.word-row .word-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* green tick appears where the first letter was, on hover */
+.word-row::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+.word-row:hover {
+  padding-left: 32px;
+  background: var(--row-hover-bg);
+  box-shadow: var(--row-hover-shadow);
+  z-index: 1;
+}
+
+.word-row:hover::before {
+  opacity: 1;
+}
+
+.book-side {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 0;
+}
+
+.side-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.side-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding-left: 14px;
+  padding-right: 14px;
+  white-space: nowrap;
+}
+
+.book-empty {
+  margin: 8px;
+  color: var(--muted);
+}

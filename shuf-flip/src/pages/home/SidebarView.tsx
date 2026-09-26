@@ -3,6 +3,7 @@ import type { ComponentType } from 'react'
 import { COMPONENTS, PAGES, type CatalogEntry } from '../../catalog'
 import { useI18n } from '../../i18n'
 import Login from '../login'
+import Shelf from '../shelf'
 import Flip from '../flip'
 import Rating from '../rating'
 import FontsView from './FontsView'
@@ -12,6 +13,7 @@ const ALL: CatalogEntry[] = [...PAGES, ...COMPONENTS]
 // Pages that are implemented render live in the panel.
 const PAGE_VIEWS: Record<string, ComponentType> = {
   login: Login,
+  shelf: Shelf,
   flip: Flip,
   rating: Rating,
 }

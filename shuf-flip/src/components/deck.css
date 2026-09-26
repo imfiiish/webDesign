@@ -322,59 +322,6 @@
   opacity: 0.6;
 }
 
-/* ---- shared chrome: back (top-left) and action (bottom-right) ---- */
-.deck-home,
-.deck-action {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  background: var(--card);
-  color: var(--text);
-  cursor: pointer;
-  z-index: 10;
-  transition: color 160ms ease, background 160ms ease, border-color 160ms ease,
-    transform 160ms ease;
-}
-
-.deck-home {
-  top: 24px;
-  left: 24px;
-}
-
-.deck-action {
-  bottom: 24px;
-  right: 24px;
-}
-
-.deck-home:hover,
-.deck-action:hover {
-  color: var(--on-accent);
-  background: var(--accent);
-  border-color: var(--accent);
-  transform: translateY(-1px);
-}
-
-/* bottom bar (key hints on Flip, rating buttons on Rating), aligned with the
-   stage's left shift */
-.hints {
-  position: absolute;
-  left: 50%;
-  bottom: 24px;
-  transform: translateX(calc(-50% - 80px));
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 24px;
-  color: var(--muted);
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-
 @keyframes app-in {
   from {
     opacity: 0;
@@ -383,15 +330,6 @@
   to {
     opacity: 1;
     transform: none;
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }
 

@@ -32,7 +32,7 @@ export const PAGES: CatalogEntry[] = [
       en: 'Book-spine shelf with progress, hover and delete confirm.',
       zh: '书脊书架，带进度、悬浮与删除确认。',
     },
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'flip',
