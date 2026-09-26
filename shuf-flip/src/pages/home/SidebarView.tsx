@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ComponentType } from 'react'
 import { COMPONENTS, PAGES, type CatalogEntry } from '../../catalog'
+import { useI18n } from '../../i18n'
 import Login from '../login'
 import FontsView from './FontsView'
 
@@ -9,14 +10,15 @@ const ALL: CatalogEntry[] = [...PAGES, ...COMPONENTS]
 // Pages that are implemented render live in the panel.
 const PAGE_VIEWS: Record<string, ComponentType> = { login: Login }
 
-const kindOf = (e: CatalogEntry) => (PAGES.includes(e) ? 'Page' : 'Component')
-
 /** Sidebar presentation: fixed nav (Pages / Components / Fonts) + panel.
  *  Clicking an implemented page shows its live preview on the right. */
 export default function SidebarView() {
+  const { lang, t } = useI18n()
   const [activeId, setActiveId] = useState<string>(ALL[0]?.id ?? '')
   const active = ALL.find((e) => e.id === activeId)
   const PageView = active ? PAGE_VIEWS[active.id] : undefined
+  const kindOf = (e: CatalogEntry) =>
+    PAGES.includes(e) ? t('kind.page') : t('kind.component')
 
   const item = (e: CatalogEntry) => (
     <button
@@ -36,18 +38,18 @@ export default function SidebarView() {
   return (
     <div className="shell">
       <aside className="side">
-        <h2>Pages</h2>
+        <h2>{t('group.pages')}</h2>
         {PAGES.map(item)}
-        <h2>Components</h2>
+        <h2>{t('group.components')}</h2>
         {COMPONENTS.map(item)}
-        <h2>Fonts</h2>
+        <h2>{t('group.fonts')}</h2>
         <button
           type="button"
           className={`navitem${activeId === 'fonts' ? ' on' : ''}`}
           onClick={() => setActiveId('fonts')}
         >
           <span className="dot" />
-          Type specimen
+          {t('nav.specimen')}
         </button>
       </aside>
       <section className={`panel${panelClass}`}>
@@ -59,8 +61,8 @@ export default function SidebarView() {
           <div className="panel-inner">
             <div className="kind">{kindOf(active)}</div>
             <h1>{active.title}</h1>
-            <p>{active.description}</p>
-            <div className="stage">preview area</div>
+            <p>{active.description[lang]}</p>
+            <div className="stage">{t('panel.preview')}</div>
           </div>
         ) : null}
       </section>

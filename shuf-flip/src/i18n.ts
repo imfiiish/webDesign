@@ -1,0 +1,93 @@
+import { createContext, useContext } from 'react'
+
+// Lightweight i18n: a flat dictionary + a persisted language.
+// The provider component lives in components/I18nProvider.tsx so this file
+// only exports non-components.
+
+export type Lang = 'zh' | 'en'
+
+const KEY = 'design-lang'
+
+const DICT: Record<Lang, Record<string, string>> = {
+  en: {
+    'home.lede':
+      'Bento board: pages get big tiles, components fill the gaps. Hierarchy by size.',
+    'mode.overview': 'Overview',
+    'mode.sidebar': 'Sidebar',
+    'group.pages': 'Pages',
+    'group.components': 'Components',
+    'group.fonts': 'Fonts',
+    'nav.specimen': 'Type specimen',
+    'kind.page': 'Page',
+    'kind.component': 'Component',
+    'panel.preview': 'preview area',
+    'login.username': 'username',
+    'login.usernameHint':
+      '3–20 chars, start with a letter, lowercase letters and digits only',
+    'login.passwordAria': 'password',
+    'login.passwordLabel': 'Re-enter password',
+    'login.needDigits': 'Digits only',
+    'login.mismatch': "Passwords don't match, try again",
+    'login.enter': 'Enter',
+    'login.confirm': 'Confirm',
+    'login.register': 'Register',
+    'login.back': 'Back',
+    'login.guest': 'Just browsing',
+    'login.backToCatalog': 'Back to catalog',
+    'lang.toggle': 'Language: English. Click to switch to Chinese.',
+  },
+  zh: {
+    'home.lede': 'Bento 拼板：页面用大块、组件填补空隙，用尺寸体现层级。',
+    'mode.overview': '概览',
+    'mode.sidebar': '侧栏',
+    'group.pages': '页面',
+    'group.components': '组件',
+    'group.fonts': '字体',
+    'nav.specimen': '字体样张',
+    'kind.page': '页面',
+    'kind.component': '组件',
+    'panel.preview': '预览区',
+    'login.username': '账号',
+    'login.usernameHint': '3–20 位，字母开头，仅小写字母与数字',
+    'login.passwordAria': '密码',
+    'login.passwordLabel': '再输入密码',
+    'login.needDigits': '请输入数字',
+    'login.mismatch': '两次不一致，请重输',
+    'login.enter': '进入',
+    'login.confirm': '确认',
+    'login.register': '注册',
+    'login.back': '返回',
+    'login.guest': '随便看看',
+    'login.backToCatalog': '返回目录',
+    'lang.toggle': '语言：中文。点击切换到 English。',
+  },
+}
+
+export function detectLang(): Lang {
+  const saved = localStorage.getItem(KEY)
+  if (saved === 'zh' || saved === 'en') return saved
+  const nav = typeof navigator !== 'undefined' ? navigator.language || '' : ''
+  return nav.toLowerCase().startsWith('zh') ? 'zh' : 'en'
+}
+
+export function saveLang(lang: Lang): void {
+  localStorage.setItem(KEY, lang)
+}
+
+export function tFor(lang: Lang, key: string): string {
+  return DICT[lang][key] ?? DICT.en[key] ?? key
+}
+
+export type I18nCtx = {
+  lang: Lang
+  setLang: (lang: Lang) => void
+  t: (key: string) => string
+}
+
+export const I18nContext = createContext<I18nCtx | null>(null)
+
+export function useI18n(): I18nCtx {
+  const ctx = useContext(I18nContext)
+  if (!ctx) throw new Error('useI18n must be used within I18nProvider')
+  return ctx
+}

@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { COMPONENTS, PAGES, type CatalogEntry } from '../../catalog'
+import { useI18n } from '../../i18n'
 
 const ALL: CatalogEntry[] = [...PAGES, ...COMPONENTS]
-
-const kindOf = (e: CatalogEntry) => (PAGES.includes(e) ? 'Page' : 'Component')
 
 /** Fonts specimen: big-type index with a sticky detail panel (former
  *  Editorial). Also handy for comparing typefaces. */
 export default function FontsView() {
+  const { lang, t } = useI18n()
   const [activeId, setActiveId] = useState(ALL[0]?.id ?? '')
   const active = ALL.find((e) => e.id === activeId) ?? ALL[0]
+  const kindOf = (e: CatalogEntry) =>
+    PAGES.includes(e) ? t('kind.page') : t('kind.component')
 
   return (
     <main className="ed">
@@ -30,7 +32,7 @@ export default function FontsView() {
       <aside className="ed-aside">
         <div className="kind">{kindOf(active)}</div>
         <h2>{active.title}</h2>
-        <p>{active.description}</p>
+        <p>{active.description[lang]}</p>
       </aside>
     </main>
   )

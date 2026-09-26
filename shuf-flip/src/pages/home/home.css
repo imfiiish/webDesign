@@ -38,6 +38,12 @@
   font-weight: 400;
 }
 
+.bar-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .tbtn {
   padding: 6px 14px;
   border: 1px solid var(--border);

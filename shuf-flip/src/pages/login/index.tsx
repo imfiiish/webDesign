@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useI18n } from '../../i18n'
 import './login.css'
 
-// Appearance + interaction only: no auth, no API, no i18n.
+// Appearance + interaction only: no auth, no API.
 const BRANDS = ['Shuf & Flip', '洗牌 · 翻牌'] as const
 
 const USERNAME_RE = /^[a-z][a-z0-9]{2,19}$/
@@ -11,25 +12,12 @@ const PASSWORD_LEN = 4
 // Names that take the existing-user (login) path; anything else registers.
 const EXISTING = new Set(['demo', 'test', 'alice'])
 
-const T = {
-  username: 'username',
-  usernameHint: '3–20 chars, start with a letter, lowercase letters and digits only',
-  passwordAria: 'password',
-  passwordLabel: 'Re-enter password',
-  needDigits: 'Digits only',
-  mismatch: "Passwords don't match, try again",
-  enter: 'Enter',
-  confirm: 'Confirm',
-  register: 'Register',
-  back: 'Back',
-  guest: 'Just browsing',
-}
-
 // 0=enter, 1=username, 2=password, 3=re-enter password (register)
 type Stage = 0 | 1 | 2 | 3
 
 export default function Login() {
   const navigate = useNavigate()
+  const { t } = useI18n()
 
   const [idx, setIdx] = useState(0)
   const [stage, setStage] = useState<Stage>(0)
@@ -208,7 +196,7 @@ export default function Login() {
   }
 
   const onPasswordChange = (raw: string) => {
-    if (/[^\d]/.test(raw)) showPasswordNote(T.needDigits)
+    if (/[^\d]/.test(raw)) showPasswordNote(t('login.needDigits'))
     else {
       setPasswordHint('')
       window.clearTimeout(passwordHintTimer.current)
@@ -235,7 +223,7 @@ export default function Login() {
     if (stage === 2 && isNew) {
       setPass1(password)
       setPassword('')
-      setPasswordLabel(T.passwordLabel)
+      setPasswordLabel(t('login.passwordLabel'))
       setStage(3)
       return
     }
@@ -245,7 +233,7 @@ export default function Login() {
     }
     // stage 3: both entries must match
     if (password !== pass1) {
-      showPasswordNote(T.mismatch)
+      showPasswordNote(t('login.mismatch'))
       setPassword('')
       return
     }
@@ -258,8 +246,8 @@ export default function Login() {
         type="button"
         className="login-home"
         onClick={() => navigate('/')}
-        aria-label="Back to catalog"
-        title="Back to catalog"
+        aria-label={t('login.backToCatalog')}
+        title={t('login.backToCatalog')}
       >
         <svg
           width="18"
@@ -300,7 +288,7 @@ export default function Login() {
               autoCapitalize="none"
               autoCorrect="off"
               spellCheck={false}
-              placeholder={T.username}
+              placeholder={t('login.username')}
               value={username}
               disabled={stage === 0}
               readOnly={stage >= 2}
@@ -348,7 +336,7 @@ export default function Login() {
                 value={password}
                 disabled={stage < 2}
                 tabIndex={stage >= 2 ? 0 : -1}
-                aria-label={T.passwordAria}
+                aria-label={t('login.passwordAria')}
                 onChange={(e) => onPasswordChange(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') advance()
@@ -358,7 +346,7 @@ export default function Login() {
           </div>
 
           <p className={`login-hint${showHint ? ' show' : ''}`} aria-hidden={!showHint}>
-            {T.usernameHint}
+            {t('login.usernameHint')}
           </p>
           <p
             className={`password-label${passwordLabel ? ' show' : ''}`}
@@ -387,7 +375,7 @@ export default function Login() {
               setPasswordLabel('')
             }}
           >
-            {T.back}
+            {t('login.back')}
           </button>
           <button
             type="button"
@@ -395,7 +383,11 @@ export default function Login() {
             disabled={!canPress}
             onClick={advance}
           >
-            {stage === 1 ? T.confirm : stage === 3 ? T.register : T.enter}
+            {stage === 1
+              ? t('login.confirm')
+              : stage === 3
+                ? t('login.register')
+                : t('login.enter')}
           </button>
         </div>
 
@@ -406,7 +398,7 @@ export default function Login() {
           tabIndex={stage === 1 ? 0 : -1}
           onClick={finish}
         >
-          {T.guest}
+          {t('login.guest')}
         </button>
       </div>
     </div>
