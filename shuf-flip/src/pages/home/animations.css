@@ -1,0 +1,222 @@
+/* Creative › Animations: one grid, the same card in several flip motions. */
+
+/* Fills the panel height: the card grid scrolls when it grows past the fold,
+   so room for more motions is already there. */
+.fa {
+  width: 100%;
+  max-width: 900px;
+  align-self: stretch;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.fa-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  align-content: start;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 30px 26px;
+  padding: 6px 4px 20px;
+  scrollbar-gutter: stable;
+}
+
+.fa-item {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.fa-label {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* ---- the card ---- */
+.fa-card {
+  --fa-axis: 0, 1, 0;
+  --fa-turn: 180deg;
+  --fa-dur: 560ms;
+  --fa-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --fa-depth: 86px;
+
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  perspective: 1100px;
+  cursor: pointer;
+  outline: none;
+  transform: translateY(0);
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fa-card:focus-visible {
+  outline: 2px solid var(--accent-ring);
+  outline-offset: 6px;
+  border-radius: var(--radius-md);
+}
+
+.fa-flip {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform var(--fa-dur) var(--fa-ease);
+  will-change: transform;
+}
+
+.fa-card.flipped .fa-flip {
+  transform: rotate3d(var(--fa-axis), var(--fa-turn));
+}
+
+.fa-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  background: var(--card-active);
+  box-shadow: var(--card-shadow);
+  text-align: center;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: box-shadow 200ms ease;
+}
+
+.fa-card:hover .fa-face {
+  box-shadow: var(--card-shadow-hi);
+}
+
+.fa-back {
+  transform: rotate3d(var(--fa-axis), 180deg);
+}
+
+.fa-word {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.fa-back .fa-word {
+  font-size: 1.2rem;
+}
+
+.fa-phon {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.fa-def {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+/* ---- the motions ---- */
+.fa-card.flip-x {
+  --fa-axis: 1, 0, 0;
+}
+
+.fa-card.diagonal {
+  --fa-axis: 1, 1, 0;
+  --fa-dur: 680ms;
+}
+
+.fa-card.spin {
+  --fa-turn: 540deg;
+  --fa-dur: 820ms;
+}
+
+.fa-card.spin-x {
+  --fa-axis: 1, 0, 0;
+  --fa-turn: 540deg;
+  --fa-dur: 820ms;
+}
+
+.fa-card.snap {
+  --fa-dur: 300ms;
+  --fa-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fa-card.slow {
+  --fa-dur: 1100ms;
+  --fa-ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.fa-card.bounce {
+  --fa-dur: 900ms;
+  --fa-ease: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.fa-card.lift {
+  --fa-dur: 600ms;
+  transition-duration: 600ms;
+}
+
+.fa-card.lift.flipped {
+  transform: translateY(-10px) scale(1.03);
+}
+
+.fa-card.zoom {
+  --fa-dur: 560ms;
+  transition-duration: 560ms;
+}
+
+.fa-card.zoom.flipped {
+  transform: scale(1.08);
+}
+
+/* a cube needs the two faces pushed apart in Z */
+.fa-card.cube {
+  --fa-dur: 680ms;
+  perspective: 1400px;
+}
+
+.fa-card.cube .fa-front {
+  transform: translateZ(var(--fa-depth));
+}
+
+.fa-card.cube .fa-back {
+  transform: rotateY(180deg) translateZ(var(--fa-depth));
+}
+
+.fa-card.cube.flipped .fa-flip {
+  transform: rotateY(180deg);
+}
+
+.fa-card.cube-x {
+  --fa-dur: 680ms;
+  perspective: 1400px;
+}
+
+.fa-card.cube-x .fa-front {
+  transform: translateZ(var(--fa-depth));
+}
+
+.fa-card.cube-x .fa-back {
+  transform: rotateX(180deg) translateZ(var(--fa-depth));
+}
+
+.fa-card.cube-x.flipped .fa-flip {
+  transform: rotateX(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fa-flip,
+  .fa-card {
+    transition-duration: 1ms;
+  }
+}
