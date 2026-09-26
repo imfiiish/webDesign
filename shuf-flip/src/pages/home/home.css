@@ -249,12 +249,14 @@ a.tile {
   overflow: auto;
 }
 
-.panel.panel-preview .login-page {
+.panel.panel-preview .login-page,
+.panel.panel-preview .flip {
   min-height: 100%;
 }
 
 /* no back button inside the embedded preview */
-.panel.panel-preview .login-home {
+.panel.panel-preview .login-home,
+.panel.panel-preview .flip-home {
   display: none;
 }
 

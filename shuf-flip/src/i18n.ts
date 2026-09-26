@@ -34,6 +34,11 @@ const DICT: Record<Lang, Record<string, string>> = {
     'login.back': 'Back',
     'login.guest': 'Just browsing',
     'login.backToCatalog': 'Back to catalog',
+    'flip.next': 'Next round',
+    'flip.reveal': 'Show definition',
+    'flip.replay': 'Hide definition',
+    'flip.back': 'Back to catalog',
+    'flip.copied': 'Copied',
     'lang.toggle': 'Language: English. Click to switch to Chinese.',
   },
   zh: {
@@ -59,6 +64,11 @@ const DICT: Record<Lang, Record<string, string>> = {
     'login.back': '返回',
     'login.guest': '随便看看',
     'login.backToCatalog': '返回目录',
+    'flip.next': '下一轮',
+    'flip.reveal': '显示释义',
+    'flip.replay': '收起释义',
+    'flip.back': '返回目录',
+    'flip.copied': '已复制',
     'lang.toggle': '语言：中文。点击切换到 English。',
   },
 }

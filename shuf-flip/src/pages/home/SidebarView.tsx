@@ -3,12 +3,16 @@ import type { ComponentType } from 'react'
 import { COMPONENTS, PAGES, type CatalogEntry } from '../../catalog'
 import { useI18n } from '../../i18n'
 import Login from '../login'
+import Flip from '../flip'
 import FontsView from './FontsView'
 
 const ALL: CatalogEntry[] = [...PAGES, ...COMPONENTS]
 
 // Pages that are implemented render live in the panel.
-const PAGE_VIEWS: Record<string, ComponentType> = { login: Login }
+const PAGE_VIEWS: Record<string, ComponentType> = {
+  login: Login,
+  flip: Flip,
+}
 
 /** Sidebar presentation: fixed nav (Pages / Components / Fonts) + panel.
  *  Clicking an implemented page shows its live preview on the right. */

@@ -42,7 +42,7 @@ export const PAGES: CatalogEntry[] = [
       en: 'Card ring: reveal definition, wheel / key flip, next round.',
       zh: '环形卡片：展开释义、滚轮/按键翻页、下一轮。',
     },
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'rating',

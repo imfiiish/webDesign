@@ -49,3 +49,12 @@ button {
   font: inherit;
   color: inherit;
 }
+
+kbd {
+  background: var(--kbd-bg);
+  border: 1px solid var(--kbd-border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-family: inherit;
+  color: var(--text);
+}
