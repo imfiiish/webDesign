@@ -5,9 +5,10 @@ import { useI18n } from '../../i18n'
 import OverviewView from './OverviewView'
 import BrowseView from './BrowseView'
 import DesignView from './DesignView'
+import CreativeView from './CreativeView'
 import './home.css'
 
-type Mode = 'overview' | 'browse' | 'design'
+type Mode = 'overview' | 'browse' | 'design' | 'creative'
 
 /** The app home ("/"). Two bars on top; the mode bar picks the presentation.
  *  Overview is the default. */
@@ -48,14 +49,23 @@ export default function Home() {
         >
           {t('mode.design')}
         </button>
+        <button
+          type="button"
+          className={mode === 'creative' ? 'on' : undefined}
+          onClick={() => setMode('creative')}
+        >
+          {t('mode.creative')}
+        </button>
       </nav>
       <div className="app-body">
         {mode === 'overview' ? (
           <OverviewView />
         ) : mode === 'browse' ? (
           <BrowseView />
-        ) : (
+        ) : mode === 'design' ? (
           <DesignView />
+        ) : (
+          <CreativeView />
         )}
       </div>
     </div>
