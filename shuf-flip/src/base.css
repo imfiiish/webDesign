@@ -33,10 +33,6 @@ body {
   color: var(--on-accent);
 }
 
-a {
-  color: inherit;
-}
-
 button {
   font: inherit;
   color: inherit;

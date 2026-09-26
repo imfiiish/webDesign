@@ -1,32 +1,26 @@
-# React + TypeScript + Vite
+# shuf-flip · design
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A design sample of the shuf-flip look, built with Vite + React + TypeScript.
+Appearance only — no business logic, no data layer.
 
-Currently, two official plugins are available:
+## Run
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev      # dev server
+npm run build    # production build (tsc -b && vite build)
+npm run lint     # oxlint
+npm run preview  # preview the build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Structure
+
+```
+src/
+├── tokens.css      design tokens (light / dark)
+├── base.css        global baseline
+├── theme.ts        auto / light / dark, persisted
+├── catalog.ts      the entries shown in the sample (data)
+├── components/     ThemeToggle
+└── pages/home/     "/" — Overview / Sidebar modes, Fonts specimen
+```

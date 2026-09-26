@@ -16,7 +16,7 @@ export function saveThemeMode(mode: ThemeMode): void {
 }
 
 /** Resolve a mode to the concrete light / dark that should be applied. */
-export function resolveTheme(mode: ThemeMode): 'light' | 'dark' {
+function resolveTheme(mode: ThemeMode): 'light' | 'dark' {
   if (mode !== 'auto') return mode
   return window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'

@@ -62,9 +62,3 @@ export const COMPONENTS: CatalogEntry[] = [
   { id: 'back-button', kind: 'component', title: 'BackButton', description: 'Top-left icon button.', status: 'planned' },
   { id: 'icons', kind: 'component', title: 'Icons', description: 'Inline SVG icon set.', status: 'planned' },
 ]
-
-export const ALL_ENTRIES: CatalogEntry[] = [...PAGES, ...COMPONENTS]
-
-export function findEntry(id: string): CatalogEntry | undefined {
-  return ALL_ENTRIES.find((e) => e.id === id)
-}
