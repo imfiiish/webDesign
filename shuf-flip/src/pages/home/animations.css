@@ -2,6 +2,8 @@
 
 /* Fills the panel height: the card grid scrolls when it grows past the fold,
    so room for more motions is already there. */
+/* the mask fades the rows that scroll under the top/bottom edge, so the
+   scroll never hard-slices a card */
 .fa {
   width: 100%;
   max-width: 900px;
@@ -9,6 +11,20 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 24px,
+    #000 calc(100% - 24px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 24px,
+    #000 calc(100% - 24px),
+    transparent 100%
+  );
 }
 
 .fa-grid {
@@ -19,7 +35,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 30px 26px;
-  padding: 6px 4px 20px;
+  padding: 28px 4px;
   scrollbar-gutter: stable;
 }
 
