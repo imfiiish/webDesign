@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react'
-import { findWord, type Word } from './data'
+import './deck.css'
+
+export type CardSense = { pos?: string; defs: string[] }
+
+export type CardData = {
+  word: string
+  phonetic: string
+  senses: CardSense[]
+  tags: string[]
+}
 
 /** Dot colors: r red / y yellow / g green / empty grey. */
 type DotColor = 'r' | 'y' | 'g' | 'empty'
@@ -34,7 +43,7 @@ function slotOf(p: number, center: number, n: number): Slot {
 }
 
 type FlipDeckProps = {
-  deck: string[]
+  deck: CardData[]
   center: number
   revealed?: boolean
   centerNotice?: string | null
@@ -108,20 +117,18 @@ export default function FlipDeck({
         onMouseMove={onCardsMouseMove}
         onMouseLeave={onCardsMouseLeave}
       >
-        {deck.map((name, p) => {
+        {deck.map((word, p) => {
           const slot = slotOf(p, center, TOTAL)
-          const word = findWord(name)
-          if (!word) return null
           return (
             <Card
-              key={name}
+              key={word.word}
               word={word}
               slot={slot}
               revealed={slot === 0 && revealed}
               notice={slot === 0 ? centerNotice : null}
-              hovered={hoveredName === name}
-              dots={revealCounts[name] || 0}
-              onClick={() => onCardClick?.(name, slot)}
+              hovered={hoveredName === word.word}
+              dots={revealCounts[word.word] || 0}
+              onClick={() => onCardClick?.(word.word, slot)}
               onContextMenu={
                 slot === 0 && onCardContextMenu
                   ? () => onCardContextMenu()
@@ -136,7 +143,7 @@ export default function FlipDeck({
 }
 
 type CardProps = {
-  word: Word
+  word: CardData
   slot: Slot
   revealed?: boolean
   hovered?: boolean

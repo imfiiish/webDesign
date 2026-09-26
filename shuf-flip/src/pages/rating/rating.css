@@ -1,0 +1,134 @@
+/* Rating page root + its bottom rating bar. Card/stage/chrome styles are
+   shared in src/components/deck.css. */
+
+.rating {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 1 unfamiliar / 2 unsure / 3 familiar, each with its own color */
+.quiz-ratings {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.rating-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 140ms ease, background 140ms ease,
+    border-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+
+/* the number is a solid color dot; the button itself uses a tinted fill */
+.rating-btn kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.rating-btn:hover {
+  transform: translateY(-1px);
+}
+
+.rating-btn:active {
+  transform: translateY(0);
+}
+
+.rating-btn.r {
+  color: var(--rate-r);
+  background: color-mix(in srgb, var(--rate-r) 12%, var(--card));
+  border-color: color-mix(in srgb, var(--rate-r) 30%, transparent);
+}
+
+.rating-btn.r kbd {
+  background: var(--rate-r);
+  color: var(--rate-r-on);
+}
+
+.rating-btn.r:hover {
+  background: color-mix(in srgb, var(--rate-r) 20%, var(--card));
+  box-shadow: 0 10px 24px -12px var(--rate-r-ring);
+}
+
+.rating-btn.r:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--rate-r-ring);
+}
+
+.rating-btn.y {
+  color: var(--rate-y);
+  background: color-mix(in srgb, var(--rate-y-solid) 16%, var(--card));
+  border-color: color-mix(in srgb, var(--rate-y-solid) 36%, transparent);
+}
+
+.rating-btn.y kbd {
+  background: var(--rate-y-solid);
+  color: var(--rate-y-on);
+}
+
+.rating-btn.y:hover {
+  background: color-mix(in srgb, var(--rate-y-solid) 26%, var(--card));
+  box-shadow: 0 10px 24px -12px var(--rate-y-ring);
+}
+
+.rating-btn.y:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--rate-y-ring);
+}
+
+.rating-btn.g {
+  color: var(--rate-g);
+  background: color-mix(in srgb, var(--rate-g) 12%, var(--card));
+  border-color: color-mix(in srgb, var(--rate-g) 30%, transparent);
+}
+
+.rating-btn.g kbd {
+  background: var(--rate-g);
+  color: var(--rate-g-on);
+}
+
+.rating-btn.g:hover {
+  background: color-mix(in srgb, var(--rate-g) 20%, var(--card));
+  box-shadow: 0 10px 24px -12px var(--rate-g-ring);
+}
+
+.rating-btn.g:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--rate-g-ring);
+}
+
+/* skip button: red while armed (waiting for a second click) */
+.rating-skip.armed,
+.rating-skip.armed:hover,
+.rating-skip.armed:active,
+.rating-skip.armed:focus-visible {
+  color: var(--on-danger);
+  background: var(--danger);
+  border-color: var(--danger);
+  box-shadow: 0 8px 28px -6px var(--danger-ring);
+}

@@ -52,7 +52,7 @@ export const PAGES: CatalogEntry[] = [
       en: 'Self-test: 1 / 2 / 3 rating bar with undo and skip confirm.',
       zh: '自测：1 / 2 / 3 评级条，含撤销与跳过确认。',
     },
-    status: 'planned',
+    status: 'ready',
   },
 ]
 

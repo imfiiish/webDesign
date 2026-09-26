@@ -4,6 +4,7 @@ import { COMPONENTS, PAGES, type CatalogEntry } from '../../catalog'
 import { useI18n } from '../../i18n'
 import Login from '../login'
 import Flip from '../flip'
+import Rating from '../rating'
 import FontsView from './FontsView'
 
 const ALL: CatalogEntry[] = [...PAGES, ...COMPONENTS]
@@ -12,6 +13,7 @@ const ALL: CatalogEntry[] = [...PAGES, ...COMPONENTS]
 const PAGE_VIEWS: Record<string, ComponentType> = {
   login: Login,
   flip: Flip,
+  rating: Rating,
 }
 
 /** Sidebar presentation: fixed nav (Pages / Components / Fonts) + panel.

@@ -250,13 +250,14 @@ a.tile {
 }
 
 .panel.panel-preview .login-page,
-.panel.panel-preview .flip {
+.panel.panel-preview .flip,
+.panel.panel-preview .rating {
   min-height: 100%;
 }
 
 /* no back button inside the embedded preview */
 .panel.panel-preview .login-home,
-.panel.panel-preview .flip-home {
+.panel.panel-preview .deck-home {
   display: none;
 }
 

@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import FlipDeck, { type CardData, type Slot } from '../../components/FlipDeck'
+import { useStageScale } from '../../components/useStageScale'
 import { useI18n } from '../../i18n'
-import FlipDeck, { type Slot } from './FlipDeck'
-import { useStageScale } from './useStageScale'
 import { WORDS } from './data'
 import './flip.css'
 
-const ALL_WORDS = WORDS.map((w) => w.word)
-
-function shuffled(list: string[]): string[] {
+function shuffled<T>(list: readonly T[]): T[] {
   const a = [...list]
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
@@ -23,7 +21,7 @@ export default function Flip() {
   const navigate = useNavigate()
   const { t } = useI18n()
 
-  const [deck, setDeck] = useState<string[]>(ALL_WORDS)
+  const [deck, setDeck] = useState<CardData[]>(WORDS)
   const [center, setCenter] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [revealCounts, setRevealCounts] = useState<Record<string, number>>({})
@@ -35,7 +33,7 @@ export default function Flip() {
 
   const { stageRef, scale } = useStageScale()
   const TOTAL = deck.length
-  const centerName = deck[center] ?? null
+  const centerName = deck[center]?.word ?? null
 
   const clearCopy = useCallback(() => {
     window.clearTimeout(copyTimer.current)
@@ -54,7 +52,7 @@ export default function Flip() {
 
   const reveal = useCallback(() => {
     setRevealed(true)
-    const name = deck[center]
+    const name = deck[center]?.word
     if (name) setRevealCounts((c) => ({ ...c, [name]: (c[name] || 0) + 1 }))
   }, [deck, center])
 
@@ -77,7 +75,7 @@ export default function Flip() {
   }, [centerName, t])
 
   const nextRound = useCallback(() => {
-    setDeck(shuffled(ALL_WORDS))
+    setDeck(shuffled(WORDS))
     setCenter(0)
     setRevealed(false)
     clearCopy()
@@ -181,10 +179,10 @@ export default function Flip() {
     <div className="flip">
       <button
         type="button"
-        className="flip-home"
+        className="deck-home"
         onClick={() => navigate('/')}
-        aria-label={t('flip.back')}
-        title={t('flip.back')}
+        aria-label={t('nav.back')}
+        title={t('nav.back')}
       >
         <svg
           width="18"
@@ -202,7 +200,7 @@ export default function Flip() {
         </svg>
       </button>
 
-      <div className="flip-stage" ref={stageRef}>
+      <div className="deck-stage" ref={stageRef}>
         <FlipDeck
           deck={deck}
           center={center}
@@ -218,7 +216,7 @@ export default function Flip() {
 
       <button
         type="button"
-        className="flip-next"
+        className="deck-action"
         onClick={nextRound}
         aria-label={t('flip.next')}
         title={t('flip.next')}

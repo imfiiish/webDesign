@@ -1,15 +1,9 @@
-// Demo words for the flip page. Appearance only — any plausible data works.
+// Demo words for the flip / rating pages. Appearance only — any plausible
+// data works.
 
-export type Sense = { pos?: string; defs: string[] }
+import type { CardData } from '../../components/FlipDeck'
 
-export type Word = {
-  word: string
-  phonetic: string
-  senses: Sense[]
-  tags: string[]
-}
-
-export const WORDS: Word[] = [
+export const WORDS: CardData[] = [
   { word: 'abandon', phonetic: '/əˈbændən/', senses: [{ pos: 'v.', defs: ['放弃', '抛弃'] }], tags: ['CET4'] },
   { word: 'benevolent', phonetic: '/bəˈnevələnt/', senses: [{ pos: 'adj.', defs: ['仁慈的', '善意的'] }], tags: ['CET6'] },
   { word: 'candid', phonetic: '/ˈkændɪd/', senses: [{ pos: 'adj.', defs: ['坦率的', '直言的'] }], tags: ['CET6'] },
@@ -23,7 +17,3 @@ export const WORDS: Word[] = [
   { word: 'resilient', phonetic: '/rɪˈzɪliənt/', senses: [{ pos: 'adj.', defs: ['有韧性的', '能恢复的'] }], tags: ['CET6'] },
   { word: 'vivid', phonetic: '/ˈvɪvɪd/', senses: [{ pos: 'adj.', defs: ['生动的', '鲜明的'] }], tags: ['CET4'] },
 ]
-
-export function findWord(name: string): Word | undefined {
-  return WORDS.find((w) => w.word === name)
-}
