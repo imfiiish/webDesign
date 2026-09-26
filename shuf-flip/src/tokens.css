@@ -1,0 +1,142 @@
+/* Design tokens for the shuf-flip sample.
+   Theme is driven by <html data-theme="light|dark"> (see src/theme.ts). */
+
+/* CJK fallback: only claims CJK code points, latin keeps the system stack. */
+@font-face {
+  font-family: 'App CJK Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('NotoSansCJKsc-Regular');
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+31C0-31EF, U+3400-4DBF,
+    U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF, U+20000-2FA1F;
+}
+@font-face {
+  font-family: 'App CJK Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('NotoSansCJKsc-Medium');
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+31C0-31EF, U+3400-4DBF,
+    U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF, U+20000-2FA1F;
+}
+@font-face {
+  font-family: 'App CJK Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('NotoSansCJKsc-Bold');
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+31C0-31EF, U+3400-4DBF,
+    U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF, U+20000-2FA1F;
+}
+
+:root {
+  color-scheme: light dark;
+
+  /* ---- Typography ---- */
+  --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC',
+    'Microsoft YaHei', 'App CJK Sans', sans-serif;
+  --font-display: 'Noto Serif CJK SC', 'Iowan Old Style', 'Palatino Linotype',
+    Palatino, 'Book Antiqua', Georgia, 'Songti SC', 'Noto Serif SC', serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-ui);
+
+  /* ---- Radius / shadow ---- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* Warm ink-brown accent */
+  --accent: #7a5f36;
+  --accent-ring: rgba(122, 95, 54, 0.35);
+  --elevate: 0 10px 30px rgba(66, 48, 25, 0.1);
+  --card-shadow: 0 18px 40px -18px rgba(45, 32, 15, 0.5),
+    0 2px 6px -2px rgba(45, 32, 15, 0.28);
+  --card-shadow-hi: 0 24px 52px -20px rgba(45, 32, 15, 0.55),
+    0 3px 10px -3px rgba(45, 32, 15, 0.3);
+  --card-shadow-hover: 0 26px 58px -20px rgba(45, 32, 15, 0.6),
+    0 4px 12px -3px rgba(45, 32, 15, 0.34);
+
+  /* Danger: neutral ink, not a loud red */
+  --danger: #3a3226;
+  --danger-ring: rgba(58, 50, 38, 0.4);
+  --on-danger: #f6efe3;
+
+  /* Rating trio: wine (unknown) → gold (fuzzy) → pine (known) */
+  --rate-r: #6b2330;
+  --rate-r-ring: rgba(107, 35, 48, 0.38);
+  --rate-r-on: #fdf4f5;
+  --rate-y: #6a4b10;
+  --rate-y-solid: #98721f;
+  --rate-y-ring: rgba(152, 114, 31, 0.42);
+  --rate-y-on: #3b2a00;
+  --rate-g: #2e513b;
+  --rate-g-ring: rgba(46, 81, 59, 0.38);
+  --rate-g-on: #eef4f0;
+
+  /* Light (default): parchment */
+  --bg: #efe6d3;
+  --card: #fdf8ec;
+  --card-active: #fffcf3;
+  --border: #ddcfb2;
+  --text: #2a2418;
+  --muted: #837458;
+  --kbd-bg: #f2e9d8;
+  --kbd-border: #ddcfb2;
+  --dot-empty: #d0c2a2;
+  --on-accent: #fdf8ec;
+
+  --row-hover-bg: var(--card-active);
+  --row-hover-shadow: 0 8px 18px -14px rgba(66, 48, 25, 0.22);
+  --list-bg: var(--bg);
+}
+
+/* Manual dark (night reading) */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --accent: #c9bb8e;
+  --accent-ring: rgba(201, 187, 142, 0.4);
+  --elevate: 0 10px 30px rgba(6, 10, 4, 0.55);
+  --card-shadow: 0 18px 40px -18px rgba(6, 10, 4, 0.6),
+    0 2px 6px -2px rgba(6, 10, 4, 0.5);
+  --card-shadow-hi: 0 24px 52px -20px rgba(6, 10, 4, 0.65),
+    0 3px 10px -3px rgba(6, 10, 4, 0.55);
+  --card-shadow-hover: 0 26px 58px -20px rgba(6, 10, 4, 0.72),
+    0 4px 12px -3px rgba(6, 10, 4, 0.6);
+
+  --danger: #e6d8bf;
+  --danger-ring: rgba(230, 216, 191, 0.35);
+  --on-danger: #201a11;
+
+  --rate-r: #9e5563;
+  --rate-r-ring: rgba(158, 85, 99, 0.45);
+  --rate-r-on: #2b0d12;
+  --rate-y: #b28a3a;
+  --rate-y-solid: #b28a3a;
+  --rate-y-ring: rgba(178, 138, 58, 0.45);
+  --rate-y-on: #2e2100;
+  --rate-g: #62866f;
+  --rate-g-ring: rgba(98, 134, 111, 0.45);
+  --rate-g-on: #0c1c14;
+
+  --bg: #223026;
+  --card: #2c3c30;
+  --card-active: #35463a;
+  --border: #485c4d;
+  --text: #e7f1ea;
+  --muted: #a0b0a3;
+  --kbd-bg: #334439;
+  --kbd-border: #485c4d;
+  --dot-empty: #55695b;
+  --on-accent: #221b10;
+
+  --row-hover-bg: var(--card-active);
+  --row-hover-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.6);
+  --list-bg: var(--card);
+}
+
+/* Manual light: keep defaults, just lock color-scheme */
+:root[data-theme='light'] {
+  color-scheme: light;
+}
