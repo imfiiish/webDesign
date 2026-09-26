@@ -55,9 +55,6 @@ const DICT: Record<Lang, Record<string, string>> = {
     'shelf.nameAria': 'Book name',
     'shelf.namePlaceholder': 'Book',
     'shelf.nameEditTitle': 'Click to rename',
-    'card.reveal': 'Reveal',
-    'card.hide': 'Hide',
-    'card.dots': 'Dots',
     'lang.toggle': 'Language: English. Click to switch to Chinese.',
   },
   zh: {
@@ -104,9 +101,6 @@ const DICT: Record<Lang, Record<string, string>> = {
     'shelf.nameAria': '词书名称',
     'shelf.namePlaceholder': '词书',
     'shelf.nameEditTitle': '点击修改名称',
-    'card.reveal': '显示释义',
-    'card.hide': '收起',
-    'card.dots': '圆点',
     'lang.toggle': '语言：中文。点击切换到 English。',
   },
 }

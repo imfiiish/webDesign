@@ -323,20 +323,5 @@
   height: 360px;
 }
 
-.card-demo-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
 
-.card-demo-bar .btn {
-  font-size: 0.9rem;
-  padding: 9px 18px;
-}
-
-.card-demo-bar .on {
-  border-color: var(--accent);
-  color: var(--accent);
-}
 

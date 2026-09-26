@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import FlipCard from '../../components/FlipCard'
-import { useI18n } from '../../i18n'
 import { WORDS } from '../flip/data'
 
-/** Isolated preview of FlipCard: the center card with reveal / dots controls. */
+/** Isolated preview of FlipCard. Click to flip; every reveal bumps the dots. */
 export default function FlipCardDemo() {
-  const { t } = useI18n()
   const [revealed, setRevealed] = useState(false)
   const [hovered, setHovered] = useState(false)
-  const [dots, setDots] = useState(3)
+  const [count, setCount] = useState(0)
+
+  const flip = () => {
+    if (!revealed) setCount((c) => c + 1)
+    setRevealed((v) => !v)
+  }
 
   return (
     <div className="card-demo">
@@ -22,25 +25,9 @@ export default function FlipCardDemo() {
           slot={0}
           revealed={revealed}
           hovered={hovered}
-          dots={dots}
-          onClick={() => setRevealed((v) => !v)}
+          dots={count}
+          onClick={flip}
         />
-      </div>
-      <div className="card-demo-bar">
-        <button
-          type="button"
-          className={`btn btn-ghost${revealed ? ' on' : ''}`}
-          onClick={() => setRevealed((v) => !v)}
-        >
-          {revealed ? t('card.hide') : t('card.reveal')}
-        </button>
-        <button
-          type="button"
-          className="btn btn-ghost"
-          onClick={() => setDots((d) => (d + 1) % 11)}
-        >
-          {t('card.dots')}: {dots}
-        </button>
       </div>
     </div>
   )
