@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ComponentType } from 'react'
 import { COMPONENTS, PAGES, type CatalogEntry } from '../../catalog'
+import HomeShell from './HomeShell'
 import { useI18n } from '../../i18n'
 import Login from '../login'
 import Shelf from '../shelf'
@@ -47,25 +48,27 @@ export default function BrowseView() {
   )
 
   return (
-    <div className="shell">
-      <aside className="side">
-        <h2>{t('group.pages')}</h2>
-        {PAGES.map(item)}
-        <h2>{t('group.components')}</h2>
-        {COMPONENTS.map(item)}
-      </aside>
-      <section className={`panel${View ? ' panel-preview' : ''}`}>
-        {View ? (
-          <View />
-        ) : active ? (
-          <div className="panel-inner">
-            <div className="kind">{kindOf(active)}</div>
-            <h1>{active.title}</h1>
-            <p>{active.description[lang]}</p>
-            <div className="panel-stage">{t('panel.preview')}</div>
-          </div>
-        ) : null}
-      </section>
-    </div>
+    <HomeShell
+      panelClassName={View ? 'panel-preview' : ''}
+      sidebar={
+        <>
+          <h2>{t('group.pages')}</h2>
+          {PAGES.map(item)}
+          <h2>{t('group.components')}</h2>
+          {COMPONENTS.map(item)}
+        </>
+      }
+    >
+      {View ? (
+        <View />
+      ) : active ? (
+        <div className="panel-inner">
+          <div className="kind">{kindOf(active)}</div>
+          <h1>{active.title}</h1>
+          <p>{active.description[lang]}</p>
+          <div className="panel-stage">{t('panel.preview')}</div>
+        </div>
+      ) : null}
+    </HomeShell>
   )
 }

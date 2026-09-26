@@ -4,9 +4,10 @@ import ThemeToggle from '../../components/ThemeToggle'
 import { useI18n } from '../../i18n'
 import OverviewView from './OverviewView'
 import BrowseView from './BrowseView'
+import DesignView from './DesignView'
 import './home.css'
 
-type Mode = 'overview' | 'browse'
+type Mode = 'overview' | 'browse' | 'design'
 
 /** The app home ("/"). Two bars on top; the mode bar picks the presentation.
  *  Overview is the default. */
@@ -40,9 +41,22 @@ export default function Home() {
         >
           {t('mode.browse')}
         </button>
+        <button
+          type="button"
+          className={mode === 'design' ? 'on' : undefined}
+          onClick={() => setMode('design')}
+        >
+          {t('mode.design')}
+        </button>
       </nav>
       <div className="app-body">
-        {mode === 'overview' ? <OverviewView /> : <BrowseView />}
+        {mode === 'overview' ? (
+          <OverviewView />
+        ) : mode === 'browse' ? (
+          <BrowseView />
+        ) : (
+          <DesignView />
+        )}
       </div>
     </div>
   )
