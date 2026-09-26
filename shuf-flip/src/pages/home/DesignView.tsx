@@ -192,7 +192,9 @@ export default function DesignView() {
 
   return (
     <HomeShell panelClassName="panel-top" sidebar={sidebar}>
-      <div className="color-stack">
+      <div
+        className={`color-stack${active.variants.length > 1 ? ' multi' : ''}`}
+      >
         {active.variants.map((v) => (
           <div
             className="color-view"

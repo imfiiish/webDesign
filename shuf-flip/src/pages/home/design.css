@@ -4,9 +4,10 @@
 .color-stack {
   width: 100%;
   max-width: 940px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 22px;
+  align-content: start;
 }
 
 .color-view {
@@ -72,6 +73,15 @@
   display: grid;
   grid-template-columns: 1.35fr 1fr;
   gap: 18px;
+}
+
+.cv-stage > * {
+  min-width: 0;
+}
+
+/* when several previews share a row the column is narrow: stack the stage */
+.color-stack.multi .cv-stage {
+  grid-template-columns: 1fr;
 }
 
 /* the word card, the app's hero surface */
