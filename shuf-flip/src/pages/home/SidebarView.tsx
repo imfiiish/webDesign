@@ -20,10 +20,10 @@ const PAGE_VIEWS: Record<string, ComponentType> = {
 }
 const COMPONENT_VIEWS: Record<string, ComponentType> = {
   'flip-card': FlipCardDemo,
+  fonts: FontsView,
 }
 
-/** Sidebar presentation: fixed nav (Pages / Components / Fonts) + panel.
- *  Clicking an implemented page shows its live preview on the right. */
+/** Sidebar presentation: fixed nav (Pages / Components) + panel. */
 export default function SidebarView() {
   const { lang, t } = useI18n()
   const [activeId, setActiveId] = useState<string>(ALL[0]?.id ?? '')
@@ -46,9 +46,6 @@ export default function SidebarView() {
     </button>
   )
 
-  const panelClass =
-    activeId === 'fonts' ? ' panel-fonts' : View ? ' panel-preview' : ''
-
   return (
     <div className="shell">
       <aside className="side">
@@ -56,20 +53,9 @@ export default function SidebarView() {
         {PAGES.map(item)}
         <h2>{t('group.components')}</h2>
         {COMPONENTS.map(item)}
-        <h2>{t('group.fonts')}</h2>
-        <button
-          type="button"
-          className={`navitem${activeId === 'fonts' ? ' on' : ''}`}
-          onClick={() => setActiveId('fonts')}
-        >
-          <span className="dot" />
-          {t('nav.specimen')}
-        </button>
       </aside>
-      <section className={`panel${panelClass}`}>
-        {activeId === 'fonts' ? (
-          <FontsView />
-        ) : View ? (
+      <section className={`panel${View ? ' panel-preview' : ''}`}>
+        {View ? (
           <View />
         ) : active ? (
           <div className="panel-inner">

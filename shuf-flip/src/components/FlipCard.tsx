@@ -16,9 +16,10 @@ export type Slot = number | 'B' | 'S'
 /** Dot colors: r red / y yellow / g green / empty grey. */
 type DotColor = 'r' | 'y' | 'g' | 'empty'
 
+const DOT_TIERS: DotColor[] = ['g', 'y', 'r']
+
 // Reveal count -> three dots:
 //   1-3: one/two/three green; 4-6: yellow; 7-9: red; stops at three red.
-const DOT_TIERS: DotColor[] = ['g', 'y', 'r']
 function dotColors(n: number): DotColor[] {
   if (n <= 0) return ['empty', 'empty', 'empty']
   const tier = Math.min(Math.floor((n - 1) / 3), DOT_TIERS.length - 1)
@@ -93,10 +94,12 @@ export default function FlipCard({
 
         <div className="face back">
           {isCenter && revealed && dots > 0 && (
-            <div className="dots">
-              {dotColors(dots).map((c, i) => (
-                <span key={i} className={`dot ${c}`} />
-              ))}
+            <div className="dots-wrap">
+              <div className="dots">
+                {dotColors(dots).map((c, i) => (
+                  <span key={i} className={`dot ${c}`} />
+                ))}
+              </div>
             </div>
           )}
           <div className="inner">

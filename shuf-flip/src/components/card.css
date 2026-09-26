@@ -147,15 +147,21 @@
   width: 100%;
 }
 
-/* reveal-count dots at the top of the card */
+/* reveal-count dots */
 .dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* the card pins them to its top */
+.dots-wrap {
   position: absolute;
   top: 14px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
-  gap: 6px;
 }
 
 .dot {
@@ -333,3 +339,4 @@
   border-color: var(--accent);
   color: var(--accent);
 }
+

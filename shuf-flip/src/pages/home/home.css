@@ -236,12 +236,6 @@ a.tile {
   justify-content: center;
 }
 
-.panel.panel-fonts {
-  align-items: stretch;
-  justify-content: flex-start;
-  padding: 0;
-}
-
 /* live page preview fills the panel */
 .panel.panel-preview {
   display: block;

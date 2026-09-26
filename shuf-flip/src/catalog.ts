@@ -58,16 +58,6 @@ export const PAGES: CatalogEntry[] = [
 
 export const COMPONENTS: CatalogEntry[] = [
   {
-    id: 'flip-deck',
-    kind: 'component',
-    title: 'FlipDeck',
-    description: {
-      en: 'Ring stage: layout, scale, hover glow, flip.',
-      zh: '环形舞台：布局、缩放、悬浮光晕、翻转。',
-    },
-    status: 'planned',
-  },
-  {
     id: 'flip-card',
     kind: 'component',
     title: 'FlipCard',
@@ -78,133 +68,13 @@ export const COMPONENTS: CatalogEntry[] = [
     status: 'ready',
   },
   {
-    id: 'progress-dots',
+    id: 'fonts',
     kind: 'component',
-    title: 'ProgressDots',
+    title: 'Fonts',
     description: {
-      en: 'Three reveal-count dots, green to red.',
-      zh: '三个展开次数圆点，绿 → 红。',
+      en: 'The catalog names set large in the display face.',
+      zh: '用展示字体排出的字体样张。',
     },
-    status: 'planned',
-  },
-  {
-    id: 'hint-bar',
-    kind: 'component',
-    title: 'HintBar',
-    description: {
-      en: 'Bottom key hints, fixed and stage-aligned.',
-      zh: '底部键位提示，固定并与舞台对齐。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'rating-bar',
-    kind: 'component',
-    title: 'RatingBar',
-    description: {
-      en: 'Familiar / unsure / unfamiliar buttons.',
-      zh: '熟悉 / 模糊 / 陌生按钮。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'shelf-item',
-    kind: 'component',
-    title: 'ShelfItem',
-    description: {
-      en: 'Book cover with spine fill and page edges.',
-      zh: '书封，带书脊填充与页边线。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'shelf-dialog',
-    kind: 'component',
-    title: 'ShelfDialog',
-    description: {
-      en: 'Book detail: word list and side actions.',
-      zh: '词书详情：词表与右侧操作。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'tag-picker',
-    kind: 'component',
-    title: 'TagPicker',
-    description: {
-      en: 'Include / exclude tag chips with count.',
-      zh: '包含 / 排除标签，带实时计数。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'shortcut-help',
-    kind: 'component',
-    title: 'ShortcutHelp',
-    description: {
-      en: 'Mouse / keyboard / trackpad modal.',
-      zh: '鼠标 / 键盘 / 触控板帮助弹窗。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'settings-dialog',
-    kind: 'component',
-    title: 'SettingsDialog',
-    description: {
-      en: 'Segmented control in a modal.',
-      zh: '弹窗里的分段选择器。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'modal',
-    kind: 'component',
-    title: 'Modal',
-    description: {
-      en: 'Backdrop, close button, Esc to dismiss.',
-      zh: '遮罩、关闭按钮、Esc 关闭。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'icon-button',
-    kind: 'component',
-    title: 'IconButton',
-    description: {
-      en: 'Round icon button and corner placements.',
-      zh: '圆形图标按钮及其四角布局。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'theme-toggle',
-    kind: 'component',
-    title: 'ThemeToggle',
-    description: {
-      en: 'Auto / light / dark cycle button.',
-      zh: '自动 / 亮 / 暗 循环按钮。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'back-button',
-    kind: 'component',
-    title: 'BackButton',
-    description: {
-      en: 'Top-left icon button.',
-      zh: '左上角图标按钮。',
-    },
-    status: 'planned',
-  },
-  {
-    id: 'icons',
-    kind: 'component',
-    title: 'Icons',
-    description: {
-      en: 'Inline SVG icon set.',
-      zh: '内联 SVG 图标集。',
-    },
-    status: 'planned',
+    status: 'ready',
   },
 ]
