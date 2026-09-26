@@ -530,16 +530,6 @@ export default function DesignView() {
   const active = entries.find((c) => c.id === activeId) ?? entries[0]
   const word = WORDS[0]
 
-  // Default sits on the opposite theme's background so the card stands out.
-  const panelStyle =
-    active.id === 'default'
-      ? {
-          background: (theme === 'dark' ? LIGHT_PALETTE : DARK_PALETTE).vars[
-            '--bg'
-          ],
-        }
-      : undefined
-
   const sidebar = (
     <>
       <h2>{t('design.colors')}</h2>
@@ -558,11 +548,7 @@ export default function DesignView() {
   )
 
   return (
-    <HomeShell
-      panelClassName="panel-top"
-      panelStyle={panelStyle}
-      sidebar={sidebar}
-    >
+    <HomeShell panelClassName="panel-top" sidebar={sidebar}>
       <div
         className={`color-stack${active.variants.length > 1 ? ' multi' : ''}`}
       >
