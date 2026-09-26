@@ -1,14 +1,18 @@
 /* The home page: two bars on top, then the selected presentation. */
 
 .app {
-  min-height: 100vh;
+  /* fixed to the viewport: bars stay put, the body scrolls instead */
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .app-body {
   flex: 1;
   min-height: 0;
+  overflow: auto;
 }
 
 /* ---- chrome ---- */
@@ -102,6 +106,11 @@
   grid-auto-rows: 118px;
   gap: 14px;
   padding: 24px 28px 60px;
+}
+
+a.tile {
+  text-decoration: none;
+  color: inherit;
 }
 
 .tile {
@@ -225,6 +234,22 @@
   align-items: stretch;
   justify-content: flex-start;
   padding: 0;
+}
+
+/* live page preview fills the panel */
+.panel.panel-preview {
+  display: block;
+  padding: 0;
+  overflow: auto;
+}
+
+.panel.panel-preview .login-page {
+  min-height: 100%;
+}
+
+/* no back button inside the embedded preview */
+.panel.panel-preview .login-home {
+  display: none;
 }
 
 .panel-inner {

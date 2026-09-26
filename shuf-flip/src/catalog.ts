@@ -20,7 +20,7 @@ export const PAGES: CatalogEntry[] = [
     kind: 'page',
     title: 'Login',
     description: 'Step-wise entry: username expands, password dots, guest link.',
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'shelf',
