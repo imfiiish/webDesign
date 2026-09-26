@@ -3,10 +3,10 @@ import LangToggle from '../../components/LangToggle'
 import ThemeToggle from '../../components/ThemeToggle'
 import { useI18n } from '../../i18n'
 import OverviewView from './OverviewView'
-import SidebarView from './SidebarView'
+import BrowseView from './BrowseView'
 import './home.css'
 
-type Mode = 'overview' | 'sidebar'
+type Mode = 'overview' | 'browse'
 
 /** The app home ("/"). Two bars on top; the mode bar picks the presentation.
  *  Overview is the default. */
@@ -35,14 +35,14 @@ export default function Home() {
         </button>
         <button
           type="button"
-          className={mode === 'sidebar' ? 'on' : undefined}
-          onClick={() => setMode('sidebar')}
+          className={mode === 'browse' ? 'on' : undefined}
+          onClick={() => setMode('browse')}
         >
-          {t('mode.sidebar')}
+          {t('mode.browse')}
         </button>
       </nav>
       <div className="app-body">
-        {mode === 'overview' ? <OverviewView /> : <SidebarView />}
+        {mode === 'overview' ? <OverviewView /> : <BrowseView />}
       </div>
     </div>
   )

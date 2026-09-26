@@ -23,8 +23,8 @@ const COMPONENT_VIEWS: Record<string, ComponentType> = {
   fonts: FontsView,
 }
 
-/** Sidebar presentation: fixed nav (Pages / Components) + panel. */
-export default function SidebarView() {
+/** Browse presentation: fixed nav (Pages / Components) + panel. */
+export default function BrowseView() {
   const { lang, t } = useI18n()
   const [activeId, setActiveId] = useState<string>(ALL[0]?.id ?? '')
   const active = ALL.find((e) => e.id === activeId)

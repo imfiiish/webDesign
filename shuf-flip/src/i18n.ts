@@ -13,7 +13,7 @@ const DICT: Record<Lang, Record<string, string>> = {
     'home.lede':
       'Bento board: pages get big tiles, components fill the gaps. Hierarchy by size.',
     'mode.overview': 'Overview',
-    'mode.sidebar': 'Sidebar',
+    'mode.browse': 'Browse',
     'group.pages': 'Pages',
     'group.components': 'Components',
     'kind.page': 'Page',
@@ -60,7 +60,7 @@ const DICT: Record<Lang, Record<string, string>> = {
   zh: {
     'home.lede': 'Bento 拼板：页面用大块、组件填补空隙，用尺寸体现层级。',
     'mode.overview': '概览',
-    'mode.sidebar': '侧栏',
+    'mode.browse': '浏览',
     'group.pages': '页面',
     'group.components': '组件',
     'kind.page': '页面',
