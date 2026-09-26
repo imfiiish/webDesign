@@ -282,7 +282,7 @@ a.tile {
   margin: 0 0 24px;
 }
 
-.panel-inner .stage {
+.panel-inner .panel-stage {
   height: 220px;
   border: 1px dashed var(--border);
   border-radius: var(--radius-lg);

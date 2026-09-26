@@ -70,7 +70,7 @@ export default function SidebarView() {
             <div className="kind">{kindOf(active)}</div>
             <h1>{active.title}</h1>
             <p>{active.description[lang]}</p>
-            <div className="stage">{t('panel.preview')}</div>
+            <div className="panel-stage">{t('panel.preview')}</div>
           </div>
         ) : null}
       </section>
