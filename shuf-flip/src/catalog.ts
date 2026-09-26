@@ -75,7 +75,7 @@ export const COMPONENTS: CatalogEntry[] = [
       en: 'Two-sided card with front / back faces.',
       zh: '双面卡片，正反两面。',
     },
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'progress-dots',

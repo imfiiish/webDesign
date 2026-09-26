@@ -6,16 +6,20 @@ import Login from '../login'
 import Shelf from '../shelf'
 import Flip from '../flip'
 import Rating from '../rating'
+import FlipCardDemo from './FlipCardDemo'
 import FontsView from './FontsView'
 
 const ALL: CatalogEntry[] = [...PAGES, ...COMPONENTS]
 
-// Pages that are implemented render live in the panel.
+// Implemented entries render live in the panel.
 const PAGE_VIEWS: Record<string, ComponentType> = {
   login: Login,
   shelf: Shelf,
   flip: Flip,
   rating: Rating,
+}
+const COMPONENT_VIEWS: Record<string, ComponentType> = {
+  'flip-card': FlipCardDemo,
 }
 
 /** Sidebar presentation: fixed nav (Pages / Components / Fonts) + panel.
@@ -24,7 +28,9 @@ export default function SidebarView() {
   const { lang, t } = useI18n()
   const [activeId, setActiveId] = useState<string>(ALL[0]?.id ?? '')
   const active = ALL.find((e) => e.id === activeId)
-  const PageView = active ? PAGE_VIEWS[active.id] : undefined
+  const View = active
+    ? (PAGE_VIEWS[active.id] ?? COMPONENT_VIEWS[active.id])
+    : undefined
   const kindOf = (e: CatalogEntry) =>
     PAGES.includes(e) ? t('kind.page') : t('kind.component')
 
@@ -41,7 +47,7 @@ export default function SidebarView() {
   )
 
   const panelClass =
-    activeId === 'fonts' ? ' panel-fonts' : PageView ? ' panel-preview' : ''
+    activeId === 'fonts' ? ' panel-fonts' : View ? ' panel-preview' : ''
 
   return (
     <div className="shell">
@@ -63,8 +69,8 @@ export default function SidebarView() {
       <section className={`panel${panelClass}`}>
         {activeId === 'fonts' ? (
           <FontsView />
-        ) : PageView ? (
-          <PageView />
+        ) : View ? (
+          <View />
         ) : active ? (
           <div className="panel-inner">
             <div className="kind">{kindOf(active)}</div>
