@@ -1,38 +1,40 @@
-/* Design presentation: live colour-palette previews. Each palette is applied
-   by setting the theme vars on .color-view, so real surfaces show in context. */
+/* Design presentation: colour palettes. One full-width preview per palette,
+   stacked so extra palettes simply add rows. */
+
+.color-stack {
+  width: 100%;
+  max-width: 940px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
 
 .color-view {
   width: 100%;
-  max-width: 940px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--bg);
   color: var(--text);
-  padding: 28px;
+  padding: 24px 28px 28px;
 }
 
-.cv-head {
+.cv-name-row {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 18px;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-.cv-head .kind {
-  margin-bottom: 6px;
-}
-
-.cv-head h1 {
+.cv-name {
   font-family: var(--font-display);
-  font-size: 1.9rem;
-  margin: 0;
+  font-size: 1.5rem;
 }
 
-.cv-head h1 em {
+.cv-hex {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
   color: var(--muted);
-  font-style: normal;
-  font-size: 1.05rem;
 }
 
 .cv-swatches {
@@ -55,15 +57,13 @@
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 14%, transparent);
 }
 
-.cv-swatch .cv-label {
+.cv-label {
   font-size: 0.72rem;
   color: var(--muted);
 }
 
-.cv-hex {
-  font-family: var(--font-mono);
+.cv-swatch .cv-hex {
   font-size: 0.66rem;
-  color: var(--muted);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -91,6 +91,7 @@
 .cv-dots {
   display: flex;
   gap: 6px;
+  justify-content: center;
   margin-bottom: 10px;
 }
 

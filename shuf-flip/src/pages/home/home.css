@@ -243,6 +243,15 @@ a.tile {
   overflow: auto;
 }
 
+/* tall content: top-align (scrollable) but centre it when it fits */
+.panel.panel-top {
+  align-items: flex-start;
+}
+
+.panel.panel-top > .color-stack {
+  margin-block: auto;
+}
+
 .panel.panel-preview .login-page,
 .panel.panel-preview .shelf,
 .panel.panel-preview .flip,
