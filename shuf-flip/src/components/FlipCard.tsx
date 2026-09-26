@@ -1,6 +1,6 @@
 import './card.css'
 
-export type CardSense = { pos?: string; defs: string[] }
+type CardSense = { pos?: string; defs: string[] }
 
 export type CardData = {
   word: string

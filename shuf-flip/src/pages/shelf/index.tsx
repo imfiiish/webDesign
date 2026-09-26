@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import BackButton from '../../components/BackButton'
 import { useI18n } from '../../i18n'
 import ShelfDialog from './ShelfDialog'
 import { BOOKS, type Book } from './data'
@@ -8,7 +8,6 @@ import './shelf.css'
 /** The Shelf page: a shelf of book spines with progress, delete confirm and
  *  a detail dialog. Appearance + local state only. */
 export default function Shelf() {
-  const navigate = useNavigate()
   const { t } = useI18n()
   const [books, setBooks] = useState<Book[]>(BOOKS)
   const [active, setActive] = useState<Book | null>(null)
@@ -23,28 +22,7 @@ export default function Shelf() {
 
   return (
     <div className="shelf">
-      <button
-        type="button"
-        className="deck-home"
-        onClick={() => navigate('/')}
-        aria-label={t('nav.back')}
-        title={t('nav.back')}
-      >
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <line x1="19" y1="12" x2="5" y2="12" />
-          <polyline points="12 19 5 12 12 5" />
-        </svg>
-      </button>
+      <BackButton />
 
       <div className="bookshelf">
         <div className="bookshelf-inner">

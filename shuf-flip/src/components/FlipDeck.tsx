@@ -3,7 +3,7 @@ import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react'
 import FlipCard, { type CardData, type Slot } from './FlipCard'
 import './deck.css'
 
-export type { CardData, CardSense, Slot } from './FlipCard'
+export type { CardData, Slot } from './FlipCard'
 
 function slotOf(p: number, center: number, n: number): Slot {
   let d = (p - center) % n

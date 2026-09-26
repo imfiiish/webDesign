@@ -1,44 +1,30 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useState } from 'react'
+import BackButton from '../../components/BackButton'
 import FlipDeck, { type CardData, type Slot } from '../../components/FlipDeck'
+import { useCopyNotice } from '../../components/useCopyNotice'
+import { useDoubleRightClick, useWheelNav } from '../../components/useDeckNav'
 import { useStageScale } from '../../components/useStageScale'
 import { useI18n } from '../../i18n'
+import { shuffled } from '../../utils'
 import { WORDS } from './data'
 import './flip.css'
-
-function shuffled<T>(list: readonly T[]): T[] {
-  const a = [...list]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
 
 /** The Flip page: a ring of cards you shuffle, reveal and flip through.
  *  Appearance + local interaction only (no audio, no progress, no sync). */
 export default function Flip() {
-  const navigate = useNavigate()
   const { t } = useI18n()
 
   const [deck, setDeck] = useState<CardData[]>(WORDS)
   const [center, setCenter] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [revealCounts, setRevealCounts] = useState<Record<string, number>>({})
-  const [copyNotice, setCopyNotice] = useState<string | null>(null)
   const [stageKey, setStageKey] = useState(0)
 
-  const copyTimer = useRef<number | undefined>(undefined)
-  useEffect(() => () => window.clearTimeout(copyTimer.current), [])
+  const { copied, copy, clear: clearCopy } = useCopyNotice()
 
   const { stageRef, scale } = useStageScale()
   const TOTAL = deck.length
   const centerName = deck[center]?.word ?? null
-
-  const clearCopy = useCallback(() => {
-    window.clearTimeout(copyTimer.current)
-    setCopyNotice(null)
-  }, [])
 
   const go = useCallback(
     (delta: number) => {
@@ -63,16 +49,8 @@ export default function Flip() {
   }, [revealed, reveal])
 
   const copyCurrent = useCallback(() => {
-    if (!centerName) return
-    void navigator.clipboard?.writeText(centerName).then(
-      () => {
-        window.clearTimeout(copyTimer.current)
-        setCopyNotice(t('flip.copied'))
-        copyTimer.current = window.setTimeout(() => setCopyNotice(null), 1000)
-      },
-      () => {},
-    )
-  }, [centerName, t])
+    if (centerName) copy(centerName)
+  }, [centerName, copy])
 
   const nextRound = useCallback(() => {
     setDeck(shuffled(WORDS))
@@ -83,35 +61,7 @@ export default function Flip() {
   }, [clearCopy])
 
   // wheel: down / right -> next, up / left -> previous
-  useEffect(() => {
-    let acc = 0
-    let last = 0
-    let idle: ReturnType<typeof setTimeout> | undefined
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey) return
-      e.preventDefault()
-      const unit =
-        e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1
-      const raw = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX
-      acc += raw * unit
-      clearTimeout(idle)
-      idle = setTimeout(() => {
-        acc = 0
-      }, 150)
-      if (Math.abs(acc) < 24) return
-      const now = performance.now()
-      if (now - last < 120) return
-      const dir = acc > 0 ? 1 : -1
-      acc = 0
-      last = now
-      go(dir)
-    }
-    window.addEventListener('wheel', onWheel, { passive: false })
-    return () => {
-      clearTimeout(idle)
-      window.removeEventListener('wheel', onWheel)
-    }
-  }, [go])
+  useWheelNav(go)
 
   // keyboard: Space reveal / Enter next round / H L arrows navigate
   useEffect(() => {
@@ -148,26 +98,7 @@ export default function Flip() {
   }, [go, toggleReveal, nextRound, copyCurrent])
 
   // double right-click (trackpad two-finger double tap) outside the center card
-  useEffect(() => {
-    let last = 0
-    const onCtx = (e: MouseEvent) => {
-      const target = e.target instanceof Element ? e.target : null
-      if (target?.closest('.card.active')) {
-        last = 0
-        return
-      }
-      e.preventDefault()
-      const now = performance.now()
-      if (last !== 0 && now - last <= 400) {
-        last = 0
-        nextRound()
-      } else {
-        last = now
-      }
-    }
-    window.addEventListener('contextmenu', onCtx)
-    return () => window.removeEventListener('contextmenu', onCtx)
-  }, [nextRound])
+  useDoubleRightClick(nextRound)
 
   const onCardClick = (_name: string, slot: Slot) => {
     if (slot === 0) toggleReveal()
@@ -177,35 +108,14 @@ export default function Flip() {
 
   return (
     <div className="flip">
-      <button
-        type="button"
-        className="deck-home"
-        onClick={() => navigate('/')}
-        aria-label={t('nav.back')}
-        title={t('nav.back')}
-      >
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <line x1="19" y1="12" x2="5" y2="12" />
-          <polyline points="12 19 5 12 12 5" />
-        </svg>
-      </button>
+      <BackButton />
 
       <div className="deck-stage" ref={stageRef}>
         <FlipDeck
           deck={deck}
           center={center}
           revealed={revealed}
-          centerNotice={copyNotice}
+          centerNotice={copied ? t('common.copied') : null}
           revealCounts={revealCounts}
           scale={scale}
           stageKey={stageKey}

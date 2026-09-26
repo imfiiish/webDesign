@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import BackButton from '../../components/BackButton'
 import FlipDeck, { type CardData, type Slot } from '../../components/FlipDeck'
+import { useDoubleRightClick, useWheelNav } from '../../components/useDeckNav'
 import { useStageScale } from '../../components/useStageScale'
 import { useI18n } from '../../i18n'
+import { shuffled } from '../../utils'
 import { WORDS } from '../flip/data'
 import './rating.css'
 
@@ -10,19 +12,9 @@ type Rating = 1 | 2 | 3
 
 const UNDO_LIMIT = 3
 
-function shuffled<T>(list: readonly T[]): T[] {
-  const a = [...list]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
-
 /** The Rating page: only tests — no revealing. Rate each card 1/2/3 and it
  *  leaves the ring; Ctrl+Z undoes the last few. Appearance + local state. */
 export default function RatingPage() {
-  const navigate = useNavigate()
   const { t } = useI18n()
 
   const [deck, setDeck] = useState<CardData[]>(() => shuffled(WORDS))
@@ -107,34 +99,7 @@ export default function RatingPage() {
   }, [skipArmed])
 
   // wheel navigation
-  useEffect(() => {
-    let acc = 0
-    let last = 0
-    let idle: ReturnType<typeof setTimeout> | undefined
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey) return
-      e.preventDefault()
-      const unit =
-        e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1
-      const raw = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX
-      acc += raw * unit
-      clearTimeout(idle)
-      idle = setTimeout(() => {
-        acc = 0
-      }, 150)
-      if (Math.abs(acc) < 24) return
-      const now = performance.now()
-      if (now - last < 120) return
-      acc = 0
-      last = now
-      go(raw > 0 ? 1 : -1)
-    }
-    window.addEventListener('wheel', onWheel, { passive: false })
-    return () => {
-      clearTimeout(idle)
-      window.removeEventListener('wheel', onWheel)
-    }
-  }, [go])
+  useWheelNav(go)
 
   // keyboard: 1 2 3 rate / Ctrl+Z undo / H L arrows / Enter x2 skip
   useEffect(() => {
@@ -171,26 +136,7 @@ export default function RatingPage() {
   }, [go, rate, undoLast, skipStep])
 
   // double right-click (outside the center card) = press Enter (two-step skip)
-  useEffect(() => {
-    let last = 0
-    const onCtx = (e: MouseEvent) => {
-      const target = e.target instanceof Element ? e.target : null
-      if (target?.closest('.card.active')) {
-        last = 0
-        return
-      }
-      e.preventDefault()
-      const now = performance.now()
-      if (last !== 0 && now - last <= 400) {
-        last = 0
-        skipStep()
-      } else {
-        last = now
-      }
-    }
-    window.addEventListener('contextmenu', onCtx)
-    return () => window.removeEventListener('contextmenu', onCtx)
-  }, [skipStep])
+  useDoubleRightClick(skipStep)
 
   const onCardClick = (_name: string, slot: Slot) => {
     if (slot === 1 || slot === 'S') go(1)
@@ -199,28 +145,7 @@ export default function RatingPage() {
 
   return (
     <div className="rating">
-      <button
-        type="button"
-        className="deck-home"
-        onClick={() => navigate('/')}
-        aria-label={t('nav.back')}
-        title={t('nav.back')}
-      >
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <line x1="19" y1="12" x2="5" y2="12" />
-          <polyline points="12 19 5 12 12 5" />
-        </svg>
-      </button>
+      <BackButton />
 
       <div className="deck-stage" ref={stageRef}>
         <FlipDeck

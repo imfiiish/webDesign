@@ -2,8 +2,8 @@
 // Appearance only — no business logic. `title` is a proper noun (kept as-is);
 // the description is bilingual.
 
-export type EntryKind = 'page' | 'component'
-export type EntryStatus = 'ready' | 'planned'
+type EntryKind = 'page' | 'component'
+type EntryStatus = 'ready' | 'planned'
 
 export type CatalogEntry = {
   id: string

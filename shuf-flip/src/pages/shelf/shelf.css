@@ -358,8 +358,3 @@
   padding-right: 14px;
   white-space: nowrap;
 }
-
-.book-empty {
-  margin: 8px;
-  color: var(--muted);
-}

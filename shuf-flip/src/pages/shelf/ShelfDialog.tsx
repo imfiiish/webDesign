@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import Modal from '../../components/Modal'
+import { useCopyNotice } from '../../components/useCopyNotice'
 import { useI18n } from '../../i18n'
 import { WORDS } from '../flip/data'
 import type { Book } from './data'
@@ -31,20 +32,7 @@ export default function ShelfDialog({ book, onClose, onRename }: Props) {
   }
 
   // click a word -> copy, show "Copied" for a moment
-  const [copied, setCopied] = useState<string | null>(null)
-  const copyTimer = useRef<number | undefined>(undefined)
-  useEffect(() => () => window.clearTimeout(copyTimer.current), [])
-
-  const copy = (word: string) => {
-    void navigator.clipboard?.writeText(word).then(
-      () => {
-        setCopied(word)
-        window.clearTimeout(copyTimer.current)
-        copyTimer.current = window.setTimeout(() => setCopied(null), 1100)
-      },
-      () => {},
-    )
-  }
+  const { copied, copy } = useCopyNotice()
 
   const words = WORDS.slice(0, 10)
 
