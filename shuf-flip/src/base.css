@@ -5,6 +5,18 @@
   box-sizing: border-box;
 }
 
+/* Hide scrollbars everywhere but keep the element scrollable. */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* legacy Edge / IE */
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
 html,
 body {
   min-height: 100%;
