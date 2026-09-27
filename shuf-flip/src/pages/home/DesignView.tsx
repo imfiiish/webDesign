@@ -1,12 +1,21 @@
 import { useState } from 'react'
-import type { CSSProperties } from 'react'
+import type { ComponentType, CSSProperties } from 'react'
 import HomeShell from './HomeShell'
 import { useResolvedTheme } from '../../components/useResolvedTheme'
 import { useI18n } from '../../i18n'
 import { DEFAULT_VARIANT } from '../../catalog'
 import { WORDS } from '../flip/data'
-import FontsView from './FontsView'
+import FontHover from './FontHover'
 import './design.css'
+
+// The Fonts section: a single specimen entry.
+const FONT_ITEMS: { id: string; name: { en: string; zh: string } }[] = [
+  { id: 'default', name: DEFAULT_VARIANT.name },
+]
+
+const FONT_VIEWS: Record<string, ComponentType> = {
+  default: FontHover,
+}
 
 type Bilingual = { en: string; zh: string }
 
@@ -529,11 +538,12 @@ export default function DesignView() {
   ]
 
   const [sel, setSel] = useState<
-    { kind: 'color'; id: string } | { kind: 'fonts' }
+    { kind: 'color'; id: string } | { kind: 'fonts'; id: string }
   >({ kind: 'color', id: entries[0].id })
   const active =
     entries.find((c) => c.id === (sel.kind === 'color' ? sel.id : '')) ??
     entries[0]
+  const FontView = sel.kind === 'fonts' ? FONT_VIEWS[sel.id] : undefined
   const word = WORDS[0]
 
   const sidebar = (
@@ -553,24 +563,29 @@ export default function DesignView() {
         </button>
       ))}
       <h2>{t('design.fonts')}</h2>
-      <button
-        type="button"
-        className={`navitem${sel.kind === 'fonts' ? ' on' : ''}`}
-        onClick={() => setSel({ kind: 'fonts' })}
-      >
-        <span className="dot" />
-        {DEFAULT_VARIANT.name[lang]}
-      </button>
+      {FONT_ITEMS.map((f) => (
+        <button
+          key={f.id}
+          type="button"
+          className={`navitem${
+            sel.kind === 'fonts' && sel.id === f.id ? ' on' : ''
+          }`}
+          onClick={() => setSel({ kind: 'fonts', id: f.id })}
+        >
+          <span className="dot" />
+          {f.name[lang]}
+        </button>
+      ))}
     </>
   )
 
   return (
     <HomeShell
-      panelClassName={sel.kind === 'fonts' ? 'panel-preview' : 'panel-top'}
+      panelClassName={FontView ? 'panel-preview' : 'panel-top'}
       sidebar={sidebar}
     >
-      {sel.kind === 'fonts' ? (
-        <FontsView />
+      {FontView ? (
+        <FontView />
       ) : (
       <div
         className={`color-stack${active.variants.length > 1 ? ' multi' : ''}`}
