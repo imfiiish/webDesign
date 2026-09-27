@@ -9,7 +9,7 @@ type Props = {
   children?: ReactNode
 }
 
-/** Left-right split shared by the Browse and Design presentations. */
+/** Left-right split shared by the Page and Design presentations. */
 export default function HomeShell({
   sidebar,
   panelClassName = '',

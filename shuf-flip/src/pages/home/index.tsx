@@ -3,12 +3,13 @@ import LangToggle from '../../components/LangToggle'
 import ThemeToggle from '../../components/ThemeToggle'
 import { useI18n } from '../../i18n'
 import OverviewView from './OverviewView'
-import BrowseView from './BrowseView'
+import PageView from './PageView'
+import ComponentsView from './ComponentsView'
 import DesignView from './DesignView'
 import CreativeView from './CreativeView'
 import './home.css'
 
-type Mode = 'overview' | 'browse' | 'design' | 'creative'
+type Mode = 'overview' | 'page' | 'components' | 'design' | 'creative'
 
 /** The app home ("/"). Two bars on top; the mode bar picks the presentation.
  *  Overview is the default. */
@@ -37,10 +38,17 @@ export default function Home() {
         </button>
         <button
           type="button"
-          className={mode === 'browse' ? 'on' : undefined}
-          onClick={() => setMode('browse')}
+          className={mode === 'page' ? 'on' : undefined}
+          onClick={() => setMode('page')}
         >
-          {t('mode.browse')}
+          {t('mode.page')}
+        </button>
+        <button
+          type="button"
+          className={mode === 'components' ? 'on' : undefined}
+          onClick={() => setMode('components')}
+        >
+          {t('mode.components')}
         </button>
         <button
           type="button"
@@ -60,8 +68,10 @@ export default function Home() {
       <div className="app-body">
         {mode === 'overview' ? (
           <OverviewView />
-        ) : mode === 'browse' ? (
-          <BrowseView />
+        ) : mode === 'page' ? (
+          <PageView />
+        ) : mode === 'components' ? (
+          <ComponentsView />
         ) : mode === 'design' ? (
           <DesignView />
         ) : (

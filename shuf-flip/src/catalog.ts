@@ -5,12 +5,28 @@
 type EntryKind = 'page' | 'component'
 type EntryStatus = 'ready' | 'planned'
 
+export type Bilingual = { en: string; zh: string }
+
+/** One design of an entry. Every entry starts with a single "Default"; a page
+ *  can gain more designs (variants) over time. */
+export type CatalogVariant = {
+  id: string
+  name: Bilingual
+}
+
 export type CatalogEntry = {
   id: string
   kind: EntryKind
   title: string
-  description: { en: string; zh: string }
+  description: Bilingual
   status: EntryStatus
+  variants: CatalogVariant[]
+}
+
+/** The base variant every entry starts with. */
+export const DEFAULT_VARIANT: CatalogVariant = {
+  id: 'default',
+  name: { en: 'Default', zh: '默认' },
 }
 
 export const PAGES: CatalogEntry[] = [
@@ -23,6 +39,7 @@ export const PAGES: CatalogEntry[] = [
       zh: '分步进入：账号展开、密码圆点、游客入口。',
     },
     status: 'ready',
+    variants: [DEFAULT_VARIANT],
   },
   {
     id: 'shelf',
@@ -33,6 +50,7 @@ export const PAGES: CatalogEntry[] = [
       zh: '书脊书架，带进度、悬浮与删除确认。',
     },
     status: 'ready',
+    variants: [DEFAULT_VARIANT],
   },
   {
     id: 'flip',
@@ -43,6 +61,7 @@ export const PAGES: CatalogEntry[] = [
       zh: '环形卡片：展开释义、滚轮/按键翻页、下一轮。',
     },
     status: 'ready',
+    variants: [DEFAULT_VARIANT],
   },
   {
     id: 'rating',
@@ -53,6 +72,7 @@ export const PAGES: CatalogEntry[] = [
       zh: '自测：1 / 2 / 3 评级条，含撤销与跳过确认。',
     },
     status: 'ready',
+    variants: [DEFAULT_VARIANT],
   },
 ]
 
@@ -66,6 +86,7 @@ export const COMPONENTS: CatalogEntry[] = [
       zh: '双面卡片，正反两面。',
     },
     status: 'ready',
+    variants: [DEFAULT_VARIANT],
   },
   {
     id: 'fonts',
@@ -76,5 +97,6 @@ export const COMPONENTS: CatalogEntry[] = [
       zh: '用展示字体排出的字体样张。',
     },
     status: 'ready',
+    variants: [DEFAULT_VARIANT],
   },
 ]

@@ -3,7 +3,9 @@ import type { CSSProperties } from 'react'
 import HomeShell from './HomeShell'
 import { useResolvedTheme } from '../../components/useResolvedTheme'
 import { useI18n } from '../../i18n'
+import { DEFAULT_VARIANT } from '../../catalog'
 import { WORDS } from '../flip/data'
+import FontsView from './FontsView'
 import './design.css'
 
 type Bilingual = { en: string; zh: string }
@@ -511,9 +513,9 @@ function dotFor(c: ColorEntry): string {
   return `linear-gradient(135deg, ${v['--border']}, ${v['--accent']})`
 }
 
-/** Design presentation: a colour section — one nav entry per colour, each
- *  rendered as one full-width live preview per palette. "Default" follows the
- *  theme toggle and sits on an inverted backdrop. */
+/** Design presentation: a colour section (one nav entry per colour, each
+ *  rendered as a live palette preview; "Default" follows the theme toggle)
+ *  plus a Fonts section holding the type specimen. */
 export default function DesignView() {
   const { lang, t } = useI18n()
   const theme = useResolvedTheme()
@@ -526,8 +528,12 @@ export default function DesignView() {
     ...COLOR_ENTRIES,
   ]
 
-  const [activeId, setActiveId] = useState(entries[0].id)
-  const active = entries.find((c) => c.id === activeId) ?? entries[0]
+  const [sel, setSel] = useState<
+    { kind: 'color'; id: string } | { kind: 'fonts' }
+  >({ kind: 'color', id: entries[0].id })
+  const active =
+    entries.find((c) => c.id === (sel.kind === 'color' ? sel.id : '')) ??
+    entries[0]
   const word = WORDS[0]
 
   const sidebar = (
@@ -537,18 +543,35 @@ export default function DesignView() {
         <button
           key={c.id}
           type="button"
-          className={`navitem${c.id === activeId ? ' on' : ''}`}
-          onClick={() => setActiveId(c.id)}
+          className={`navitem${
+            sel.kind === 'color' && sel.id === c.id ? ' on' : ''
+          }`}
+          onClick={() => setSel({ kind: 'color', id: c.id })}
         >
           <span className="dot" style={{ background: dotFor(c) }} />
           {c.name[lang]}
         </button>
       ))}
+      <h2>{t('design.fonts')}</h2>
+      <button
+        type="button"
+        className={`navitem${sel.kind === 'fonts' ? ' on' : ''}`}
+        onClick={() => setSel({ kind: 'fonts' })}
+      >
+        <span className="dot" />
+        {DEFAULT_VARIANT.name[lang]}
+      </button>
     </>
   )
 
   return (
-    <HomeShell panelClassName="panel-top" sidebar={sidebar}>
+    <HomeShell
+      panelClassName={sel.kind === 'fonts' ? 'panel-preview' : 'panel-top'}
+      sidebar={sidebar}
+    >
+      {sel.kind === 'fonts' ? (
+        <FontsView />
+      ) : (
       <div
         className={`color-stack${active.variants.length > 1 ? ' multi' : ''}`}
       >
@@ -621,6 +644,7 @@ export default function DesignView() {
           </div>
         ))}
       </div>
+      )}
     </HomeShell>
   )
 }

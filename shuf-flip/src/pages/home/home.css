@@ -165,7 +165,7 @@ a.tile {
   grid-column: span 2;
 }
 
-/* ---- browse presentation ---- */
+/* ---- page presentation ---- */
 .shell {
   height: 100%;
   display: grid;
@@ -296,7 +296,7 @@ a.tile {
   font-size: 0.85rem;
 }
 
-/* ---- fonts specimen (inside the browse panel) ---- */
+/* ---- fonts specimen (inside the page / design panel) ---- */
 .ed {
   max-width: 1060px;
   width: 100%;

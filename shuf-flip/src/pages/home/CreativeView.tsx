@@ -5,7 +5,7 @@ import FlipAnimations from './FlipAnimations'
 
 type Item = 'flip'
 
-/** Creative presentation: same split as Browse. Animations holds a live flip
+/** Creative presentation: same split as Page. Animations holds a live flip
  *  demo; Styles is deliberately empty for now. */
 export default function CreativeView() {
   const { t } = useI18n()
