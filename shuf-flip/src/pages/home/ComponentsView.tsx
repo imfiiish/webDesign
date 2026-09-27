@@ -5,11 +5,13 @@ import HomeShell from './HomeShell'
 import { useI18n } from '../../i18n'
 import FlipCardDemo from './FlipCardDemo'
 import FontsView from './FontsView'
+import BookPanelDemo from './BookPanelDemo'
 
 // Implemented components render live in the panel.
 const COMPONENT_VIEWS: Record<string, ComponentType> = {
   'flip-card': FlipCardDemo,
   fonts: FontsView,
+  'book-panel': BookPanelDemo,
 }
 
 /** Components presentation: a flat list of previews (no categories yet). */

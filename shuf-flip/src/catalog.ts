@@ -99,4 +99,15 @@ export const COMPONENTS: CatalogEntry[] = [
     status: 'ready',
     variants: [DEFAULT_VARIANT],
   },
+  {
+    id: 'book-panel',
+    kind: 'component',
+    title: 'BookPanel',
+    description: {
+      en: 'Book detail: rename title, this-round word list, start action.',
+      zh: '书籍详情：改名、本轮词表、开始按钮。',
+    },
+    status: 'ready',
+    variants: [DEFAULT_VARIANT],
+  },
 ]
