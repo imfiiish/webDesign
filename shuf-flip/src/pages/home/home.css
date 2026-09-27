@@ -98,14 +98,6 @@
 }
 
 /* ---- overview (bento) ---- */
-.lede {
-  color: var(--muted);
-  font-size: 0.88rem;
-  margin: 0;
-  max-width: 560px;
-  padding: 22px 28px 0;
-}
-
 .bento {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

@@ -8,7 +8,6 @@ export default function OverviewView() {
 
   return (
     <>
-      <p className="lede">{t('home.lede')}</p>
       <div className="bento">
         {PAGES.map((e) => {
           const body = (

@@ -10,8 +10,6 @@ const KEY = 'design-lang'
 
 const DICT: Record<Lang, Record<string, string>> = {
   en: {
-    'home.lede':
-      'Bento board: pages get big tiles, components fill the gaps. Hierarchy by size.',
     'mode.overview': 'Overview',
     'mode.page': 'Page',
     'mode.components': 'Components',
@@ -62,7 +60,6 @@ const DICT: Record<Lang, Record<string, string>> = {
     'lang.toggle': 'Language: English. Click to switch to Chinese.',
   },
   zh: {
-    'home.lede': 'Bento 拼板：页面用大块、组件填补空隙，用尺寸体现层级。',
     'mode.overview': '概览',
     'mode.page': '页面',
     'mode.components': '组件',
