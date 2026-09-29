@@ -6,7 +6,7 @@ import FlipAnimations from './FlipAnimations'
 type Item = 'flip'
 
 /** Creative presentation: same split as Page. Animations holds a live flip
- *  demo; Styles is deliberately empty for now. */
+ *  demo. */
 export default function CreativeView() {
   const { t } = useI18n()
   const [active, setActive] = useState<Item>('flip')
@@ -25,7 +25,6 @@ export default function CreativeView() {
             <span className="dot" />
             {t('anim.flip')}
           </button>
-          <h2>{t('design.styles')}</h2>
         </>
       }
     >
