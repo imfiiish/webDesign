@@ -4,10 +4,18 @@ import { useI18n } from '../../i18n'
 import FlipAnimations from './FlipAnimations'
 import SentenceBoard from './SentenceBoard'
 import PromptAnimations from './PromptAnimations'
+import BoxStyles from './BoxStyles'
+import BlankStyles from './BlankStyles'
 
-type Item = 'flip' | 'sentence' | 'cardAnimations'
+type Item =
+  | 'flip'
+  | 'sentence'
+  | 'cardAnimations'
+  | 'boxStyles'
+  | 'blankStyles'
 
-/** Creative presentation: a live flip demo and the sentence exercise. */
+/** Creative presentation: a live flip demo, the sentence exercise, and three
+ *  pickers for the sentence card's motion, tray and blanks. */
 export default function CreativeView() {
   const { t } = useI18n()
   const [active, setActive] = useState<Item>('flip')
@@ -42,6 +50,22 @@ export default function CreativeView() {
             <span className="dot" />
             {t('anim.promptCard')}
           </button>
+          <button
+            type="button"
+            className={`navitem${active === 'boxStyles' ? ' on' : ''}`}
+            onClick={() => setActive('boxStyles')}
+          >
+            <span className="dot" />
+            {t('anim.boxStyles')}
+          </button>
+          <button
+            type="button"
+            className={`navitem${active === 'blankStyles' ? ' on' : ''}`}
+            onClick={() => setActive('blankStyles')}
+          >
+            <span className="dot" />
+            {t('anim.blankStyles')}
+          </button>
         </>
       }
     >
@@ -49,8 +73,12 @@ export default function CreativeView() {
         <FlipAnimations />
       ) : active === 'sentence' ? (
         <SentenceBoard />
-      ) : (
+      ) : active === 'cardAnimations' ? (
         <PromptAnimations />
+      ) : active === 'boxStyles' ? (
+        <BoxStyles />
+      ) : (
+        <BlankStyles />
       )}
     </HomeShell>
   )

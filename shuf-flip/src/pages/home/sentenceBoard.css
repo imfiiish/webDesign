@@ -180,9 +180,11 @@
   gap: 16px;
   padding: 16px;
   border-radius: 18px;
-  background: color-mix(in srgb, var(--bg) 58%, var(--card));
-  box-shadow: inset 0 3px 10px -4px rgba(0, 0, 0, 0.32),
-    inset 0 -1px 0 var(--border);
+  background: color-mix(in srgb, var(--card) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .sv-rack {
@@ -250,70 +252,71 @@
   display: flex;
 }
 
-/* empty blank: an underline */
+/* empty blank: a neumorphic well */
 .sv-hole {
   width: 64px;
-  min-height: 40px;
+  min-height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 6px;
   border: 0;
-  border-bottom: 2px solid var(--border);
-  background: transparent;
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.16),
+    inset -3px -3px 6px color-mix(in srgb, var(--card-active) 85%, transparent);
   cursor: text;
-  transition: border-color 160ms ease, background 160ms ease;
+  transition: box-shadow 170ms ease, background 170ms ease;
 }
 
 .sv-hole.active {
-  border-bottom-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 13%, transparent);
-  border-radius: 8px 8px 0 0;
-  box-shadow: inset 0 0 0 1px var(--accent-ring),
-    0 8px 16px -14px var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.16),
+    inset -3px -3px 6px color-mix(in srgb, var(--card-active) 85%, transparent),
+    inset 0 0 0 1.5px var(--accent);
   animation: sv-pop 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sv-slot.good .sv-hole {
-  border-bottom-color: var(--rate-g);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.16),
+    inset -3px -3px 6px color-mix(in srgb, var(--card-active) 85%, transparent),
+    inset 0 0 0 1.5px var(--rate-g);
 }
 
 .sv-slot.flash .sv-hole {
   animation: sv-flash-underline 680ms ease;
 }
 
-/* filled blank: a little bordered square */
+/* filled blank: a raised paper key */
 .sv-piece {
   width: 60px;
-  min-height: 40px;
+  min-height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 4px;
-  border: 1px solid var(--accent);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--accent) 9%, var(--card));
+  border: 0;
+  border-radius: 12px;
+  background: var(--card-active);
   color: var(--accent);
   font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--row-hover-shadow);
   animation: sv-drop 220ms cubic-bezier(0.22, 1, 0.36, 1);
-  transition: border-color 160ms ease, color 160ms ease, background 160ms ease,
-    transform 160ms ease;
+  transition: transform 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
 .sv-piece:hover {
-  border-color: var(--rate-r);
   color: var(--rate-r);
-  background: color-mix(in srgb, var(--rate-r) 8%, var(--card));
   transform: translateY(-2px);
+  box-shadow: var(--card-shadow);
 }
 
 .sv-slot.good .sv-piece {
   color: var(--rate-g);
-  border-color: var(--rate-g);
-  background: color-mix(in srgb, var(--rate-g) 10%, var(--card));
+  box-shadow: 0 0 0 1.5px var(--rate-g), var(--row-hover-shadow);
 }
 
 .sv-pending {

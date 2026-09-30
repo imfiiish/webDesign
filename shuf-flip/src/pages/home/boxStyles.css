@@ -1,0 +1,157 @@
+/* Creative › SentenceBox:styles — the tray (word bank + blanks) in several
+   materials, so one can be chosen for the Sentence board. */
+
+.bx {
+  width: 100%;
+  max-width: 900px;
+  margin-block: auto;
+}
+
+.bx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 34px 26px;
+  align-content: start;
+}
+
+.bx-item {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bx-label {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* ---- the shared tray content ---- */
+.bx-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  transition: box-shadow 200ms ease, background 200ms ease,
+    border-color 200ms ease;
+}
+
+.bx-rack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.bx-chip {
+  display: flex;
+  flex-direction: column-reverse; /* pinyin on top, hanzi below */
+  align-items: center;
+  gap: 1px;
+  min-width: 48px;
+  padding: 7px 12px;
+  border-radius: 11px;
+  background: var(--card-active);
+  color: var(--text);
+  box-shadow: var(--row-hover-shadow);
+}
+
+.bx-chip-text {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.bx-chip-pinyin {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  color: var(--muted);
+}
+
+.bx-slots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+
+.bx-piece {
+  width: 52px;
+  min-height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--accent);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--accent) 9%, var(--card));
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.bx-hole {
+  width: 52px;
+  min-height: 36px;
+  border-bottom: 2px solid var(--border);
+}
+
+/* ---- materials ---- */
+
+/* 1 — recessed (the current board) */
+.bx-recessed {
+  background: color-mix(in srgb, var(--bg) 58%, var(--card));
+  box-shadow: inset 0 3px 10px -4px rgba(0, 0, 0, 0.32),
+    inset 0 -1px 0 var(--border);
+}
+
+/* 2 — raised paper card */
+.bx-raised {
+  background: var(--card-active);
+  box-shadow: var(--card-shadow);
+}
+
+/* 3 — outline only */
+.bx-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+}
+
+/* 4 — flat, no shadow */
+.bx-flat {
+  background: color-mix(in srgb, var(--bg) 70%, var(--card));
+}
+
+/* 5 — soft card */
+.bx-soft {
+  background: var(--card);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  box-shadow: var(--row-hover-shadow);
+}
+
+/* 6 — recessed with a border */
+.bx-insetborder {
+  background: color-mix(in srgb, var(--bg) 55%, var(--card));
+  border: 1px solid var(--border);
+  box-shadow: inset 0 4px 12px -5px rgba(0, 0, 0, 0.4);
+}
+
+/* 7 — frosted glass */
+.bx-glass {
+  background: color-mix(in srgb, var(--card) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* 8 — dashed outline */
+.bx-dashed {
+  background: color-mix(in srgb, var(--bg) 45%, transparent);
+  border: 1px dashed var(--border);
+}
