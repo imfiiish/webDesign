@@ -61,10 +61,7 @@ export const PAGES: CatalogEntry[] = [
       zh: '环形卡片：展开释义、滚轮/按键翻页、下一轮。',
     },
     status: 'ready',
-    variants: [
-      DEFAULT_VARIANT,
-      { id: 'swap', name: { en: 'Swap', zh: '换面' } },
-    ],
+    variants: [DEFAULT_VARIANT],
   },
   {
     id: 'rating',
@@ -89,18 +86,10 @@ export const COMPONENTS: CatalogEntry[] = [
       zh: '双面卡片，正反两面。',
     },
     status: 'ready',
-    variants: [DEFAULT_VARIANT],
-  },
-  {
-    id: 'fonts',
-    kind: 'component',
-    title: 'Fonts',
-    description: {
-      en: 'The catalog names set large in the display face.',
-      zh: '用展示字体排出的字体样张。',
-    },
-    status: 'ready',
-    variants: [DEFAULT_VARIANT],
+    variants: [
+      DEFAULT_VARIANT,
+      { id: 'swap', name: { en: 'Swap', zh: '换面' } },
+    ],
   },
   {
     id: 'book-panel',

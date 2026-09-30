@@ -70,11 +70,11 @@
   width: 582px;
 }
 
-/* Swap reveal (Flip variant): the back face is natively larger (582 ≈ 540 ×
-   1.08) and the flip is a pure rotateY, so at 90° (edge-on) the card swaps to
-   the bigger back. Neither face is scaled, so text is always rendered 1:1.
+/* Swap reveal (FlipCard variant): the back face is natively larger (582 ≈
+   540 × 1.08) and the flip is a pure rotateY, so at 90° (edge-on) the card
+   swaps to the bigger back. Neither face is scaled, so text is always 1:1.
    The card box keeps the front size, so the ring layout is unchanged. */
-.cards--swap .face.back {
+.card--swap .face.back {
   inset: auto;
   left: 50%;
   top: 50%;
@@ -84,7 +84,7 @@
 }
 
 /* in swap mode the box does not grow — the bigger back face is the zoom */
-.cards--swap .pos-0:has(.card-flip.flipped) {
+.card--swap.pos-0:has(.card-flip.flipped) {
   width: 540px;
 }
 

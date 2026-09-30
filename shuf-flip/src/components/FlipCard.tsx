@@ -36,6 +36,9 @@ type FlipCardProps = {
   word: CardData
   slot: Slot
   revealed?: boolean
+  /** Reveal style: 'default' grows the box by layout; 'swap' flips to a
+   *  natively larger back face. */
+  reveal?: 'default' | 'swap'
   hovered?: boolean
   dots?: number
   notice?: string | null
@@ -49,6 +52,7 @@ export default function FlipCard({
   word,
   slot,
   revealed = false,
+  reveal = 'default',
   hovered = false,
   dots = 0,
   notice = null,
@@ -75,7 +79,7 @@ export default function FlipCard({
     <div
       className={`card ${posClass}${isCenter ? ' active' : ''}${
         hovered ? ' hovered' : ''
-      }`}
+      }${reveal === 'swap' ? ' card--swap' : ''}`}
       data-word={word.word}
       onClick={onClick}
       onContextMenu={

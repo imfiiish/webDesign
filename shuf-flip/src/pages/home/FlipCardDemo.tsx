@@ -2,8 +2,10 @@ import { useState } from 'react'
 import FlipCard from '../../components/FlipCard'
 import { WORDS } from '../flip/data'
 
+type FlipCardDemoProps = { variant?: string }
+
 /** Isolated preview of FlipCard. Click to flip; every reveal bumps the dots. */
-export default function FlipCardDemo() {
+export default function FlipCardDemo({ variant }: FlipCardDemoProps) {
   const [revealed, setRevealed] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [count, setCount] = useState(0)
@@ -23,6 +25,7 @@ export default function FlipCardDemo() {
         <FlipCard
           word={WORDS[0]}
           slot={0}
+          reveal={variant === 'swap' ? 'swap' : 'default'}
           revealed={revealed}
           hovered={hovered}
           dots={count}

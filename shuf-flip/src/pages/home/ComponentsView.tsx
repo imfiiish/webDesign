@@ -1,38 +1,51 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import type { ComponentType } from 'react'
 import { COMPONENTS } from '../../catalog'
 import HomeShell from './HomeShell'
 import { useI18n } from '../../i18n'
 import FlipCardDemo from './FlipCardDemo'
-import FontsView from './FontsView'
 import BookPanelDemo from './BookPanelDemo'
 
-// Implemented components render live in the panel.
-const COMPONENT_VIEWS: Record<string, ComponentType> = {
+// Implemented components render live in the panel. All take an optional
+// `variant` (currently only FlipCard uses it).
+const COMPONENT_VIEWS: Record<string, ComponentType<{ variant?: string }>> = {
   'flip-card': FlipCardDemo,
-  fonts: FontsView,
   'book-panel': BookPanelDemo,
 }
 
-/** Components presentation: a flat list of previews (no categories yet). */
+type Selection = { component: string; variant: string }
+
+/** Components presentation: one section per component, its variants below. */
 export default function ComponentsView() {
   const { lang, t } = useI18n()
-  const [activeId, setActiveId] = useState<string>(COMPONENTS[0]?.id ?? '')
-  const active = COMPONENTS.find((c) => c.id === activeId)
-  const View = active ? COMPONENT_VIEWS[active.id] : undefined
+  const [active, setActive] = useState<Selection>({
+    component: COMPONENTS[0]?.id ?? '',
+    variant: COMPONENTS[0]?.variants[0]?.id ?? '',
+  })
+
+  const comp = COMPONENTS.find((c) => c.id === active.component) ?? COMPONENTS[0]
+  const View = comp ? COMPONENT_VIEWS[comp.id] : undefined
 
   const sidebar = (
     <>
       {COMPONENTS.map((c) => (
-        <button
-          key={c.id}
-          type="button"
-          className={`navitem${c.id === activeId ? ' on' : ''}`}
-          onClick={() => setActiveId(c.id)}
-        >
-          <span className="dot" />
-          {c.title}
-        </button>
+        <Fragment key={c.id}>
+          <h2>{c.title}</h2>
+          {c.variants.map((v) => {
+            const on = c.id === active.component && v.id === active.variant
+            return (
+              <button
+                key={v.id}
+                type="button"
+                className={`navitem${on ? ' on' : ''}`}
+                onClick={() => setActive({ component: c.id, variant: v.id })}
+              >
+                <span className="dot" />
+                {v.name[lang]}
+              </button>
+            )
+          })}
+        </Fragment>
       ))}
     </>
   )
@@ -40,12 +53,12 @@ export default function ComponentsView() {
   return (
     <HomeShell panelClassName={View ? 'panel-preview' : ''} sidebar={sidebar}>
       {View ? (
-        <View />
-      ) : active ? (
+        <View key={`${comp?.id}:${active.variant}`} variant={active.variant} />
+      ) : comp ? (
         <div className="panel-inner">
           <div className="kind">{t('kind.component')}</div>
-          <h1>{active.title}</h1>
-          <p>{active.description[lang]}</p>
+          <h1>{comp.title}</h1>
+          <p>{comp.description[lang]}</p>
           <div className="panel-stage">{t('panel.preview')}</div>
         </div>
       ) : null}
