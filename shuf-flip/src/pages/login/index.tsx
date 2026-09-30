@@ -262,7 +262,7 @@ export default function Login() {
             <canvas ref={trailRef} className="login-trail" aria-hidden="true" />
             <input
               ref={usernameRef}
-              className="login-input"
+              className={`login-input${composing ? ' composing' : ''}`}
               type="text"
               autoComplete="username"
               autoCapitalize="none"
