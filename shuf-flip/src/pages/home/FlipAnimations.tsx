@@ -17,6 +17,7 @@ const VARIANTS: Variant[] = [
   { id: 'slow', label: 'Slow' },
   { id: 'bounce', label: 'Bounce' },
   { id: 'zoom', label: 'Flip + zoom' },
+  { id: 'swap', label: 'Flip + swap' },
   { id: 'cube-x', label: 'Cube X' },
 ]
 

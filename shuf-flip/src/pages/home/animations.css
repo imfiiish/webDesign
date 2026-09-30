@@ -162,13 +162,22 @@
   transform: translateY(-10px) scale(1.03);
 }
 
+/* Flip + zoom (Default): grow the card box by layout, so the faces are
+   rasterized at their final size — text stays crisp (no transform scale). */
 .fa-card.zoom {
   --fa-dur: 560ms;
-  transition-duration: 560ms;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 560ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .fa-card.zoom.flipped {
-  transform: scale(1.08);
+  width: 108%;
+}
+
+/* Flip + swap (Swap): the back face is natively larger; the flip swaps to it
+   at 90° (edge-on). No scaling — both faces render text 1:1. */
+.fa-card.swap .fa-back {
+  inset: -4%;
 }
 
 /* a cube needs the two faces pushed apart in Z */
