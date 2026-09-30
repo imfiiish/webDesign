@@ -1,0 +1,416 @@
+/* Creative › Sentence — the fill-in exercise. English prompt card on top, a
+   recessed tray holding the shuffled token bank and the blanks below it.
+   Shares the SentenceGame engine, so the keyboard/click behaviour is
+   unchanged. */
+
+/* ---- shared bits used by SentenceGame's Typer / GameFooter ---- */
+.sf-typer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sf-pending {
+  padding: 3px 7px;
+  border-radius: 7px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.1;
+  animation: sv-drop 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sf-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.sf-foot kbd {
+  font-size: 0.76rem;
+}
+
+.sf-order,
+.sf-score {
+  font-family: var(--font-mono);
+}
+
+.sf-score {
+  color: var(--text);
+}
+
+/* ---- board shell: English card + tray centred, hint pinned to the bottom ---- */
+.sv {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+  align-self: stretch;
+  margin-block: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 44px;
+}
+
+/* staggered entrance (the hidden input is skipped) */
+.sv > :not(.sf-typer) {
+  animation: sv-rise 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.sv > :nth-child(2) {
+  animation-delay: 30ms;
+}
+
+.sv > :nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.sv > :nth-child(4) {
+  animation-delay: 130ms;
+}
+
+.sv-caret {
+  width: 2px;
+  height: 1.4rem;
+  border-radius: 1px;
+  background: var(--accent);
+  animation: sv-blink 1s steps(1, end) infinite;
+}
+
+/* ---- prompt: a FlipCard-style paper card ---- */
+.sv-prompt {
+  position: relative;
+  width: 100%;
+  padding: 32px 30px 26px;
+  margin: 0;
+  border-radius: 20px;
+  background: linear-gradient(
+    180deg,
+    var(--card-active),
+    color-mix(in srgb, var(--card-active) 86%, var(--bg))
+  );
+  box-shadow: var(--card-shadow);
+  text-align: center;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: box-shadow 200ms ease;
+}
+
+/* hover deepens the paper's shadow, like a flip card */
+.sv-prompt:hover {
+  box-shadow: var(--card-shadow-hi);
+}
+
+.sv-tag {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sv-en {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px 6px;
+  font-family: var(--font-display);
+  font-size: 1.95rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* each English word is a small pressed-in block */
+.sv-en-word {
+  padding: 3px 10px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--bg) 32%, var(--card-active));
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.18),
+    inset 0 0 0 1px color-mix(in srgb, var(--border) 65%, transparent);
+  transition: color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.sv-en-word:hover {
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.24),
+    inset 0 0 0 1px var(--accent);
+}
+
+.sv-en-word.good {
+  color: var(--rate-g);
+  background: color-mix(in srgb, var(--rate-g) 12%, transparent);
+}
+
+.sv-en-word.flash {
+  animation: sv-flash-word 680ms ease;
+}
+
+/* ---- tray: word bank on top, blanks below, one recessed box ---- */
+.sv-board {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--bg) 58%, var(--card));
+  box-shadow: inset 0 3px 10px -4px rgba(0, 0, 0, 0.32),
+    inset 0 -1px 0 var(--border);
+}
+
+.sv-rack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.sv-chip {
+  display: flex;
+  flex-direction: column-reverse; /* pinyin on top, hanzi below */
+  align-items: center;
+  gap: 1px;
+  min-width: 56px;
+  padding: 9px 15px;
+  border: 0;
+  border-radius: 13px;
+  background: var(--card-active);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--row-hover-shadow);
+  transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 160ms ease, opacity 200ms ease, background 160ms ease;
+}
+
+.sv-chip:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: var(--card-shadow);
+}
+
+.sv-chip.hint {
+  background: color-mix(in srgb, var(--accent) 14%, var(--card-active));
+  box-shadow: 0 0 0 3px var(--accent-ring), var(--card-shadow);
+}
+
+.sv-chip.used {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.sv-chip-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.sv-chip-pinyin {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+}
+
+.sv-slots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border);
+}
+
+.sv-slot {
+  display: flex;
+}
+
+/* empty blank: an underline */
+.sv-hole {
+  width: 64px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  border: 0;
+  border-bottom: 2px solid var(--border);
+  background: transparent;
+  cursor: text;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.sv-hole.active {
+  border-bottom-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  border-radius: 8px 8px 0 0;
+  box-shadow: inset 0 0 0 1px var(--accent-ring),
+    0 8px 16px -14px var(--accent);
+  animation: sv-pop 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sv-slot.good .sv-hole {
+  border-bottom-color: var(--rate-g);
+}
+
+.sv-slot.flash .sv-hole {
+  animation: sv-flash-underline 680ms ease;
+}
+
+/* filled blank: a little bordered square */
+.sv-piece {
+  width: 60px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 9%, var(--card));
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  cursor: pointer;
+  animation: sv-drop 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease,
+    transform 160ms ease;
+}
+
+.sv-piece:hover {
+  border-color: var(--rate-r);
+  color: var(--rate-r);
+  background: color-mix(in srgb, var(--rate-r) 8%, var(--card));
+  transform: translateY(-2px);
+}
+
+.sv-slot.good .sv-piece {
+  color: var(--rate-g);
+  border-color: var(--rate-g);
+  background: color-mix(in srgb, var(--rate-g) 10%, var(--card));
+}
+
+.sv-pending {
+  font-size: 0.82rem;
+  padding: 3px 7px;
+}
+
+/* the hint sits at the panel bottom, outside the centred group */
+.sv .sf-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* ---- motion ---- */
+@keyframes sv-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sv-drop {
+  from {
+    transform: translateY(-10px) scale(0.94);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes sv-pop {
+  from {
+    transform: translateY(-3px) scale(1.05);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes sv-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sv-flash-word {
+  0%,
+  55% {
+    color: var(--rate-r);
+    background: color-mix(in srgb, var(--rate-r) 14%, transparent);
+  }
+}
+
+@keyframes sv-flash-underline {
+  0%,
+  55% {
+    border-bottom-color: var(--rate-r);
+    color: var(--rate-r);
+    background: color-mix(in srgb, var(--rate-r) 16%, transparent);
+  }
+}
+
+@media (max-width: 620px) {
+  .sv {
+    gap: 28px;
+  }
+
+  .sv-prompt {
+    padding: 26px 18px 20px;
+  }
+
+  .sv-en {
+    font-size: 1.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv > :not(.sf-typer) {
+    animation: none;
+  }
+
+  .sv-hole.active,
+  .sv-piece,
+  .sv-slot.flash .sv-hole {
+    animation-duration: 1ms;
+  }
+
+  .sv-caret {
+    animation: none;
+    opacity: 1;
+  }
+
+  .sv-chip {
+    transition: none;
+  }
+}

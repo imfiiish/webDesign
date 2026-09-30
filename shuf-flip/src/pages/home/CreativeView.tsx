@@ -2,12 +2,11 @@ import { useState } from 'react'
 import HomeShell from './HomeShell'
 import { useI18n } from '../../i18n'
 import FlipAnimations from './FlipAnimations'
-import SentenceFill from './SentenceFill'
+import SentenceBoard from './SentenceBoard'
 
 type Item = 'flip' | 'sentence'
 
-/** Creative presentation: same split as Page. Animations holds a live flip
- *  demo, Sentence a pinyin fill-in demo. */
+/** Creative presentation: a live flip demo and the sentence exercise. */
 export default function CreativeView() {
   const { t } = useI18n()
   const [active, setActive] = useState<Item>('flip')
@@ -37,7 +36,7 @@ export default function CreativeView() {
         </>
       }
     >
-      {active === 'flip' ? <FlipAnimations /> : <SentenceFill />}
+      {active === 'flip' ? <FlipAnimations /> : <SentenceBoard />}
     </HomeShell>
   )
 }
