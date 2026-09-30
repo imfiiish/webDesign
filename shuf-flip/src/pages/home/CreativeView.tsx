@@ -3,8 +3,9 @@ import HomeShell from './HomeShell'
 import { useI18n } from '../../i18n'
 import FlipAnimations from './FlipAnimations'
 import SentenceBoard from './SentenceBoard'
+import PromptAnimations from './PromptAnimations'
 
-type Item = 'flip' | 'sentence'
+type Item = 'flip' | 'sentence' | 'cardAnimations'
 
 /** Creative presentation: a live flip demo and the sentence exercise. */
 export default function CreativeView() {
@@ -33,10 +34,24 @@ export default function CreativeView() {
             <span className="dot" />
             {t('creative.sentence')}
           </button>
+          <button
+            type="button"
+            className={`navitem${active === 'cardAnimations' ? ' on' : ''}`}
+            onClick={() => setActive('cardAnimations')}
+          >
+            <span className="dot" />
+            {t('anim.promptCard')}
+          </button>
         </>
       }
     >
-      {active === 'flip' ? <FlipAnimations /> : <SentenceBoard />}
+      {active === 'flip' ? (
+        <FlipAnimations />
+      ) : active === 'sentence' ? (
+        <SentenceBoard />
+      ) : (
+        <PromptAnimations />
+      )}
     </HomeShell>
   )
 }

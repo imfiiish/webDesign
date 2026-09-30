@@ -1,0 +1,202 @@
+/* Creative › SentenceCard:animations — the same prompt card in several
+   hover/press motions, so one can be chosen for the Sentence board. */
+
+.pa {
+  width: 100%;
+  max-width: 900px;
+  margin-block: auto;
+}
+
+.pa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 34px 26px;
+  align-content: start;
+}
+
+.pa-item {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pa-label {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* ---- the shared card ---- */
+.pa-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 132px;
+  padding: 26px 18px;
+  border-radius: 18px;
+  background: linear-gradient(
+    180deg,
+    var(--card-active),
+    color-mix(in srgb, var(--card-active) 86%, var(--bg))
+  );
+  box-shadow: var(--card-shadow);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+  transform: translateY(0) scale(1) rotate(0deg);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms ease;
+}
+
+.pa-tag {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pa-text {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 6px;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.pa-word {
+  padding: 3px 9px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--bg) 32%, var(--card-active));
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.18),
+    inset 0 0 0 1px color-mix(in srgb, var(--border) 65%, transparent);
+}
+
+/* every card also gets the same press-back feel */
+.pa-grid .pa-card:active {
+  transform: scale(0.97);
+  transition-duration: 80ms;
+}
+
+/* 1 — shadow only (FlipCard-like) */
+.pa-shadow:hover {
+  box-shadow: var(--card-shadow-hi);
+}
+
+/* 2 — lift */
+.pa-lift:hover {
+  transform: translateY(-7px);
+  box-shadow: var(--card-shadow-hi);
+}
+
+/* 3 — zoom */
+.pa-zoom:hover {
+  transform: scale(1.06);
+  box-shadow: var(--card-shadow-hi);
+}
+
+/* 4 — lift + zoom */
+.pa-liftzoom:hover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: var(--card-shadow-hi);
+}
+
+/* 5 — 3D tilt */
+.pa-tilt {
+  transform: perspective(800px) rotateX(0deg) rotateY(0deg);
+}
+
+.pa-tilt:hover {
+  transform: perspective(800px) rotateX(8deg) rotateY(-10deg) translateY(-4px);
+  box-shadow: var(--card-shadow-hi);
+}
+
+/* 6 — light sheen sweep */
+.pa-sheen::after {
+  content: '';
+  position: absolute;
+  top: -25%;
+  bottom: -25%;
+  left: 0;
+  width: 42%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 22%, transparent) 45%,
+    transparent
+  );
+  transform: translateX(-160%) skewX(-12deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pa-sheen:hover {
+  box-shadow: var(--card-shadow-hi);
+}
+
+.pa-sheen:hover::after {
+  animation: pa-sheen 820ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 7 — accent glow ring */
+.pa-glow:hover {
+  box-shadow: 0 0 0 3px var(--accent-ring), var(--card-shadow-hi);
+}
+
+/* 8 — springy pop */
+.pa-spring:hover {
+  transform: scale(1.04);
+  box-shadow: var(--card-shadow-hi);
+  animation: pa-spring 520ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pa-sheen {
+  0% {
+    transform: translateX(-160%) skewX(-12deg);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(330%) skewX(-12deg);
+    opacity: 0;
+  }
+}
+
+@keyframes pa-spring {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pa-card {
+    transition: none;
+  }
+
+  .pa-sheen:hover::after,
+  .pa-spring:hover {
+    animation: none;
+  }
+}

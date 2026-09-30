@@ -64,9 +64,10 @@
   gap: 44px;
 }
 
-/* staggered entrance (the hidden input is skipped) */
+/* staggered entrance (the hidden input is skipped). `backwards` releases the
+   transform after the animation so the hover zoom below still works. */
 .sv > :not(.sf-typer) {
-  animation: sv-rise 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: sv-rise 480ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 .sv > :nth-child(2) {
@@ -107,12 +108,20 @@
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
-  transition: box-shadow 200ms ease;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms ease;
 }
 
-/* hover deepens the paper's shadow, like a flip card */
+/* hover: only the shadow deepens (FlipCard-like) */
 .sv-prompt:hover {
   box-shadow: var(--card-shadow-hi);
+}
+
+/* press: a quick push-down, then it springs back on release */
+.sv-prompt:active {
+  transform: scale(0.97);
+  box-shadow: var(--row-hover-shadow);
+  transition-duration: 80ms;
 }
 
 .sv-tag {
@@ -411,6 +420,10 @@
   }
 
   .sv-chip {
+    transition: none;
+  }
+
+  .sv-prompt {
     transition: none;
   }
 }
