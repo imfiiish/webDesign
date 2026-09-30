@@ -393,12 +393,6 @@
 }
 
 /* detail · specimen sheet */
-.fh-sheet {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-
 .fh-sheet-hero {
   font-size: clamp(3.5rem, 12vh, 7rem);
   line-height: 0.85;
@@ -512,13 +506,6 @@
 .fh-weight-sample {
   font-size: 1.7rem;
   line-height: 1.2;
-}
-
-.fh-weight-para {
-  margin: 0;
-  max-width: 66ch;
-  font-size: 1.02rem;
-  line-height: 1.8;
 }
 
 /* detail · full specimen (sheet + weights) */
