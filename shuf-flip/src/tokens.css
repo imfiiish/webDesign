@@ -108,9 +108,7 @@
   --danger-ring: rgba(230, 216, 191, 0.35);
   --on-danger: #201a11;
 
-  --rate-r: #9e5563;
-  --rate-r-ring: rgba(158, 85, 99, 0.45);
-  --rate-r-on: #2b0d12;
+  --rate-r-ring: rgba(107, 35, 48, 0.5);
   --rate-y: #b28a3a;
   --rate-y-solid: #b28a3a;
   --rate-y-ring: rgba(178, 138, 58, 0.45);

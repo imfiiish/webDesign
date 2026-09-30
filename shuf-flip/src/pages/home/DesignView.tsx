@@ -33,8 +33,8 @@ type ColorEntry = {
 
 // Rating trios (see tokens.css): a dark-friendly and a light-friendly set.
 const RATE_DARK = {
-  '--rate-r': '#9e5563',
-  '--rate-r-on': '#2b0d12',
+  '--rate-r': '#6b2330',
+  '--rate-r-on': '#fdf4f5',
   '--rate-y': '#b28a3a',
   '--rate-y-solid': '#b28a3a',
   '--rate-y-on': '#2e2100',
