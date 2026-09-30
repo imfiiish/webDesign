@@ -164,10 +164,11 @@
 }
 
 .sv-en-word.good {
-  color: var(--rate-g);
-  background: color-mix(in srgb, var(--rate-g) 12%, transparent);
+  color: var(--rate-g-on);
+  background: var(--rate-g);
 }
 
+/* a wrong word flashes a red background for a beat, then clears */
 .sv-en-word.flash {
   animation: sv-flash-word 680ms ease;
 }
@@ -290,7 +291,7 @@
 }
 
 .sv-slot.flash .sv-hole {
-  animation: sv-flash-underline 680ms ease;
+  animation: sv-flash-blank 680ms ease;
 }
 
 /* filled blank: a raised accent key with light text */
@@ -387,17 +388,16 @@
 @keyframes sv-flash-word {
   0%,
   55% {
-    color: var(--rate-r);
-    background: color-mix(in srgb, var(--rate-r) 14%, transparent);
+    color: var(--rate-r-on);
+    background: var(--rate-r);
   }
 }
 
-@keyframes sv-flash-underline {
+@keyframes sv-flash-blank {
   0%,
   55% {
-    border-bottom-color: var(--rate-r);
-    color: var(--rate-r);
-    background: color-mix(in srgb, var(--rate-r) 16%, transparent);
+    background: var(--rate-r);
+    box-shadow: 0 0 0 3px var(--rate-r-ring);
   }
 }
 
