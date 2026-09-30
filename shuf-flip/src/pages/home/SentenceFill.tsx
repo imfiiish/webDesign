@@ -76,21 +76,24 @@ export default function SentenceFill() {
   const bank = useMemo(() => bankOrder(entry.tokens.length, entry.order), [entry])
   const [slots, setSlots] = useState<Slot[]>(() => makeSlots(SENTENCES[0].tokens.length))
   const [active, setActive] = useState(0)
-  const [checked, setChecked] = useState(false)
+  const [results, setResults] = useState<boolean[] | null>(null)
+  const [flash, setFlash] = useState<boolean[]>([])
   const [pending, setPending] = useState('')
   const typer = useRef<HTMLInputElement>(null)
+  const flashTimer = useRef<number | undefined>(undefined)
 
-  const rightAt = (i: number) => slots[i]?.token === i
-  const isOpen = (k: number, arr: Slot[]) => !(checked && arr[k]?.token === k)
+  // Feedback is frozen at each submit; editing does not repaint it.
+  const done = (i: number) => results?.[i] === true
+  const failed = (i: number) => results?.[i] === false
 
-  /** Next blank to move to; `wrap` also searches past the end. */
-  const nextOpen = (from: number, arr: Slot[], wrap: boolean): number => {
-    const n = arr.length
+  /** Next blank to move to that is not locked correct; `wrap` searches past the end. */
+  const nextOpen = (from: number, wrap: boolean): number => {
+    const n = entry.tokens.length
     for (let s = 1; s <= n; s++) {
       const k = from + s
       if (!wrap && k >= n) break
       const idx = k % n
-      if (isOpen(idx, arr)) return idx
+      if (!done(idx)) return idx
     }
     return from
   }
@@ -110,8 +113,20 @@ export default function SentenceFill() {
     return () => window.removeEventListener('mousedown', onDown)
   }, [])
 
+  useEffect(() => () => window.clearTimeout(flashTimer.current), [])
+
+  /** Move to the next empty blank, wrapping; stay put if all are filled. */
+  const nextEmpty = (from: number, arr: Slot[]): number => {
+    const n = arr.length
+    for (let s = 1; s <= n; s++) {
+      const k = (from + s) % n
+      if (arr[k].token === null) return k
+    }
+    return from
+  }
+
   const settle = (arr: Slot[], from: number) => {
-    setActive(nextOpen(from, arr, false))
+    setActive(nextEmpty(from, arr))
   }
 
   const nextSentence = () => {
@@ -119,7 +134,8 @@ export default function SentenceFill() {
     setRound(r)
     setSlots(makeSlots(SENTENCES[r].tokens.length))
     setActive(0)
-    setChecked(false)
+    setResults(null)
+    setFlash([])
     setPending('')
   }
 
@@ -138,41 +154,78 @@ export default function SentenceFill() {
     typer.current?.focus()
   }
 
-  /** Typed letters: keep them visible ("selected") until they match a token. */
+  /** Typed letters fill a buffer. A unique, *complete* pinyin places at once;
+   *  partial or ambiguous input waits for Space / Enter. */
   const type = (value: string) => {
     if (value === '') {
       setPending('')
       return
     }
-    // typing over a filled blank replaces its word
-    const base =
-      slots[active]?.token !== null
-        ? slots.map((s, k) => (k === active ? { token: null } : s))
-        : slots
-    const used = new Set(base.map((s) => s.token))
-    let found: number | null = null
+    // typing over a filled blank clears it first
+    if (slots[active]?.token !== null) {
+      setSlots((prev) => prev.map((s, k) => (k === active ? { token: null } : s)))
+    }
+    const v = toneless(value)
+    const used = new Set(slots.map((s) => s.token))
+    let exact: number | null = null
+    let candidates = 0
     for (let j = 0; j < entry.tokens.length; j++) {
       if (used.has(j)) continue
-      const token = entry.tokens[j]
-      if (value === token.text || toneless(value) === toneless(token.pinyin)) {
-        found = j
-        break
-      }
+      const p = toneless(entry.tokens[j].pinyin)
+      if (p === v) exact = j
+      if (p.startsWith(v)) candidates++
     }
-    if (found === null) {
-      if (base !== slots) setSlots(base)
-      setPending(value)
+    if (exact !== null && candidates === 1) {
+      const next = slots.map((s, k) => (k === active ? { token: exact } : s))
+      setSlots(next)
+      setPending('')
+      setActive(nextEmpty(active, next))
       return
     }
-    const j = found
-    const next = base.map((s, k) => (k === active ? { token: j } : s))
+    setPending(value)
+  }
+
+  /** Resolve the buffer: exact pinyin first, else a unique prefix. */
+  const resolve = (value: string): number | null => {
+    const v = toneless(value)
+    if (v === '') return null
+    const used = new Set(slots.map((s) => s.token))
+    for (let j = 0; j < entry.tokens.length; j++) {
+      if (!used.has(j) && toneless(entry.tokens[j].pinyin) === v) return j
+    }
+    const candidates: number[] = []
+    for (let j = 0; j < entry.tokens.length; j++) {
+      if (!used.has(j) && toneless(entry.tokens[j].pinyin).startsWith(v)) {
+        candidates.push(j)
+      }
+    }
+    return candidates.length === 1 ? candidates[0] : null
+  }
+
+  /** Commit the buffer into the active blank; `advance` moves on afterwards. */
+  const commit = (advance: boolean) => {
+    if (pending === '') {
+      if (advance) setActive(nextOpen(active, true))
+      return
+    }
+    const j = resolve(pending)
+    if (j === null) return
+    const next = slots.map((s, k) => (k === active ? { token: j } : s))
     setSlots(next)
     setPending('')
-    settle(next, active)
+    if (advance) setActive(nextEmpty(active, next))
+  }
+
+  /** Previous blank that is not already locked correct; stops at the start. */
+  const prevEditable = (from: number): number => {
+    for (let k = from - 1; k >= 0; k--) {
+      if (!done(k)) return k
+    }
+    return from
   }
 
   const remove = (i: number) => {
-    if (checked && rightAt(i)) return
+    if (done(i)) return
     setSlots((prev) => prev.map((s, k) => (k === i ? { token: null } : s)))
     setActive(i)
     setPending('')
@@ -188,46 +241,55 @@ export default function SentenceFill() {
   /** Enter. First time: mark, then empty the wrong blanks and jump to the first
    *  one. Again when everything is right: go to the next sentence. */
   const submit = () => {
-    const wrong = slots
-      .map((s, i) => (s.token === i ? -1 : i))
-      .filter((i) => i !== -1)
-    if (checked && wrong.length === 0) {
+    const fresh = slots.map((s, i) => s.token === i)
+    if (results && fresh.every(Boolean)) {
       nextSentence()
       return
     }
-    setChecked(true)
+    setResults(fresh)
     setPending('')
+    const wrong = fresh.map((ok, i) => (ok ? -1 : i)).filter((i) => i !== -1)
     if (wrong.length > 0) {
       setSlots(slots.map((s, i) => (wrong.includes(i) ? { token: null } : s)))
       setActive(wrong[0])
     }
+    // wrong blanks flash red once, then settle back to normal
+    setFlash(fresh.map((ok) => !ok))
+    window.clearTimeout(flashTimer.current)
+    flashTimer.current = window.setTimeout(() => setFlash([]), 680)
   }
 
   const onKey = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === ' ' || e.key === 'Tab') {
-      // Space and Tab both walk to the next blank (wrapping).
+      // Space / Tab commit the buffer (or just move on when it is empty).
       e.preventDefault()
-      setPending('')
-      setActive(nextOpen(active, slots, true))
+      commit(true)
       return
     }
     if (e.key === 'Enter') {
       e.preventDefault()
-      submit()
+      // With letters pending, Enter commits them; otherwise it submits.
+      if (pending !== '') commit(false)
+      else submit()
       return
     }
     if (e.key === 'Backspace' && pending === '') {
-      // Empty buffer: back a blank; if that blank is filled, remove its word.
+      // Empty buffer: remove this word if it has one, else step back to the
+      // previous editable blank (skipping ones already locked correct).
       e.preventDefault()
       const canRemove =
-        slots[active]?.token !== null && !(checked && rightAt(active))
-      if (canRemove) remove(active)
-      else if (active > 0) setActive(active - 1)
+        slots[active]?.token !== null && !done(active)
+      if (canRemove) {
+        remove(active)
+      } else {
+        const prev = prevEditable(active)
+        if (prev !== active) setActive(prev)
+      }
     }
     // Backspace with text pending falls through: the input drops a letter.
   }
 
-  const score = entry.tokens.filter((_, i) => rightAt(i)).length
+  const score = results ? results.filter(Boolean).length : 0
   const typed = toneless(pending)
 
   return (
@@ -247,20 +309,19 @@ export default function SentenceFill() {
         aria-label="type pinyin"
       />
 
-      {/* top: the whole English sentence (the prompt) */}
-      <p className="sf-translation">
+      {/* top: the whole English sentence as clickable word cards */}
+      <div className="sf-translation" role="button" tabIndex={-1}>
         {words.map((word, i) => {
-          const good = word.owners.length > 0 && word.owners.every(rightAt)
-          const bad = word.owners.length > 0 && word.owners.some((ti) => !rightAt(ti))
-          const state = checked ? (bad ? ' bad' : good ? ' good' : '') : ''
+          const good = word.owners.length > 0 && word.owners.every(done)
+          const bad = word.owners.length > 0 && word.owners.some(failed)
+          const state = good ? ' good' : bad && flash.length > 0 ? ' flash' : ''
           return (
             <span key={i} className={`sf-word${state}`}>
               {word.text}
-              {i < words.length - 1 ? ' ' : ''}
             </span>
           )
         })}
-      </p>
+      </div>
 
       {/* middle: the shuffled word bank */}
       <div className="sf-bank">
@@ -288,7 +349,7 @@ export default function SentenceFill() {
         {entry.tokens.map((_, i) => {
           const slot = slots[i]
           const filled = slot.token !== null ? entry.tokens[slot.token as number] : null
-          const state = checked ? (rightAt(i) ? ' good' : ' bad') : ''
+          const state = done(i) ? ' good' : flash[i] ? ' flash' : ''
           const here = i === active && pending !== '' && slot.token === null
           const isActive = i === active
           return (
@@ -324,7 +385,7 @@ export default function SentenceFill() {
 
       <footer className="sf-foot">
         <span className="sf-order">#{entry.order}</span>
-        {checked ? (
+        {results ? (
           <>
             <span className="sf-score">
               {score} / {entry.tokens.length}
@@ -343,7 +404,7 @@ export default function SentenceFill() {
           <>
             <span className="sf-howto">{t('sentence.howto')}</span>
             <span>
-              <kbd>Space</kbd>/<kbd>Tab</kbd> {t('sentence.nextBlank')}
+              <kbd>Space</kbd>/<kbd>Tab</kbd> {t('sentence.place')}
             </span>
             <span>
               <kbd>Enter</kbd> {t('sentence.submit')}

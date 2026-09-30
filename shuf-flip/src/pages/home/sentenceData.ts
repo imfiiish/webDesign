@@ -1,8 +1,9 @@
 // Sentence-fill demo data.
 // Fields mirror hsk1_sentences.json exactly (order / word / pinyin / pos /
 // sentence / translation / tokens / grammar / deps / note). Entries 212 and
-// 280 are embedded verbatim as the template for Creative › Sentence, and the
-// array order is the loop order (212 → 280 → 212 …).
+// 147 are embedded verbatim as the template for Creative › Sentence, and the
+// array order is the loop order (212 → 147 → 212 …). 147 is here because 一
+// (yī) is a prefix of 衣服 (yīfu), which exercises pinyin-overlap matching.
 
 export type SentenceToken = {
   /** 中文词 (text) */
@@ -74,34 +75,35 @@ const S212: SentenceEntry = {
   note: null,
 }
 
-const S280: SentenceEntry = {
-  order: 280,
-  word: '怎么',
-  pinyin: 'zěnme',
-  pos: 'pron',
-  sentence: '你怎么去学校？',
-  translation: 'How do you go to school?',
+const S147: SentenceEntry = {
+  order: 147,
+  word: '件',
+  pinyin: 'jiàn',
+  pos: 'measure',
+  sentence: '这是一件衣服。',
+  translation: 'This is a piece of clothing.',
   tokens: [
-    { text: '你', pinyin: 'nǐ', en: 'you', base: 'you', role: 'subject' },
+    { text: '这', pinyin: 'zhè', en: 'this', base: 'this', role: 'subject' },
+    { text: '是', pinyin: 'shì', en: 'is', base: 'to be', role: 'predicate' },
+    { text: '一', pinyin: 'yī', en: 'a', base: 'one', role: 'numeral' },
     {
-      text: '怎么',
-      pinyin: 'zěnme',
-      en: 'how',
-      base: 'how',
-      role: 'adverbial',
+      text: '件',
+      pinyin: 'jiàn',
+      en: '(mw.)',
+      base: '(mw. for clothes/matters)',
+      role: 'measure',
     },
-    { text: '去', pinyin: 'qù', en: 'go', base: 'to go', role: 'predicate' },
     {
-      text: '学校',
-      pinyin: 'xuéxiào',
-      en: 'to school',
-      base: 'school',
+      text: '衣服',
+      pinyin: 'yīfu',
+      en: 'piece of clothing',
+      base: 'clothes',
       role: 'object',
     },
   ],
-  grammar: ['特指疑问句'],
-  deps: ['你', '学校', '去'],
+  grammar: ['量词“件”', '数量短语'],
+  deps: ['是', '这', '一', '衣服'],
   note: null,
 }
 
-export const SENTENCES: SentenceEntry[] = [S212, S280]
+export const SENTENCES: SentenceEntry[] = [S212, S147]
