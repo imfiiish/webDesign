@@ -14,10 +14,15 @@ function slotOf(p: number, center: number, n: number): Slot {
   return d
 }
 
+type Reveal = 'default' | 'swap'
+
 type FlipDeckProps = {
   deck: CardData[]
   center: number
   revealed?: boolean
+  /** How the center card grows on reveal. 'default' animates the width; 'swap'
+   *  flips to a natively larger back face. */
+  reveal?: Reveal
   centerNotice?: string | null
   revealCounts?: Record<string, number>
   scale: number
@@ -31,6 +36,7 @@ export default function FlipDeck({
   deck,
   center,
   revealed = false,
+  reveal = 'default',
   centerNotice = null,
   revealCounts = {},
   scale,
@@ -85,7 +91,7 @@ export default function FlipDeck({
       style={{ '--stage-scale': scale } as CSSProperties}
     >
       <div
-        className="cards"
+        className={`cards${reveal === 'swap' ? ' cards--swap' : ''}`}
         onMouseMove={onCardsMouseMove}
         onMouseLeave={onCardsMouseLeave}
       >

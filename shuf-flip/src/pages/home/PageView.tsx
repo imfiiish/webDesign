@@ -8,8 +8,9 @@ import Shelf from '../shelf'
 import Flip from '../flip'
 import Rating from '../rating'
 
-// Implemented pages render live in the panel.
-const PAGE_VIEWS: Record<string, ComponentType> = {
+// Implemented pages render live in the panel. All take an optional `variant`
+// (currently only Flip uses it) — pages ignore it when they have no variants.
+const PAGE_VIEWS: Record<string, ComponentType<{ variant?: string }>> = {
   login: Login,
   shelf: Shelf,
   flip: Flip,
@@ -56,7 +57,7 @@ export default function PageView() {
   return (
     <HomeShell panelClassName={View ? 'panel-preview' : ''} sidebar={sidebar}>
       {View ? (
-        <View />
+        <View key={`${page?.id}:${active.variant}`} variant={active.variant} />
       ) : page ? (
         <div className="panel-inner">
           <div className="kind">{t('kind.page')}</div>

@@ -9,9 +9,11 @@ import { shuffled } from '../../utils'
 import { WORDS } from './data'
 import './flip.css'
 
+type FlipProps = { variant?: string }
+
 /** The Flip page: a ring of cards you shuffle, reveal and flip through.
  *  Appearance + local interaction only (no audio, no progress, no sync). */
-export default function Flip() {
+export default function Flip({ variant }: FlipProps) {
   const { t } = useI18n()
 
   const [deck, setDeck] = useState<CardData[]>(WORDS)
@@ -115,6 +117,7 @@ export default function Flip() {
           deck={deck}
           center={center}
           revealed={revealed}
+          reveal={variant === 'swap' ? 'swap' : 'default'}
           centerNotice={copied ? t('common.copied') : null}
           revealCounts={revealCounts}
           scale={scale}

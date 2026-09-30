@@ -11,8 +11,11 @@
   transform-origin: center;
   perspective: 1200px;
   will-change: transform, opacity;
+  /* width is animated too: the center card grows by layout, not by transform
+     scale, so the faces are rasterized at their final size (B2) */
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 380ms ease;
+    opacity 380ms ease,
+    width 460ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .card-flip {
@@ -23,9 +26,11 @@
   transition: transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* flip + zoom: the reveal also scales the card up, like the Creative motion */
+/* The reveal flips to the back. The zoom is faked on the center card below by
+   animating its layout width (B2), so the faces are rasterized at their final
+   size instead of being stretched — which is what made the text blurry. */
 .card-flip.flipped {
-  transform: rotateY(180deg) scale(1.08);
+  transform: rotateY(180deg);
 }
 
 .face {
@@ -54,8 +59,33 @@
   transform: translate(-50%, -50%);
   opacity: 1;
   z-index: 3;
+  width: 540px;
   --face-bg: var(--card-active);
   --face-shadow: var(--card-shadow);
+}
+
+/* grow the card on reveal by animating layout width (540 → 582 ≈ 1.08×), with
+   no transform scale on the 3D layer — the back renders natively at 582. */
+.pos-0:has(.card-flip.flipped) {
+  width: 582px;
+}
+
+/* Swap reveal (Flip variant): the back face is natively larger (582 ≈ 540 ×
+   1.08) and the flip is a pure rotateY, so at 90° (edge-on) the card swaps to
+   the bigger back. Neither face is scaled, so text is always rendered 1:1.
+   The card box keeps the front size, so the ring layout is unchanged. */
+.cards--swap .face.back {
+  inset: auto;
+  left: 50%;
+  top: 50%;
+  width: 582px;
+  height: 388px;
+  margin: -194px 0 0 -291px;
+}
+
+/* in swap mode the box does not grow — the bigger back face is the zoom */
+.cards--swap .pos-0:has(.card-flip.flipped) {
+  width: 540px;
 }
 
 /* right neighbor: 75% scale, 4/5 showing */
