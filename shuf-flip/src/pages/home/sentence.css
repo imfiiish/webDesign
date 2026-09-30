@@ -1,0 +1,291 @@
+/* Creative › Sentence — a grammar exercise: full English sentence on top, a
+   shuffled token bank, then fixed blanks. Type anywhere; the letters show as a
+   highlighted "selection" in the active blank until they match a token. */
+
+.sf {
+  width: 100%;
+  max-width: 720px;
+  margin-block: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 34px;
+  padding: 24px 0;
+}
+
+/* invisible input that captures every keystroke */
+.sf-typer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- top: the whole English sentence ---- */
+.sf-translation {
+  margin: 0;
+  max-width: 560px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.45;
+}
+
+.sf-word {
+  transition: color 200ms ease;
+}
+
+.sf-word.good {
+  color: var(--rate-g);
+  font-weight: 600;
+}
+
+.sf-word.bad {
+  color: var(--rate-r);
+  font-weight: 600;
+}
+
+/* ---- middle: the token bank ---- */
+.sf-bank {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  max-width: 560px;
+}
+
+.sf-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 54px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease,
+    box-shadow 160ms ease, opacity 200ms ease;
+}
+
+.sf-chip:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: var(--row-hover-shadow);
+}
+
+.sf-chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+/* the token the typed letters are heading towards */
+.sf-chip.hint {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--card));
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.sf-chip.used {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.sf-chip-text {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.sf-chip-pinyin {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--muted);
+}
+
+/* ---- bottom: the fixed blanks ---- */
+.sf-blanks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 18px;
+}
+
+.sf-slot {
+  display: flex;
+}
+
+/* empty blank: a fixed underline */
+.sf-blank {
+  width: 64px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border-bottom: 2px solid var(--border);
+  cursor: text;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+/* the blank you are on: clearly lit up, with a blinking caret */
+.sf-blank.active {
+  border-bottom-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  border-radius: 8px 8px 0 0;
+  box-shadow: inset 0 0 0 1px var(--accent-ring),
+    0 8px 16px -14px var(--accent);
+  animation: sf-pop 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sf-caret {
+  width: 2px;
+  height: 1.4em;
+  border-radius: 1px;
+  background: var(--accent);
+  animation: sf-caret 1s steps(1, end) infinite;
+}
+
+/* the letters being typed, shown like selected text */
+.sf-pending {
+  padding: 3px 7px;
+  border-radius: 7px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.1;
+  animation: sf-drop 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* filled blank: a little square you can click to remove */
+.sf-square {
+  width: 60px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 9%, var(--card));
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease,
+    transform 160ms ease;
+  animation: sf-drop 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sf-square:hover {
+  border-color: var(--rate-r);
+  color: var(--rate-r);
+  background: color-mix(in srgb, var(--rate-r) 8%, var(--card));
+  transform: translateY(-2px);
+}
+
+/* the filled square the cursor is on (e.g. after Backspace) */
+.sf-slot.active .sf-square {
+  box-shadow: 0 0 0 3px var(--accent-ring), 0 8px 16px -14px var(--accent);
+  animation: sf-pop 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---- marked up after submit ---- */
+.sf-slot.good .sf-square {
+  color: var(--rate-g);
+  border-color: var(--rate-g);
+  background: color-mix(in srgb, var(--rate-g) 10%, var(--card));
+}
+
+.sf-slot.bad .sf-square {
+  color: var(--rate-r);
+  border-color: var(--rate-r);
+  background: color-mix(in srgb, var(--rate-r) 10%, var(--card));
+}
+
+/* wrong blanks were emptied, so show a red underline */
+.sf-slot.bad .sf-blank {
+  border-bottom-color: var(--rate-r);
+}
+
+/* ---- bottom hints ---- */
+.sf-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.sf-foot kbd {
+  font-size: 0.76rem;
+}
+
+.sf-order,
+.sf-score {
+  font-family: var(--font-mono);
+}
+
+.sf-score {
+  color: var(--text);
+}
+
+@keyframes sf-drop {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes sf-pop {
+  from {
+    transform: translateY(-3px) scale(1.06);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes sf-caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-pending,
+  .sf-square,
+  .sf-blank.active {
+    animation-duration: 1ms;
+  }
+
+  .sf-caret {
+    animation: none;
+    opacity: 1;
+  }
+
+  .sf-chip,
+  .sf-square {
+    transition: none;
+  }
+}

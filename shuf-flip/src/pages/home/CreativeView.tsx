@@ -2,11 +2,12 @@ import { useState } from 'react'
 import HomeShell from './HomeShell'
 import { useI18n } from '../../i18n'
 import FlipAnimations from './FlipAnimations'
+import SentenceFill from './SentenceFill'
 
-type Item = 'flip'
+type Item = 'flip' | 'sentence'
 
 /** Creative presentation: same split as Page. Animations holds a live flip
- *  demo. */
+ *  demo, Sentence a pinyin fill-in demo. */
 export default function CreativeView() {
   const { t } = useI18n()
   const [active, setActive] = useState<Item>('flip')
@@ -25,10 +26,18 @@ export default function CreativeView() {
             <span className="dot" />
             {t('anim.flip')}
           </button>
+          <button
+            type="button"
+            className={`navitem${active === 'sentence' ? ' on' : ''}`}
+            onClick={() => setActive('sentence')}
+          >
+            <span className="dot" />
+            {t('creative.sentence')}
+          </button>
         </>
       }
     >
-      {active === 'flip' ? <FlipAnimations /> : null}
+      {active === 'flip' ? <FlipAnimations /> : <SentenceFill />}
     </HomeShell>
   )
 }
