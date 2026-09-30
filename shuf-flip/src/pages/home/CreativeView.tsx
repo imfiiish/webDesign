@@ -16,7 +16,7 @@ export default function CreativeView() {
       panelClassName="panel-top"
       sidebar={
         <>
-          <h2>{t('design.animations')}</h2>
+          <h2>{t('design.misc')}</h2>
           <button
             type="button"
             className={`navitem${active === 'flip' ? ' on' : ''}`}
