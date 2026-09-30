@@ -110,7 +110,7 @@ export default function SentenceBoard() {
             const active = i === g.active
             const here = active && g.pending !== ''
             return (
-              <div className={`sv-slot${state}`} key={i}>
+              <div className={`sv-slot${state}${active ? ' active' : ''}`} key={i}>
                 {filled ? (
                   <button
                     type="button"
@@ -122,7 +122,7 @@ export default function SentenceBoard() {
                 ) : (
                   <button
                     type="button"
-                    className={`sv-hole${active ? ' active' : ''}`}
+                    className="sv-hole"
                     onClick={() => g.selectBlank(i)}
                   >
                     {here ? (

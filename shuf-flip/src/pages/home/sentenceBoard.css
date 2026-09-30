@@ -269,12 +269,18 @@
   transition: box-shadow 170ms ease, background 170ms ease;
 }
 
-.sv-hole.active {
+.sv-slot.active .sv-hole {
   background: color-mix(in srgb, var(--accent) 8%, var(--bg));
   box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.16),
     inset -3px -3px 6px color-mix(in srgb, var(--card-active) 85%, transparent),
     inset 0 0 0 1.5px var(--accent);
   animation: sv-pop 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* a filled blank can be the active one too (e.g. after Backspace): ring it */
+.sv-slot.active .sv-piece {
+  box-shadow: 0 0 0 2px var(--card-active), 0 0 0 4px var(--accent),
+    var(--row-hover-shadow);
 }
 
 .sv-slot.good .sv-hole {
@@ -287,7 +293,7 @@
   animation: sv-flash-underline 680ms ease;
 }
 
-/* filled blank: a raised paper key */
+/* filled blank: a raised accent key with light text */
 .sv-piece {
   width: 60px;
   min-height: 42px;
@@ -297,25 +303,28 @@
   padding: 0 4px;
   border: 0;
   border-radius: 12px;
-  background: var(--card-active);
-  color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
   font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 600;
   cursor: pointer;
   box-shadow: var(--row-hover-shadow);
   animation: sv-drop 220ms cubic-bezier(0.22, 1, 0.36, 1);
-  transition: transform 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  transition: transform 160ms ease, color 160ms ease, background 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .sv-piece:hover {
-  color: var(--rate-r);
+  background: var(--rate-r);
+  color: var(--rate-r-on);
   transform: translateY(-2px);
   box-shadow: var(--card-shadow);
 }
 
 .sv-slot.good .sv-piece {
-  color: var(--rate-g);
+  background: var(--rate-g);
+  color: var(--rate-g-on);
   box-shadow: 0 0 0 1.5px var(--rate-g), var(--row-hover-shadow);
 }
 
