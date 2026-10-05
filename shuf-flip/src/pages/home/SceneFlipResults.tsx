@@ -11,6 +11,16 @@ import { WORDS } from '../flip/data'
 import FlipResults, { type ResultsStats, type ResultsWord } from './FlipResults'
 import '../flip/flip.css'
 
+/** Reveal counts that auto-open the summary (distinct words revealed). */
+const MILESTONES = [5, 20]
+
+/** Stable new/review tag (no history here, so derive it from the word). */
+function kindOf(word: string): 'new' | 'review' {
+  let h = 0
+  for (let i = 0; i < word.length; i++) h = (h * 31 + word.charCodeAt(i)) >>> 0
+  return h % 100 < 62 ? 'new' : 'review'
+}
+
 /** Scene: the Flip page plus a full-screen round summary. Data is demo —
  *  centered = exposure (once per round), revealed = review (repeat counts). */
 export default function SceneFlipResults() {
@@ -23,6 +33,8 @@ export default function SceneFlipResults() {
   const [revealCounts, setRevealCounts] = useState<Record<string, number>>({})
   const [stageKey, setStageKey] = useState(0)
   const [stats, setStats] = useState<ResultsStats | null>(null)
+  // milestones already consumed by opening the summary
+  const [shownMilestones, setShownMilestones] = useState<number[]>([])
 
   // words that reached the centre this round (exposure, once each)
   const centeredRef = useRef<Set<string>>(new Set())
@@ -32,6 +44,10 @@ export default function SceneFlipResults() {
   const TOTAL = deck.length
   const centerName = deck[center]?.word ?? null
   const showResults = stats !== null
+  const revealedCount = Object.keys(revealCounts).length
+  const nextMilestone = MILESTONES.find((m) => !shownMilestones.includes(m))
+  const canFinish =
+    nextMilestone !== undefined && revealedCount >= nextMilestone
 
   // record exposure as the centre moves
   useEffect(() => {
@@ -64,56 +80,56 @@ export default function SceneFlipResults() {
     if (centerName) copy(centerName)
   }, [centerName, copy])
 
-  // build a plausible summary from the round (real words, demo numbers)
-  const makeStats = useCallback((): ResultsStats => {
-    const map = new Map<string, ResultsWord>()
-    const add = (word: string, count: number) => {
-      if (!word || map.has(word)) return
-      map.set(word, {
-        word,
-        count,
-        kind: Math.random() < 0.58 ? 'new' : 'review',
-      })
-    }
-    // words that reached the centre = encountered (exposure; count 0 = seen only)
-    for (const word of centeredRef.current) add(word, revealCounts[word] ?? 0)
-    // revealed words, in case any were missed
-    for (const [word, count] of Object.entries(revealCounts)) add(word, count)
-    // pad the rail so it does not look empty
-    const pool = WORDS.map((w) => w.word)
-    while (map.size < 12) {
-      const word = pool[Math.floor(Math.random() * pool.length)]
-      const count = Math.random() < 0.7 ? 1 + Math.floor(Math.random() * 3) : 0
-      add(word, count)
-    }
-
-    const words = [...map.values()].slice(0, 16)
-    const studied = words.filter((w) => w.count > 0).length
-    const newWords = words.filter((w) => w.count > 0 && w.kind === 'new').length
+  // real summary from the session — only revealed words count as learned
+  const computeStats = useCallback((): ResultsStats => {
+    const words: ResultsWord[] = Object.entries(revealCounts).map(
+      ([word, count]) => ({ word, count, kind: kindOf(word) }),
+    )
+    const revealed = new Set(words.map((w) => w.word))
+    const studied = words.length
+    const newWords = words.filter((w) => w.kind === 'new').length
     const reviewWords = studied - newWords
-    const exposed = words.filter((w) => w.count === 0).length
     const reveals = words.reduce((n, w) => n + w.count, 0)
+    // exposed = reached the centre but never revealed
+    let exposed = 0
+    for (const word of centeredRef.current) if (!revealed.has(word)) exposed += 1
     return { studied, newWords, reviewWords, exposed, reveals, words }
   }, [revealCounts])
 
-  // finish the round -> full-screen summary
-  const finishRound = useCallback(() => {
-    if (showResults) return
-    setRevealed(false)
-    setStats(makeStats())
-  }, [showResults, makeStats])
-
-  // continue -> reshuffle a fresh round
-  const continueRound = useCallback(() => {
+  // Enter opens the summary, but only once the reveal count has reached the
+  // next milestone (5, then 20)
+  // a fresh shuffle; the session (and milestone counts) carry on
+  const newRound = useCallback(() => {
     setDeck(shuffled(WORDS))
     setCenter(0)
     setRevealed(false)
-    setRevealCounts({})
     setStageKey((k) => k + 1)
     clearCopy()
-    centeredRef.current.clear()
-    setStats(null)
   }, [clearCopy])
+
+  // Enter / action: before the first milestone it starts a new round; once the
+  // next milestone is reached it opens the summary.
+  const finishRound = useCallback(() => {
+    if (showResults) return
+    const revealed = Object.keys(revealCounts).length
+    const next = MILESTONES.find((m) => !shownMilestones.includes(m))
+    if (next !== undefined && revealed < next) {
+      newRound()
+      return
+    }
+    setShownMilestones((prev) => {
+      const set = new Set(prev)
+      for (const m of MILESTONES) if (revealed >= m) set.add(m)
+      return [...set]
+    })
+    setRevealed(false)
+    setStats(computeStats())
+  }, [showResults, revealCounts, shownMilestones, computeStats, newRound])
+
+  const continueRound = useCallback(() => {
+    newRound()
+    setStats(null)
+  }, [newRound])
 
   const stopSession = useCallback(() => navigate('/'), [navigate])
 
@@ -171,7 +187,7 @@ export default function SceneFlipResults() {
   )
 
   return (
-    <div className="flip">
+    <div className="flip scene-results">
       <BackButton />
 
       <div className="deck-stage" ref={stageRef}>
@@ -218,6 +234,12 @@ export default function SceneFlipResults() {
           <kbd>Enter</kbd> {t('flip.next')}
         </span>
       </div>
+
+      {canFinish && !showResults && (
+        <button type="button" className="flip-finish" onClick={finishRound}>
+          {t('results.break')}
+        </button>
+      )}
 
       {stats && (
         <FlipResults

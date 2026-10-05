@@ -37,13 +37,10 @@ export default function FlipResults({ stats, onContinue, onStop }: Props) {
         <h2 className="results-side-title">{t('results.encountered')}</h2>
         <ul className="results-wordlist">
           {words.map((w) => (
-            <li
-              key={w.word}
-              className={`rw ${w.count > 0 ? w.kind : 'seen'}`}
-            >
+            <li key={w.word} className={`rw ${w.kind}`}>
               <span className="rw-dot" aria-hidden="true" />
               <span className="rw-word">{w.word}</span>
-              {w.count > 0 && <span className="rw-count">×{w.count}</span>}
+              <span className="rw-count">×{w.count}</span>
             </li>
           ))}
         </ul>
