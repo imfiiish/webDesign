@@ -9,6 +9,8 @@ type Props = {
   className?: string
   /** Set false to ignore Esc (e.g. while renaming). */
   closeOnEscape?: boolean
+  /** Play the exit animation (caller keeps it mounted until it finishes). */
+  closing?: boolean
   children: ReactNode
 }
 
@@ -18,6 +20,7 @@ export default function Modal({
   ariaLabel,
   className = '',
   closeOnEscape = true,
+  closing = false,
   children,
 }: Props) {
   const { t } = useI18n()
@@ -32,9 +35,11 @@ export default function Modal({
   }, [closeOnEscape, onClose])
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className={`modal-backdrop${closing ? ' closing' : ''}`} onClick={onClose}>
       <div
-        className={`modal${className ? ` ${className}` : ''}`}
+        className={`modal${className ? ` ${className}` : ''}${
+          closing ? ' closing' : ''
+        }`}
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}

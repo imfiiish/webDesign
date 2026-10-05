@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { COMPONENTS, PAGES } from '../../catalog'
+import { COMPONENTS, PAGES, SCENES } from '../../catalog'
 import { useI18n } from '../../i18n'
 
 /** Overview: the catalog as a bento board — pages big, components filling in. */
@@ -29,6 +29,15 @@ export default function OverviewView() {
             </article>
           )
         })}
+        {SCENES.map((e) => (
+          <article className="tile" key={e.id}>
+            <span className="kind">{t('kind.scene')}</span>
+            <div>
+              <h3>{e.title}</h3>
+              <p>{e.description[lang]}</p>
+            </div>
+          </article>
+        ))}
         {COMPONENTS.map((e, i) => (
           <article className={`tile${i % 3 === 0 ? ' wide' : ''}`} key={e.id}>
             <span className="kind">{t('kind.component')}</span>

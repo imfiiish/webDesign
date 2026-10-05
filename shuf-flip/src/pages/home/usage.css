@@ -1,0 +1,116 @@
+/* Usage hint dialog (SceneFlip): rises from the bottom to the centre.
+   A slim header row (title left, close right, hairline below) over a list of
+   numbered how-to rows. */
+
+.modal.usage {
+  max-width: 620px;
+  gap: 0;
+  padding: 0;
+  align-items: stretch;
+  /* align the centre with the deck's centre card (stage is shifted -80) */
+  left: -80px;
+  /* override the default modal-in: rise from the bottom to the centre */
+  animation: usage-rise 440ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* header: title shares a 52px row with the close button */
+.modal.usage .modal-title {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 64px 0 24px;
+  border-bottom: 1px solid var(--border);
+  font-size: 1.25rem;
+}
+
+.modal.usage .modal-close {
+  top: 8px;
+  right: 12px;
+}
+
+/* drop the sideways offset when there is no room for it */
+@media (max-width: 760px) {
+  .modal.usage {
+    left: 0;
+  }
+}
+
+.usage-list {
+  counter-reset: usage;
+  list-style: none;
+  margin: 0;
+  padding: 18px 24px 22px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.usage-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.usage-list li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.usage-list li::before {
+  counter-increment: usage;
+  content: counter(usage);
+  flex: 0 0 auto;
+  align-self: flex-start;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* exit: sink back down to the bottom */
+.modal.usage.closing {
+  animation: usage-sink 220ms cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.modal-backdrop.closing {
+  animation: usage-fade-out 220ms ease forwards;
+}
+
+@keyframes usage-rise {
+  from {
+    opacity: 0;
+    transform: translateY(100vh);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes usage-sink {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes usage-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

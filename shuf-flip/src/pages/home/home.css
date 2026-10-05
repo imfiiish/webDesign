@@ -221,11 +221,21 @@ a.tile {
 }
 
 .panel {
+  position: relative;
   padding: 40px;
   overflow: auto;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* "open full page" link, top-right of a preview panel */
+.panel-open {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+  text-decoration: none;
 }
 
 /* live page preview fills the panel */

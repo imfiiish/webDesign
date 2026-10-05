@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useI18n } from '../i18n'
 
 type Props = {
@@ -14,13 +14,16 @@ export default function BackButton({
   labelKey = 'nav.back',
 }: Props) {
   const navigate = useNavigate()
+  const location = useLocation()
   const { t } = useI18n()
+  // Return to where the page was opened from (e.g. the Scenes bar), else home.
+  const from = (location.state as { from?: string } | null)?.from ?? '/'
 
   return (
     <button
       type="button"
       className={className}
-      onClick={() => navigate('/')}
+      onClick={() => navigate(from)}
       aria-label={t(labelKey)}
       title={t(labelKey)}
     >

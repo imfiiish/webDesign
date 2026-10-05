@@ -2,7 +2,7 @@
 // Appearance only — no business logic. `title` is a proper noun (kept as-is);
 // the description is bilingual.
 
-type EntryKind = 'page' | 'component'
+type EntryKind = 'page' | 'component' | 'scene'
 type EntryStatus = 'ready' | 'planned'
 
 export type Bilingual = { en: string; zh: string }
@@ -70,6 +70,22 @@ export const PAGES: CatalogEntry[] = [
     description: {
       en: 'Self-test: 1 / 2 / 3 rating bar with undo and skip confirm.',
       zh: '自测：1 / 2 / 3 评级条，含撤销与跳过确认。',
+    },
+    status: 'ready',
+    variants: [DEFAULT_VARIANT],
+  },
+]
+
+// Scenes: a page assembled with extra state (e.g. an end dialog) — more than
+// a single page, but not a complete flow.
+export const SCENES: CatalogEntry[] = [
+  {
+    id: 'flip',
+    kind: 'scene',
+    title: 'Flip',
+    description: {
+      en: 'The Flip page as a scene — a copy kept to grow extra states.',
+      zh: '以场景呈现的 Flip 页面——页面副本，留作叠加额外状态。',
     },
     status: 'ready',
     variants: [DEFAULT_VARIANT],

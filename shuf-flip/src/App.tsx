@@ -5,6 +5,7 @@ import Login from './pages/login'
 import Shelf from './pages/shelf'
 import Flip from './pages/flip'
 import Rating from './pages/rating'
+import Scene from './pages/scene'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/shelf" element={<Shelf />} />
           <Route path="/flip" element={<Flip />} />
           <Route path="/rating" element={<Rating />} />
+          <Route path="/scene/:id" element={<Scene />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

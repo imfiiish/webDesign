@@ -1,11 +1,19 @@
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 
 /** Wheel / trackpad ring navigation with progressive acceleration: the first
  *  card of a gesture needs a fair amount of scroll, and the threshold shrinks
  *  with every card advanced, so a continuous scroll speeds up. The gesture
  *  ends after IDLE ms of silence; reversing restarts (slow) in the new
  *  direction. */
-export function useWheelNav(step: (dir: 1 | -1) => void): void {
+export function useWheelNav(
+  step: (dir: 1 | -1) => void,
+  enabled = true,
+): void {
+  const enabledRef = useRef(enabled)
+  useLayoutEffect(() => {
+    enabledRef.current = enabled
+  }, [enabled])
+
   useEffect(() => {
     const STEP_MAX = 520 // scroll px for the first card of a gesture
     const STEP_MIN = 16 // floor once the gesture is in full swing
@@ -29,6 +37,7 @@ export function useWheelNav(step: (dir: 1 | -1) => void): void {
     }
 
     const onWheel = (e: WheelEvent) => {
+      if (!enabledRef.current) return
       if (e.ctrlKey) return
       e.preventDefault()
 
