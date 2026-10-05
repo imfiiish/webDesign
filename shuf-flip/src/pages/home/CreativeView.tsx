@@ -11,6 +11,7 @@ import ResultCharts from './ResultCharts'
 import ResultWords from './ResultWords'
 import ResultWordsTweaks from './ResultWordsTweaks'
 import ProgressCharts from './ProgressCharts'
+import ProgressModules from './ProgressModules'
 
 type Item =
   | 'flip'
@@ -23,6 +24,7 @@ type Item =
   | 'resultWords'
   | 'resultWordsTweaks'
   | 'progressCharts'
+  | 'progressModules'
 
 /** Creative presentation: a live flip demo, the sentence exercise, and three
  *  pickers for the sentence card's motion, tray and blanks. */
@@ -116,6 +118,14 @@ export default function CreativeView() {
             <span className="dot" />
             {t('progress.charts')}
           </button>
+          <button
+            type="button"
+            className={`navitem${active === 'progressModules' ? ' on' : ''}`}
+            onClick={() => setActive('progressModules')}
+          >
+            <span className="dot" />
+            {t('progress.modules')}
+          </button>
         </>
       }
     >
@@ -137,8 +147,10 @@ export default function CreativeView() {
         <ResultWords />
       ) : active === 'resultWordsTweaks' ? (
         <ResultWordsTweaks />
-      ) : (
+      ) : active === 'progressCharts' ? (
         <ProgressCharts />
+      ) : (
+        <ProgressModules />
       )}
     </HomeShell>
   )
