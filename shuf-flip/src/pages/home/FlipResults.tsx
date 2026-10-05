@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { useStageScale } from '../../components/useStageScale'
 import { useI18n } from '../../i18n'
 import { Dual, GoalGauge, PieExplode } from './ResultCharts'
 import './flipResults.css'
@@ -31,14 +32,26 @@ type Props = {
 /** Daily target the goal gauge measures against. */
 const DAILY_GOAL = 15
 
+/** Fixed design canvas for the summary, scaled as one unit (see useStageScale). */
+const STAGE_W = 1440
+const STAGE_H = 900
+
 /** Full-screen round summary for the Flip · Results scene. Words encountered
  *  live in a left rail; the summary reads as a small report — a composition
  *  halo, a daily-goal gauge and the round's reveal pace. Free of the app
  *  tokens on purpose — it is meant to feel like a reward screen. */
 export default function FlipResults({ stats, onContinue, onStop }: Props) {
   const { t } = useI18n()
+  const { stageRef, scale } = useStageScale(STAGE_W, STAGE_H)
   const { studied, newWords, reviewWords, exposed, words, rounds, deck } =
     stats
+
+  // split a trailing "!" (or "！") off the title so it can hang on the right
+  // without dragging the words off-centre
+  const title = t('results.title')
+  const bangMatch = title.match(/^(.*?)([!！?？。.]+)$/)
+  const titleText = bangMatch ? bangMatch[1] : title
+  const titleBang = bangMatch ? bangMatch[2] : ''
 
   // left rail doubles as a bar chart: sorted, with a proportional fill
   const maxCount = Math.max(1, ...words.map((w) => w.count))
@@ -47,51 +60,63 @@ export default function FlipResults({ stats, onContinue, onStop }: Props) {
   )
 
   return (
-    <div className="results">
-      <aside className="results-side">
-        <h2 className="results-side-title">
-          {t('results.encountered')}
-          <span className="results-side-count">{studied}</span>
-        </h2>
-        <ul className="results-wordlist">
-          {rail.map((w, i) => (
-            <li
-              key={w.word}
-              className={`rw ${w.kind}`}
-              style={
-                {
-                  '--w': `${(w.count / maxCount) * 100}%`,
-                  '--d': `${Math.min(i, 14) * 26}ms`,
-                } as CSSProperties
-              }
-            >
-              <span className="rw-dot" aria-hidden="true" />
-              <span className="rw-word">{w.word}</span>
-              <span className="rw-count">×{w.count}</span>
-            </li>
-          ))}
-        </ul>
-      </aside>
+    <div className="results" ref={stageRef}>
+      <div
+        className="results-stage"
+        style={{ '--s': scale } as CSSProperties}
+      >
+        <header className="results-head">
+          <h1 className="results-title">
+            <span className="results-title-ghost" aria-hidden="true">
+              {titleBang}
+            </span>
+            {titleText}
+            <span className="results-title-bang">{titleBang}</span>
+          </h1>
+        </header>
 
-      <main className="results-main">
-        <p className="results-kicker">{t('results.kicker')}</p>
-        <h1 className="results-title">{t('results.title')}</h1>
+        <aside className="results-side">
+          <h2 className="results-side-title">
+            {t('results.encountered')}
+            <span className="results-side-count">{studied}</span>
+          </h2>
+          <ul className="results-wordlist">
+            {rail.map((w, i) => (
+              <li
+                key={w.word}
+                className={`rw ${w.kind}`}
+                style={
+                  {
+                    '--w': `${(w.count / maxCount) * 100}%`,
+                    '--d': `${Math.min(i, 14) * 26}ms`,
+                  } as CSSProperties
+                }
+              >
+                <span className="rw-dot" aria-hidden="true" />
+                <span className="rw-word">{w.word}</span>
+                <span className="rw-count">×{w.count}</span>
+              </li>
+            ))}
+          </ul>
+        </aside>
 
-        <div className="results-dashboard">
-          <section className="results-panel results-panel-halo">
-            <PieExplode
-              newWords={newWords}
-              reviewWords={reviewWords}
-              exposed={exposed}
-            />
-          </section>
-          <section className="results-panel results-panel-gauge">
-            <GoalGauge value={studied} goal={DAILY_GOAL} />
-          </section>
-          <section className="results-panel results-panel-dual">
-            <Dual rounds={rounds} deck={deck} />
-          </section>
-        </div>
+        <main className="results-main">
+          <div className="results-dashboard">
+            <section className="results-panel results-panel-halo">
+              <PieExplode
+                newWords={newWords}
+                reviewWords={reviewWords}
+                exposed={exposed}
+              />
+            </section>
+            <section className="results-panel results-panel-gauge">
+              <GoalGauge value={studied} goal={DAILY_GOAL} />
+            </section>
+            <section className="results-panel results-panel-dual">
+              <Dual rounds={rounds} deck={deck} />
+            </section>
+          </div>
+        </main>
 
         <div className="results-actions">
           <button type="button" className="results-btn ghost" onClick={onStop}>
@@ -105,7 +130,7 @@ export default function FlipResults({ stats, onContinue, onStop }: Props) {
             {t('results.continue')}
           </button>
         </div>
-      </main>
+      </div>
     </div>
   )
 }

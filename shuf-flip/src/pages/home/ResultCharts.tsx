@@ -665,11 +665,6 @@ function ChartCombo({ t }: { t: T }) {
           />
         ))}
       </svg>
-      <div className="rc-combo-axis">
-        <span>{WORDS[0].w}</span>
-        <span>{WORDS[Math.floor(n / 2)].w}</span>
-        <span>{WORDS[n - 1].w}</span>
-      </div>
     </div>
   )
 }
@@ -862,23 +857,6 @@ export function Dual({
           />
         ))}
       </svg>
-      <div className="rc-dual-axis">
-        {(n <= 6
-          ? rounds.map((_, i) => i)
-          : [0, Math.floor((n - 1) / 2), n - 1]
-        ).map((i) => (
-          <span key={i}>R{i + 1}</span>
-        ))}
-        <span>{t('results.chart.rounds')}</span>
-      </div>
-      <div className="rc-dual-scale">
-        <span>
-          {t('results.exposed')} · max {DECK}
-        </span>
-        <span>
-          {t('results.reveals')} · max {maxRev}
-        </span>
-      </div>
     </div>
   )
 }

@@ -7,7 +7,8 @@
   inset: 0;
   z-index: 60;
   display: grid;
-  grid-template-columns: 500px 1fr;
+  place-content: center;
+  overflow: hidden;
   color: #eef4ee;
   background:
     radial-gradient(
@@ -24,13 +25,38 @@
   animation: results-in 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Fixed design canvas, scaled as one unit (see useStageScale) so every screen
+   shows the identical composition — mirrors how the deck stage works. */
+.results-stage {
+  width: 1440px;
+  height: 900px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    'head head'
+    'side main'
+    'actions actions';
+  column-gap: 18px;
+  row-gap: 22px;
+  padding: 48px 64px 40px;
+  transform: scale(var(--s, 1));
+  transform-origin: center;
+}
+
+/* header spans both columns so it centres on the whole canvas, not the
+   right column */
+.results-head {
+  grid-area: head;
+  text-align: center;
+}
+
 /* ---- left rail: learned words as a floating card ---- */
 .results-side {
-  align-self: center;
-  justify-self: start;
-  width: 360px;
-  height: 520px;
-  margin-left: 140px;
+  grid-area: side;
+  height: 100%;
+  min-height: 0;
   overflow: auto;
   padding: 22px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -144,24 +170,14 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ---- right column: report cards + actions ---- */
+/* ---- right column: the chart report ---- */
 .results-main {
-  overflow: auto;
+  grid-area: main;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 16px;
-  padding: 40px 44px;
-  text-align: center;
-}
-
-.results-kicker {
-  margin: auto 0 0;
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #8fdca0;
 }
 
 .results-title {
@@ -171,13 +187,23 @@
   line-height: 1.1;
 }
 
+/* the trailing "!" would push the words off-centre; an invisible twin before
+   the words balances the line so the words stay centred and the bang hangs */
+.results-title-ghost {
+  visibility: hidden;
+}
+
 /* ---- dashboard: halo + gauge, then pace across both ---- */
 .results-dashboard {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
+  /* row 1 hugs its content, row 2 (the pace chart) absorbs the leftover so
+     the actions below never get pushed past the canvas */
+  grid-template-rows: auto minmax(0, 1fr);
+  flex: 1 1 auto;
+  min-height: 0;
   gap: 14px;
-  width: min(100%, 900px);
-  margin-top: 4px;
+  width: 100%;
   text-align: left;
 }
 
@@ -194,6 +220,18 @@
 
 .results-panel-dual {
   grid-column: 1 / -1;
+  min-height: 0;
+}
+
+/* the pace chart flexes to whatever height row 2 has left */
+.results-panel-dual .rc-dual {
+  min-height: 0;
+}
+
+.results-panel-dual .rc-dual svg {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
 }
 
 /* the reusable charts are happy anywhere; nudge them to fit the panels */
@@ -220,12 +258,12 @@
   max-width: 380px;
 }
 
-/* ---- actions ---- */
+/* ---- actions: spans both columns, centred ---- */
 .results-actions {
+  grid-area: actions;
   display: flex;
   gap: 12px;
   justify-content: center;
-  margin: 10px 0 auto;
 }
 
 .results-btn {
@@ -261,37 +299,8 @@
   box-shadow: 0 16px 36px -10px rgba(143, 220, 160, 0.85);
 }
 
-@media (max-width: 1000px) {
-  .results {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    overflow: auto;
-  }
-
-  .results-side {
-    align-self: center;
-    flex: 0 0 auto;
-    width: calc(100% - 40px);
-    height: auto;
-    max-height: none;
-    margin: 24px 0 0;
-  }
-
-  .results-main {
-    flex: 0 0 auto;
-    overflow: visible;
-    padding: 26px 24px 40px;
-  }
-
-  .results-dashboard {
-    grid-template-columns: 1fr;
-  }
-
-  .results-panel-gauge .rc-gauge svg {
-    max-width: 320px;
-  }
-}
+/* Small screens are handled by the uniform scale, so no reflow here. The
+   stage simply shrinks as a whole instead of re-arranging. */
 
 @keyframes results-in {
   from {

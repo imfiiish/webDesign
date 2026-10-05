@@ -892,13 +892,6 @@
   stroke-width: 1.6;
 }
 
-.rc-combo-axis {
-  display: flex;
-  justify-content: space-between;
-  color: #9db3a6;
-  font-size: 0.75rem;
-}
-
 /* ============ 12 · Radar ============ */
 .rc-radar {
   display: flex;
@@ -1071,19 +1064,6 @@
 
 .rc-dual-pt.reveal {
   stroke: var(--rc-new);
-}
-
-.rc-dual-axis,
-.rc-dual-scale {
-  display: flex;
-  justify-content: space-between;
-  color: #9db3a6;
-  font-size: 0.75rem;
-}
-
-.rc-dual-scale {
-  font-size: 0.72rem;
-  opacity: 0.8;
 }
 
 /* ============ 14 · Halo · gloss ============ */
