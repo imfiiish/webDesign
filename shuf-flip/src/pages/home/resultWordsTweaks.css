@@ -1,0 +1,328 @@
+/* Creative: the words-learned card from the results page, at its real size
+   (320px), with one surface / hover tweak per variant so they can be compared
+   side by side on the scene's own backdrop. */
+
+.wt-board {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 30px;
+  border-radius: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 320px);
+  justify-content: center;
+  gap: 42px 24px;
+  background:
+    radial-gradient(
+      120% 80% at 50% -10%,
+      rgba(143, 220, 160, 0.24),
+      transparent 60%
+    ),
+    radial-gradient(
+      90% 70% at 88% 112%,
+      rgba(230, 200, 119, 0.16),
+      transparent 60%
+    ),
+    linear-gradient(160deg, #14332a 0%, #0d1f19 55%, #10251d 100%);
+}
+
+.wt-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wt-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wt-label {
+  margin: 0;
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #cfe3d6;
+}
+
+.wt-caption {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #8fa79a;
+}
+
+/* ---- the card: identical layout for every variant ---- */
+.wt-card {
+  position: relative;
+  width: 320px;
+  height: 600px;
+  overflow: auto;
+  padding: 22px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.85);
+  color: #eef4ee;
+  transition: background 200ms ease, border-color 200ms ease,
+    box-shadow 200ms ease, transform 200ms ease;
+}
+
+.wt-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 14px;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8fdca0;
+}
+
+.wt-title b {
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  color: #eef4ee;
+  font-variant-numeric: tabular-nums;
+}
+
+.wt-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wt-list li {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.92rem;
+  transition: background 140ms ease, transform 140ms ease,
+    box-shadow 160ms ease;
+}
+
+.wt-list li > * {
+  position: relative;
+  z-index: 1;
+}
+
+.wt-dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #55705f;
+}
+
+.wt-list li.new .wt-dot {
+  background: #8fdca0;
+}
+
+.wt-list li.review .wt-dot {
+  background: #e6c877;
+}
+
+.wt-word {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wt-count {
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  color: #9db3a6;
+  font-variant-numeric: tabular-nums;
+  transition: color 160ms ease, transform 160ms ease;
+}
+
+/* the share fill behind each row; animates out to --w like the real card */
+.wt-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 0;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    rgba(143, 220, 160, 0.22),
+    rgba(143, 220, 160, 0.08)
+  );
+  animation: wt-grow 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+.wt-list li.review .wt-fill {
+  background: linear-gradient(
+    90deg,
+    rgba(230, 200, 119, 0.24),
+    rgba(230, 200, 119, 0.09)
+  );
+}
+
+@keyframes wt-grow {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--w, 0%);
+  }
+}
+
+/* ============ variants ============ */
+
+/* current — the production look (base already matches it) */
+.wt-card--current .wt-list li:hover {
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateX(2px);
+}
+
+/* glow — ambient green halo, left edge lights on hover */
+.wt-card--glow {
+  border-color: rgba(143, 220, 160, 0.28);
+  box-shadow:
+    0 0 0 1px rgba(143, 220, 160, 0.12),
+    0 30px 80px -30px rgba(143, 220, 160, 0.55);
+}
+.wt-card--glow .wt-list li:hover {
+  background: rgba(143, 220, 160, 0.1);
+  box-shadow: inset 3px 0 0 #8fdca0;
+}
+
+/* flat — no shadow or border, hairline rows */
+.wt-card--flat {
+  border-color: transparent;
+  border-radius: 12px;
+  background: #10251d;
+  box-shadow: none;
+  padding: 20px;
+}
+.wt-card--flat .wt-list {
+  gap: 0;
+}
+.wt-card--flat .wt-list li {
+  border-radius: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: transparent;
+}
+.wt-card--flat .wt-list li:hover {
+  background: rgba(143, 220, 160, 0.07);
+}
+
+/* recessed — pressed into the panel */
+.wt-card--recessed {
+  background: rgba(0, 0, 0, 0.22);
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 3px 26px rgba(0, 0, 0, 0.65);
+}
+.wt-card--recessed .wt-list li {
+  background: rgba(255, 255, 255, 0.02);
+}
+.wt-card--recessed .wt-list li:hover {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* glass — translucent, blurred, bright edge */
+.wt-card--glass {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.03)
+  );
+  box-shadow: 0 24px 60px -34px rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.wt-card--glass .wt-list li:hover {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+/* hard — offset solid shadow; the card lifts on hover */
+.wt-card--hard {
+  border-radius: 8px;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.55);
+}
+.wt-card--hard:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 14px 14px 0 rgba(0, 0, 0, 0.6);
+}
+.wt-card--hard .wt-list li {
+  border-radius: 6px;
+}
+.wt-card--hard .wt-list li:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* underline — minimal; hover draws the share as an underline */
+.wt-card--underline {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: transparent;
+  box-shadow: none;
+}
+.wt-card--underline .wt-list {
+  gap: 2px;
+}
+.wt-card--underline .wt-list li {
+  padding: 7px 6px;
+  background: transparent;
+}
+.wt-card--underline .wt-fill {
+  opacity: 0;
+}
+.wt-card--underline .wt-list li::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 2px;
+  height: 2px;
+  background: #8fdca0;
+  transform: scaleX(var(--p));
+  transform-origin: left;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.wt-card--underline .wt-list li.review::after {
+  background: #e6c877;
+}
+.wt-card--underline .wt-list li:hover::after {
+  opacity: 1;
+}
+.wt-card--underline .wt-list li:hover .wt-word {
+  color: #fff;
+}
+
+/* grow — the share bar thickens and the count pops on hover */
+.wt-card--grow .wt-list li {
+  background: rgba(255, 255, 255, 0.03);
+}
+.wt-card--grow .wt-fill {
+  inset: auto 0 0 0;
+  height: 3px;
+  transition: height 160ms ease, filter 160ms ease;
+}
+.wt-card--grow .wt-list li:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+.wt-card--grow .wt-list li:hover .wt-fill {
+  height: 100%;
+  filter: brightness(1.5);
+}
+.wt-card--grow .wt-list li:hover .wt-count {
+  transform: scale(1.25);
+  color: #eef4ee;
+}

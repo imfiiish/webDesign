@@ -8,6 +8,8 @@ import BoxStyles from './BoxStyles'
 import BlankStyles from './BlankStyles'
 import ResultsIdeas from './ResultsIdeas'
 import ResultCharts from './ResultCharts'
+import ResultWords from './ResultWords'
+import ResultWordsTweaks from './ResultWordsTweaks'
 
 type Item =
   | 'flip'
@@ -17,6 +19,8 @@ type Item =
   | 'blankStyles'
   | 'resultsIdeas'
   | 'resultCharts'
+  | 'resultWords'
+  | 'resultWordsTweaks'
 
 /** Creative presentation: a live flip demo, the sentence exercise, and three
  *  pickers for the sentence card's motion, tray and blanks. */
@@ -86,6 +90,22 @@ export default function CreativeView() {
             <span className="dot" />
             {t('results.charts')}
           </button>
+          <button
+            type="button"
+            className={`navitem${active === 'resultWords' ? ' on' : ''}`}
+            onClick={() => setActive('resultWords')}
+          >
+            <span className="dot" />
+            {t('results.words')}
+          </button>
+          <button
+            type="button"
+            className={`navitem${active === 'resultWordsTweaks' ? ' on' : ''}`}
+            onClick={() => setActive('resultWordsTweaks')}
+          >
+            <span className="dot" />
+            {t('results.words.tweak')}
+          </button>
         </>
       }
     >
@@ -101,8 +121,12 @@ export default function CreativeView() {
         <BlankStyles />
       ) : active === 'resultsIdeas' ? (
         <ResultsIdeas />
-      ) : (
+      ) : active === 'resultCharts' ? (
         <ResultCharts />
+      ) : active === 'resultWords' ? (
+        <ResultWords />
+      ) : (
+        <ResultWordsTweaks />
       )}
     </HomeShell>
   )

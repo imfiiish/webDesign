@@ -227,7 +227,7 @@ export function GoalGauge({ value, goal }: { value: number; goal: number }) {
  * Creative gallery
  * ================================================================== */
 
-function Chart({
+export function Chart({
   label,
   caption,
   children,
