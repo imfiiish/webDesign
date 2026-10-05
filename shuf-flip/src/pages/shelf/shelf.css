@@ -104,7 +104,7 @@
   font: inherit;
   cursor: pointer;
   overflow: hidden;
-  box-shadow: 0 10px 24px -14px rgba(66, 48, 25, 0.45);
+  box-shadow: 0 10px 24px -14px rgba(6, 10, 4, 0.6);
   transition: transform 180ms ease, box-shadow 180ms ease,
     border-color 180ms ease, color 180ms ease;
 }
@@ -186,16 +186,6 @@
 .book-item:hover .book {
   transform: translateY(-3px);
   border-color: var(--accent);
-  box-shadow: 0 18px 38px -14px var(--accent-ring),
-    0 8px 18px -10px rgba(66, 48, 25, 0.32);
-}
-
-:root[data-theme='dark'] .book {
-  box-shadow: 0 10px 24px -14px rgba(6, 10, 4, 0.6);
-}
-
-:root[data-theme='dark'] .book:hover,
-:root[data-theme='dark'] .book-item:hover .book {
   box-shadow: 0 18px 38px -14px var(--accent-ring),
     0 8px 18px -10px rgba(6, 10, 4, 0.55);
 }

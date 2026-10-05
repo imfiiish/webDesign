@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import type { ComponentType, CSSProperties } from 'react'
 import HomeShell from './HomeShell'
-import { useResolvedTheme } from '../../components/useResolvedTheme'
 import { useI18n } from '../../i18n'
 import { DEFAULT_VARIANT } from '../../catalog'
 import { WORDS } from '../flip/data'
@@ -67,25 +66,7 @@ const SWATCHES: { key: string; label: string }[] = [
   { key: '--accent', label: 'Accent' },
 ]
 
-// The app's two built-in themes; merged into one "Default" entry that follows
-// the theme toggle.
-const LIGHT_PALETTE: Palette = {
-  id: 'parchment',
-  variant: { en: 'Parchment', zh: '羊皮纸' },
-  vars: {
-    '--bg': '#efe6d3',
-    '--card': '#fdf8ec',
-    '--card-active': '#fffcf3',
-    '--border': '#ddcfb2',
-    '--text': '#2a2418',
-    '--muted': '#837458',
-    '--accent': '#7a5f36',
-    '--on-accent': '#fdf8ec',
-    '--card-shadow': SHADOW_LIGHT,
-    ...RATE_LIGHT,
-  },
-}
-
+// The app's built-in theme, shown as the "Default" entry.
 const DARK_PALETTE: Palette = {
   id: 'sprout',
   variant: { en: 'Sprout', zh: '嫩芽' },
@@ -523,16 +504,15 @@ function dotFor(c: ColorEntry): string {
 }
 
 /** Design presentation: a colour section (one nav entry per colour, each
- *  rendered as a live palette preview; "Default" follows the theme toggle)
- *  plus a Fonts section holding the type specimen. */
+ *  rendered as a live palette preview) plus a Fonts section holding the type
+ *  specimen. */
 export default function DesignView() {
   const { lang, t } = useI18n()
-  const theme = useResolvedTheme()
   const entries: ColorEntry[] = [
     {
       id: 'default',
       name: { en: 'Default', zh: '默认' },
-      variants: [theme === 'dark' ? DARK_PALETTE : LIGHT_PALETTE],
+      variants: [DARK_PALETTE],
     },
     ...COLOR_ENTRIES,
   ]

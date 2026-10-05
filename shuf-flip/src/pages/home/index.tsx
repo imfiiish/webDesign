@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import LangToggle from '../../components/LangToggle'
-import ThemeToggle from '../../components/ThemeToggle'
 import { useI18n } from '../../i18n'
 import OverviewView from './OverviewView'
 import PageView from './PageView'
@@ -25,7 +24,6 @@ export default function Home() {
         </span>
         <div className="bar-tools">
           <LangToggle />
-          <ThemeToggle />
         </div>
       </header>
       <nav className="modebar">

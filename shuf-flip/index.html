@@ -5,29 +5,9 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>shuf-flip · design</title>
-    <script>
-      // Set the theme before first paint to avoid a flash.
-      // Key must match src/theme.ts.
-      ;(function () {
-        try {
-          var m = localStorage.getItem('design-theme')
-          var t =
-            m === 'light' || m === 'dark'
-              ? m
-              : window.matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'dark'
-                : 'light'
-          document.documentElement.dataset.theme = t
-        } catch (e) {}
-      })()
-    </script>
     <style>
       /* Critical background before CSS loads. Keep in sync with --bg. */
       html {
-        background: #efe6d3;
-        color-scheme: light;
-      }
-      html[data-theme='dark'] {
         background: #223026;
         color-scheme: dark;
       }

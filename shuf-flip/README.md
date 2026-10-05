@@ -17,10 +17,9 @@ npm run preview  # preview the build
 
 ```
 src/
-├── tokens.css      design tokens (light / dark)
+├── tokens.css      design tokens (single dark theme)
 ├── base.css        global baseline
-├── theme.ts        auto / light / dark, persisted
 ├── catalog.ts      the entries shown in the sample (data)
-├── components/     ThemeToggle
+├── components/     shared UI + hooks
 └── pages/home/     "/" — Overview / Sidebar modes, Fonts specimen
 ```

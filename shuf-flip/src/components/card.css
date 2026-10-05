@@ -176,11 +176,6 @@
 /* side cards: softer shadow than the center */
 .pos-1,
 .pos-S {
-  --face-shadow: 0 12px 30px -16px rgba(45, 32, 15, 0.4);
-}
-
-:root[data-theme='dark'] .pos-1,
-:root[data-theme='dark'] .pos-S {
   --face-shadow: 0 12px 30px -16px rgba(6, 10, 4, 0.55);
 }
 
