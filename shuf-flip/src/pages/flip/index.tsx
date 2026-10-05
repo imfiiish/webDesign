@@ -100,11 +100,14 @@ export default function Flip() {
   // double right-click (trackpad two-finger double tap) outside the center card
   useDoubleRightClick(nextRound)
 
-  const onCardClick = (_name: string, slot: Slot) => {
-    if (slot === 0) toggleReveal()
-    else if (slot === 1 || slot === 'S') go(1)
-    else if (slot === -1) go(-1)
-  }
+  const onCardClick = useCallback(
+    (_name: string, slot: Slot) => {
+      if (slot === 0) toggleReveal()
+      else if (slot === 1 || slot === 'S') go(1)
+      else if (slot === -1) go(-1)
+    },
+    [toggleReveal, go],
+  )
 
   return (
     <div className="flip">

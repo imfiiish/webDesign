@@ -10,7 +10,6 @@
   user-select: none;
   transform-origin: center;
   perspective: 1200px;
-  will-change: transform, opacity;
   /* width is animated too: the center card grows by layout, not by transform
      scale, so the faces are rasterized at their final size (B2) */
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -22,7 +21,6 @@
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  will-change: transform;
   transition: transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -154,6 +152,25 @@
   transform: translate(-50%, -50%) translateX(310px) scale(0.75);
   opacity: 0.5;
   z-index: 2;
+}
+
+/* Only the visible ring gets its own compositing layer. Parked/back slots
+   never render (see FlipDeck), and the demo only ever uses .pos-0, so this
+   keeps the layer count at the five cards that can actually move. */
+.pos-0,
+.pos-1,
+.pos--1,
+.pos-2,
+.pos--2,
+.pos-S {
+  will-change: transform, opacity;
+}
+
+/* Only the center card (or a .card--swap demo card) ever rotates, so only it
+   needs a dedicated flip layer. */
+.pos-0 .card-flip,
+.card--swap .card-flip {
+  will-change: transform;
 }
 
 /* side cards: softer shadow than the center */

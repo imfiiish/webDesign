@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import './card.css'
 
 type CardSense = { pos?: string; defs: string[] }
@@ -30,7 +31,7 @@ function dotColors(n: number): DotColor[] {
 }
 
 // Visible window: ±2 is the off-stage transition slot; beyond that is parked.
-const SIDE = 2
+export const SIDE = 2
 
 type FlipCardProps = {
   word: CardData
@@ -42,13 +43,13 @@ type FlipCardProps = {
   hovered?: boolean
   dots?: number
   notice?: string | null
-  onClick?: () => void
+  onClick?: (name: string, slot: Slot) => void
   onContextMenu?: () => void
 }
 
 /** One two-sided card in the ring: a word on the front, definition on the
  *  back. The ring placement comes from `slot`; the deck positions it. */
-export default function FlipCard({
+function FlipCard({
   word,
   slot,
   revealed = false,
@@ -81,7 +82,7 @@ export default function FlipCard({
         hovered ? ' hovered' : ''
       }${reveal === 'swap' ? ' card--swap' : ''}`}
       data-word={word.word}
-      onClick={onClick}
+      onClick={onClick ? () => onClick(word.word, slot) : undefined}
       onContextMenu={
         onContextMenu
           ? (e) => {
@@ -137,3 +138,5 @@ export default function FlipCard({
     </div>
   )
 }
+
+export default memo(FlipCard)

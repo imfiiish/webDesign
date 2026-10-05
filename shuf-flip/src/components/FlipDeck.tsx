@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react'
-import FlipCard, { type CardData, type Slot } from './FlipCard'
+import FlipCard, { SIDE, type CardData, type Slot } from './FlipCard'
 import './deck.css'
 
 export type { CardData, Slot } from './FlipCard'
@@ -44,6 +44,7 @@ export default function FlipDeck({
   // stick to a card that is moving).
   const [hoveredName, setHoveredName] = useState<string | null>(null)
   const pointer = useRef<{ x: number; y: number } | null>(null)
+  const hoverRaf = useRef(0)
 
   const updateHover = useCallback(() => {
     const pt = pointer.current
@@ -53,18 +54,30 @@ export default function FlipDeck({
     setHoveredName(cardEl?.dataset.word ?? null)
   }, [])
 
+  // Coalesce raw pointer moves into one hit-test per frame: `elementFromPoint`
+  // forces layout, so calling it per mousemove is the expensive part.
   const onCardsMouseMove = useCallback(
     (e: ReactMouseEvent) => {
       pointer.current = { x: e.clientX, y: e.clientY }
-      updateHover()
+      if (hoverRaf.current) return
+      hoverRaf.current = requestAnimationFrame(() => {
+        hoverRaf.current = 0
+        updateHover()
+      })
     },
     [updateHover],
   )
 
   const onCardsMouseLeave = useCallback(() => {
     pointer.current = null
+    if (hoverRaf.current) {
+      cancelAnimationFrame(hoverRaf.current)
+      hoverRaf.current = 0
+    }
     setHoveredName(null)
   }, [])
+
+  useEffect(() => () => cancelAnimationFrame(hoverRaf.current), [])
 
   useEffect(() => {
     if (!pointer.current) return
@@ -91,6 +104,11 @@ export default function FlipDeck({
       >
         {deck.map((word, p) => {
           const slot = slotOf(p, center, TOTAL)
+          // Mount only the visible ring. Parked slots (|slot| > SIDE) and the
+          // hidden back 'B' sit at opacity 0, so keeping them in the DOM only
+          // costs compositing layers. Culling them is visually identical.
+          if (slot === 'B') return null
+          if (typeof slot === 'number' && Math.abs(slot) > SIDE) return null
           return (
             <FlipCard
               key={word.word}
@@ -100,12 +118,8 @@ export default function FlipDeck({
               notice={slot === 0 ? centerNotice : null}
               hovered={hoveredName === word.word}
               dots={revealCounts[word.word] || 0}
-              onClick={() => onCardClick?.(word.word, slot)}
-              onContextMenu={
-                slot === 0 && onCardContextMenu
-                  ? () => onCardContextMenu()
-                  : undefined
-              }
+              onClick={onCardClick}
+              onContextMenu={slot === 0 ? onCardContextMenu : undefined}
             />
           )
         })}

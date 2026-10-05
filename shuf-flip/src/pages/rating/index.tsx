@@ -138,10 +138,13 @@ export default function RatingPage() {
   // double right-click (outside the center card) = press Enter (two-step skip)
   useDoubleRightClick(skipStep)
 
-  const onCardClick = (_name: string, slot: Slot) => {
-    if (slot === 1 || slot === 'S') go(1)
-    else if (slot === -1) go(-1)
-  }
+  const onCardClick = useCallback(
+    (_name: string, slot: Slot) => {
+      if (slot === 1 || slot === 'S') go(1)
+      else if (slot === -1) go(-1)
+    },
+    [go],
+  )
 
   return (
     <div className="rating">
