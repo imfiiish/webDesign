@@ -74,6 +74,28 @@ export const PAGES: CatalogEntry[] = [
     status: 'ready',
     variants: [DEFAULT_VARIANT],
   },
+  {
+    id: 'results',
+    kind: 'page',
+    title: 'Result',
+    description: {
+      en: 'Round summary: words learned, goal gauge and reveal charts.',
+      zh: '本轮小结：学习词汇、目标弧与翻开图表。',
+    },
+    status: 'ready',
+    variants: [DEFAULT_VARIANT],
+  },
+  {
+    id: 'progress',
+    kind: 'page',
+    title: 'Progress',
+    description: {
+      en: 'Learning progress over time — placeholder.',
+      zh: '学习进度随时间的变化——占位。',
+    },
+    status: 'ready',
+    variants: [DEFAULT_VARIANT],
+  },
 ]
 
 // Scenes: a page assembled with extra state (e.g. an end dialog) — more than

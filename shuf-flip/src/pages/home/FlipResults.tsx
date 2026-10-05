@@ -27,6 +27,8 @@ type Props = {
   stats: ResultsStats
   onContinue: () => void
   onStop: () => void
+  /** Fill the parent instead of overlaying the viewport (standalone page). */
+  contained?: boolean
 }
 
 /** Daily target the goal gauge measures against. */
@@ -40,7 +42,12 @@ const STAGE_H = 900
  *  live in a left rail; the summary reads as a small report — a composition
  *  halo, a daily-goal gauge and the round's reveal pace. Free of the app
  *  tokens on purpose — it is meant to feel like a reward screen. */
-export default function FlipResults({ stats, onContinue, onStop }: Props) {
+export default function FlipResults({
+  stats,
+  onContinue,
+  onStop,
+  contained = false,
+}: Props) {
   const { t } = useI18n()
   const { stageRef, scale } = useStageScale(STAGE_W, STAGE_H)
   const { studied, newWords, reviewWords, exposed, words, rounds, deck } =
@@ -60,7 +67,10 @@ export default function FlipResults({ stats, onContinue, onStop }: Props) {
   )
 
   return (
-    <div className="results" ref={stageRef}>
+    <div
+      className={`results${contained ? ' results--contained' : ''}`}
+      ref={stageRef}
+    >
       <div
         className="results-stage"
         style={{ '--s': scale } as CSSProperties}

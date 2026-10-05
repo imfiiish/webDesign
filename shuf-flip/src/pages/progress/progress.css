@@ -1,0 +1,6 @@
+/* Progress page — placeholder for now; only the chrome is in place. */
+
+.progress-page {
+  position: relative;
+  min-height: 100vh;
+}

@@ -25,6 +25,12 @@
   animation: results-in 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* standalone page: fill the host page instead of overlaying the viewport */
+.results--contained {
+  position: absolute;
+  inset: 0;
+}
+
 /* Fixed design canvas, scaled as one unit (see useStageScale) so every screen
    shows the identical composition — mirrors how the deck stage works. */
 .results-stage {
