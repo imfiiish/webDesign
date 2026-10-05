@@ -97,7 +97,8 @@ export default function Flip() {
     return () => window.removeEventListener('keydown', onKey)
   }, [go, toggleReveal, nextRound, copyCurrent])
 
-  // double right-click (trackpad two-finger double tap) outside the center card
+  // double right-click (trackpad two-finger double tap), anywhere including
+  // the center card
   useDoubleRightClick(nextRound)
 
   const onCardClick = useCallback(
@@ -123,7 +124,6 @@ export default function Flip() {
           scale={scale}
           stageKey={stageKey}
           onCardClick={onCardClick}
-          onCardContextMenu={copyCurrent}
         />
       </div>
 

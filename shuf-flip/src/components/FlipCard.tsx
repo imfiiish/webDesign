@@ -44,7 +44,6 @@ type FlipCardProps = {
   dots?: number
   notice?: string | null
   onClick?: (name: string, slot: Slot) => void
-  onContextMenu?: () => void
 }
 
 /** One two-sided card in the ring: a word on the front, definition on the
@@ -58,7 +57,6 @@ function FlipCard({
   dots = 0,
   notice = null,
   onClick,
-  onContextMenu,
 }: FlipCardProps) {
   const isCenter = slot === 0
   const off = typeof slot === 'number' && Math.abs(slot) > SIDE
@@ -83,14 +81,6 @@ function FlipCard({
       }${reveal === 'swap' ? ' card--swap' : ''}`}
       data-word={word.word}
       onClick={onClick ? () => onClick(word.word, slot) : undefined}
-      onContextMenu={
-        onContextMenu
-          ? (e) => {
-              e.preventDefault()
-              onContextMenu()
-            }
-          : undefined
-      }
     >
       <div className={`card-flip${isCenter && revealed ? ' flipped' : ''}`}>
         <div className="face front">

@@ -23,7 +23,6 @@ type FlipDeckProps = {
   scale: number
   stageKey?: number | string
   onCardClick?: (name: string, slot: Slot) => void
-  onCardContextMenu?: () => void
 }
 
 /** Card ring: cards absolutely stacked at center, slid around via transform. */
@@ -36,7 +35,6 @@ export default function FlipDeck({
   scale,
   stageKey,
   onCardClick,
-  onCardContextMenu,
 }: FlipDeckProps) {
   const TOTAL = deck.length
 
@@ -119,7 +117,6 @@ export default function FlipDeck({
               hovered={hoveredName === word.word}
               dots={revealCounts[word.word] || 0}
               onClick={onCardClick}
-              onContextMenu={slot === 0 ? onCardContextMenu : undefined}
             />
           )
         })}

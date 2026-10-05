@@ -33,16 +33,11 @@ export function useWheelNav(step: (dir: 1 | -1) => void): void {
   }, [step])
 }
 
-/** Two quick right-clicks outside the active card trigger an action. */
+/** Two quick right-clicks trigger an action. */
 export function useDoubleRightClick(onDouble: () => void): void {
   useEffect(() => {
     let last = 0
     const onCtx = (e: MouseEvent) => {
-      const target = e.target instanceof Element ? e.target : null
-      if (target?.closest('.card.active')) {
-        last = 0
-        return
-      }
       e.preventDefault()
       const now = performance.now()
       if (last !== 0 && now - last <= 400) {
