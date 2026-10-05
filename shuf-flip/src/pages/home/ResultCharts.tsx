@@ -745,10 +745,25 @@ export function Dual({
   rounds,
   deck,
   hover = 'values',
+  labels,
+  headlineLabel,
+  headlineValue = 'r',
+  tone,
+  scale = 'split',
 }: {
   rounds: { e: number; r: number }[]
   deck: number
   hover?: 'values' | 'crosshair' | 'tooltip' | 'spotlight'
+  /** Override the four legend labels (bar ×2, line ×2). */
+  labels?: { e: string; r: string; cumE: string; cumR: string }
+  /** i18n key for the headline caption; defaults to “reveals”. */
+  headlineLabel?: string
+  /** Headline number: the reveal total, or review + new together. */
+  headlineValue?: 'r' | 'sum'
+  /** Extra modifier class for alternate colouring (e.g. "study"). */
+  tone?: string
+  /** Bars share one y-scale, or keep the exposure ceiling / reveal max. */
+  scale?: 'split' | 'shared'
 }) {
   const { t } = useI18n()
   const [active, setActive] = useState<number | null>(null)
@@ -760,6 +775,9 @@ export function Dual({
   const DECK = deck || 1
   const n = rounds.length
   const maxRev = Math.max(1, ...rounds.map((d) => d.r))
+  const maxAll = Math.max(1, ...rounds.map((d) => Math.max(d.e, d.r)))
+  const expScale = scale === 'shared' ? maxAll : DECK
+  const revScale = scale === 'shared' ? maxAll : maxRev
 
   const cumExp = rounds.reduce<number[]>((acc, d) => {
     acc.push((acc[acc.length - 1] ?? 0) + d.e)
@@ -769,40 +787,59 @@ export function Dual({
     acc.push((acc[acc.length - 1] ?? 0) + d.r)
     return acc
   }, [])
-  const totalExp = cumExp[n - 1] || 1
-  const totalRev = cumRev[n - 1] || 1
+  const sumE = cumExp[n - 1] ?? 0
+  const sumR = cumRev[n - 1] ?? 0
+  const totalExp = sumE || 1
+  const totalRev = sumR || 1
 
   const slot = (W - 2 * PX) / Math.max(1, n)
   const bw = slot * 0.26
   const cx = (i: number) => PX + slot * i + slot / 2
-  const yExp = (v: number) => H - PY - (v / DECK) * (H - 2 * PY)
-  const yRev = (v: number) => H - PY - (v / maxRev) * (H - 2 * PY)
+  const yExp = (v: number) => H - PY - (v / expScale) * (H - 2 * PY)
+  const yRev = (v: number) => H - PY - (v / revScale) * (H - 2 * PY)
   const yCum = (v: number, total: number) =>
     H - PY - (v / total) * (H - 2 * PY)
+  // with a shared scale the cumulative lines need one too, or two similarly
+  // shaped totals draw on top of each other and read as a single line
+  const lineMax = scale === 'shared' ? Math.max(sumE, sumR, 1) : 0
+  const expTotal = scale === 'shared' ? lineMax : totalExp
+  const revTotal = scale === 'shared' ? lineMax : totalRev
   const lineExp = cumExp
-    .map((v, i) => `${i ? 'L' : 'M'} ${cx(i)} ${yCum(v, totalExp)}`)
+    .map((v, i) => `${i ? 'L' : 'M'} ${cx(i)} ${yCum(v, expTotal)}`)
     .join(' ')
   const lineRev = cumRev
-    .map((v, i) => `${i ? 'L' : 'M'} ${cx(i)} ${yCum(v, totalRev)}`)
+    .map((v, i) => `${i ? 'L' : 'M'} ${cx(i)} ${yCum(v, revTotal)}`)
     .join(' ')
 
   const legend = [
-    { cls: 'exp-bar', label: t('results.exposed'), v: 'bar' },
-    { cls: 'rev-bar', label: t('results.reveals'), v: 'bar' },
-    { cls: 'exp-line', label: t('results.chart.cumExposure'), v: 'line' },
-    { cls: 'rev-line', label: t('results.chart.cumReveal'), v: 'line' },
+    { cls: 'exp-bar', label: labels?.e ?? t('results.exposed'), v: 'bar' },
+    { cls: 'rev-bar', label: labels?.r ?? t('results.reveals'), v: 'bar' },
+    {
+      cls: 'exp-line',
+      label: labels?.cumE ?? t('results.chart.cumExposure'),
+      v: 'line',
+    },
+    {
+      cls: 'rev-line',
+      label: labels?.cumR ?? t('results.chart.cumReveal'),
+      v: 'line',
+    },
   ]
 
   return (
     <div
       className={`rc rc-dual rc-dual--${hover}${
-        active !== null ? ' is-hover' : ''
-      }`}
+        tone ? ` rc-dual--${tone}` : ''
+      }${active !== null ? ' is-hover' : ''}`}
       onMouseLeave={() => setActive(null)}
     >
       <div className="rc-dual-top">
-        <span className="rc-big">{totalRev}</span>
-        <span className="rc-cap">{t('results.reveals')}</span>
+        <span className="rc-big">
+          {headlineValue === 'sum' ? sumE + sumR : totalRev}
+        </span>
+        <span className="rc-cap">
+          {headlineLabel ? t(headlineLabel) : t('results.reveals')}
+        </span>
         <ul className="rc-dual-legend">
           {legend.map((l) => (
             <li key={l.cls} className={l.cls}>
@@ -873,7 +910,7 @@ export function Dual({
               x={cx(i) - bw - 2}
               y={yExp(d.e)}
               width={bw}
-              height={(d.e / DECK) * (H - 2 * PY)}
+              height={(d.e / expScale) * (H - 2 * PY)}
               rx={3}
               style={{ animationDelay: `${i * 40}ms` } as CSSProperties}
             />
@@ -882,7 +919,7 @@ export function Dual({
               x={cx(i) + 2}
               y={yRev(d.r)}
               width={bw}
-              height={(d.r / maxRev) * (H - 2 * PY)}
+              height={(d.r / revScale) * (H - 2 * PY)}
               rx={3}
               style={{ animationDelay: `${i * 40 + 60}ms` } as CSSProperties}
             />
@@ -915,7 +952,7 @@ export function Dual({
             key={`e${i}`}
             className="rc-dual-pt exposure"
             cx={cx(i)}
-            cy={yCum(v, totalExp)}
+            cy={yCum(v, expTotal)}
             r={2.4}
           />
         ))}
@@ -924,7 +961,7 @@ export function Dual({
             key={`r${i}`}
             className="rc-dual-pt reveal"
             cx={cx(i)}
-            cy={yCum(v, totalRev)}
+            cy={yCum(v, revTotal)}
             r={2.4}
           />
         ))}
@@ -935,13 +972,13 @@ export function Dual({
             <circle
               className="rc-dual-cross-dot exposure"
               cx={cx(active)}
-              cy={yCum(cumExp[active], totalExp)}
+              cy={yCum(cumExp[active], expTotal)}
               r={4.4}
             />
             <circle
               className="rc-dual-cross-dot reveal"
               cx={cx(active)}
-              cy={yCum(cumRev[active], totalRev)}
+              cy={yCum(cumRev[active], revTotal)}
               r={4.4}
             />
             <text

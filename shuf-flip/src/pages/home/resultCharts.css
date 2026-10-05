@@ -1162,6 +1162,15 @@
   fill: url(#dual-beam-grad);
 }
 
+/* alt tone: review reads blue, new stays green, both lines solid */
+.rc-dual--study {
+  --rc-review: #7fb3d5;
+}
+
+.rc-dual--study .rc-dual-line.exposure {
+  stroke-dasharray: none;
+}
+
 .rc-dual-line {
   fill: none;
   stroke-width: 2;

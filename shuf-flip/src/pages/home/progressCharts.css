@@ -1,5 +1,5 @@
 /* Creative: progress-page chart concepts. Shares the `.rc` dark skin and the
-   chart palette with the Results gallery. */
+   composition-pie treatment (soft lift + per-segment glow). */
 
 /* a segment slot that can slide outward when its branch is active */
 .pb-slot {
@@ -15,15 +15,15 @@
   transition: opacity 0.2s ease;
 }
 
-/* ============ 01 / 06 · Sunburst ============ */
+/* ============ 01 · Sunburst ============ */
 .rc-pburst {
   gap: 44px;
 }
 
 .pb-dial {
   position: relative;
-  width: 340px;
-  height: 340px;
+  width: min(340px, 100%);
+  aspect-ratio: 1;
   flex: 0 0 auto;
 }
 
@@ -31,7 +31,7 @@
   width: 100%;
   height: 100%;
   overflow: visible;
-  /* the composition pie's soft lift (on the SVG only, not the centre text) */
+  /* the composition pie's soft lift (SVG only, not the centre text) */
   filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.45));
 }
 
@@ -60,7 +60,7 @@
   cursor: pointer;
 }
 
-/* stroked ring segment (01, 06): draws in, glows and brightens on hover */
+/* stroked ring segment: draws in, glows and brightens on hover */
 .pb-arc {
   fill: none;
   stroke-dasharray: 1;
@@ -73,39 +73,6 @@
 
 .pb-arc:hover {
   filter: drop-shadow(0 0 13px var(--glow, transparent)) brightness(1.1);
-}
-
-/* filled segment (05): pops in from the centre, with the same glow */
-.pb-fill {
-  stroke: rgba(13, 31, 25, 0.35);
-  stroke-width: 1;
-  transform-box: view-box;
-  transform-origin: center;
-  filter: drop-shadow(0 0 9px var(--glow, transparent));
-  animation: pb-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-  cursor: pointer;
-  transition: filter 0.18s ease;
-}
-
-.pb-slot:hover .pb-fill {
-  filter: drop-shadow(0 0 13px var(--glow, transparent)) brightness(1.06);
-}
-
-@keyframes pb-pop {
-  from {
-    opacity: 0;
-    transform: scale(0);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.pb-hole {
-  fill: rgba(0, 0, 0, 0.25);
-  stroke: rgba(255, 255, 255, 0.06);
-  stroke-width: 1;
 }
 
 .pb-num {
@@ -292,73 +259,4 @@
   fill: #8fdca0;
   stroke: #0d1f19;
   stroke-width: 1.5;
-}
-
-/* ============ 04 · Mastery rings ============ */
-.pm-svg {
-  width: 300px;
-  height: 300px;
-}
-
-.pm-track {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.08);
-  stroke-width: 12;
-}
-
-.pm-arc {
-  fill: none;
-  stroke-width: 12;
-  stroke-linecap: round;
-  animation: pm-draw 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes pm-draw {
-  from {
-    stroke-dashoffset: 100;
-  }
-}
-
-.pm-num {
-  fill: #eef4ee;
-  font-size: 42px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.pm-cap {
-  fill: #9db3a6;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.pm-legend {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  min-width: 210px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.pm-legend li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.95rem;
-}
-
-.pm-legend i {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
-  flex: 0 0 auto;
-}
-
-.pm-legend b {
-  margin-left: auto;
-  color: #eef4ee;
-  font-variant-numeric: tabular-nums;
 }
