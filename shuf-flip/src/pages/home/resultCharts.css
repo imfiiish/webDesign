@@ -159,20 +159,8 @@
 .rc-pie {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 36px;
-}
-
-.rp-dial {
-  position: relative;
-  width: 250px;
-  height: 250px;
-  flex: 0 0 auto;
-  filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.45));
-}
-
-.rp-dial svg {
-  width: 100%;
-  height: 100%;
 }
 
 .rp-slice {
@@ -1319,142 +1307,6 @@
   background: var(--rc-review);
 }
 
-/* ============ 16 · Halo · rings ============ */
-.rc-halo-rings {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-.rhr-dial {
-  position: relative;
-  width: 260px;
-  height: 260px;
-  flex: 0 0 auto;
-  filter: drop-shadow(0 0 28px rgba(143, 220, 160, 0.16));
-}
-
-.rhr-dial svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.rhr-track {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.07);
-}
-
-.rhr-val {
-  fill: none;
-  stroke-linecap: round;
-  stroke-dasharray: var(--len) var(--circ);
-  stroke-dashoffset: var(--off);
-  animation: rc-draw 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.rhr-center {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-content: center;
-  gap: 2px;
-  text-align: center;
-}
-
-.rc-halo-rings .rc-big {
-  font-size: 2rem;
-}
-
-.rhr-legend {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  min-width: 160px;
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
-}
-
-.rhr-legend li {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 0.88rem;
-  color: #cfe0d4;
-}
-
-.rhr-legend i {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--c);
-  box-shadow: 0 0 8px -2px var(--c);
-}
-
-.rhr-legend b {
-  margin-left: auto;
-  color: var(--c);
-  font-variant-numeric: tabular-nums;
-}
-
-/* ============ 17 · Pie · sweep ============ */
-@property --rps-angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-
-.rc-pie-sweep {
-  align-items: center;
-}
-
-.rps-wrap {
-  position: relative;
-  width: 250px;
-  height: 250px;
-  flex: 0 0 auto;
-  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.4));
-  mask-image: conic-gradient(
-    from 0deg,
-    #000 0deg,
-    #000 var(--rps-angle, 360deg),
-    transparent var(--rps-angle, 360deg),
-    transparent 360deg
-  );
-  animation: rps-sweep 1.1s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-.rps-wrap svg {
-  width: 100%;
-  height: 100%;
-}
-
-.rc-pie-sweep .rp-slice {
-  animation: none;
-  transform-box: view-box;
-  transform-origin: 130px 130px;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.rps-wrap:hover .rp-slice {
-  opacity: 0.35;
-}
-
-.rps-wrap .rp-slice:hover {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-@keyframes rps-sweep {
-  from {
-    --rps-angle: 0deg;
-  }
-  to {
-    --rps-angle: 360deg;
-  }
-}
-
 /* ============ 18 · Pie · explode ============ */
 .rc-pie-explode {
   align-items: center;
@@ -1501,97 +1353,6 @@
     opacity: 1;
     transform: scale(1);
   }
-}
-
-/* ============ 19 · Pie · ring ============ */
-.rc-pie-ring {
-  align-items: center;
-}
-
-.rpr-dial {
-  position: relative;
-  width: 250px;
-  height: 250px;
-  flex: 0 0 auto;
-  filter: drop-shadow(0 0 30px rgba(143, 220, 160, 0.14));
-}
-
-.rpr-dial svg {
-  width: 100%;
-  height: 100%;
-  animation: rpr-spin 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-.rpr-seg {
-  cursor: pointer;
-  transform-box: view-box;
-  transform-origin: 130px 130px;
-  transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
-  animation: rpr-pop 0.6s ease both;
-}
-
-.rpr-seg.new {
-  fill: url(#rprNew);
-}
-
-.rpr-seg.review {
-  fill: url(#rprReview);
-}
-
-.rpr-seg.exposed {
-  fill: url(#rprExposed);
-}
-
-.rpr-dial:hover .rpr-seg {
-  opacity: 0.5;
-}
-
-.rpr-seg.on {
-  opacity: 1;
-  transform: scale(1.03);
-  filter: brightness(1.12);
-}
-
-.rpr-center {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-content: center;
-  gap: 2px;
-  text-align: center;
-}
-
-.rpr-center .rc-big {
-  font-size: 2.2rem;
-}
-
-@keyframes rpr-spin {
-  from {
-    opacity: 0;
-    transform: rotate(-140deg) scale(0.85);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes rpr-pop {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* shared: legend + a hovered row */
-.rc-legend li.on {
-  color: #fff;
-}
-
-.rc-legend li.on .rc-dot {
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.14);
 }
 
 /* ============ keyframes ============ */
@@ -1698,7 +1459,6 @@
   }
 
   .rc-halo-gloss,
-  .rc-halo-rings,
   .rc-pie {
     flex-direction: column;
     gap: 20px;

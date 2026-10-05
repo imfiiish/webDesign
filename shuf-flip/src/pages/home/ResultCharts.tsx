@@ -71,23 +71,6 @@ function wedgePath(cx: number, cy: number, r: number, a0: number, a1: number) {
   return `M ${cx} ${cy} L ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} Z`
 }
 
-/** Annulus (ring) wedge from r0 to r1, a0 to a1. */
-function ringWedgePath(
-  cx: number,
-  cy: number,
-  r0: number,
-  r1: number,
-  a0: number,
-  a1: number,
-) {
-  const [x0, y0] = polar(cx, cy, r1, a0)
-  const [x1, y1] = polar(cx, cy, r1, a1)
-  const [x2, y2] = polar(cx, cy, r0, a1)
-  const [x3, y3] = polar(cx, cy, r0, a0)
-  const large = a1 - a0 > 180 ? 1 : 0
-  return `M ${x0} ${y0} A ${r1} ${r1} 0 ${large} 1 ${x1} ${y1} L ${x2} ${y2} A ${r0} ${r0} 0 ${large} 0 ${x3} ${y3} Z`
-}
-
 /** Split new / review / exposure into pie slices (cumulative counts). */
 function slicesOf(newWords: number, reviewWords: number, exposed: number) {
   const total = newWords + reviewWords + exposed || 1
@@ -109,84 +92,6 @@ function slicesOf(newWords: number, reviewWords: number, exposed: number) {
 /* ================================================================== *
  * Reusable chart bodies (no outer chrome — callers supply a panel).
  * ================================================================== */
-
-/** Composition pie: cumulative new / review / exposure as slices. */
-export function Pie({
-  newWords,
-  reviewWords,
-  exposed,
-}: {
-  newWords: number
-  reviewWords: number
-  exposed: number
-}) {
-  const { t } = useI18n()
-  const total = newWords + reviewWords + exposed || 1
-  const parts = [
-    { key: 'new', n: newWords },
-    { key: 'review', n: reviewWords },
-    { key: 'exposed', n: exposed },
-  ] as const
-
-  const cx = 130
-  const cy = 130
-  const R = 104
-  const gapDeg = 2.5
-  let acc = 0
-  const slices = parts.map((p) => {
-    const frac = p.n / total
-    const a0 = acc * 360
-    const a1 = (acc + frac) * 360
-    acc += frac
-    return { ...p, frac, a0, a1 }
-  })
-
-  return (
-    <div className="rc-pie">
-      <div className="rp-dial">
-        <svg viewBox="0 0 260 260" aria-hidden="true">
-          {slices.map((s, i) => {
-            const half = Math.min(gapDeg / 2, (s.a1 - s.a0) / 4)
-            return (
-              <path
-                key={s.key}
-                className={`rp-slice ${s.key}`}
-                d={wedgePath(cx, cy, R, s.a0 + half, s.a1 - half)}
-                style={{ animationDelay: `${i * 120}ms` } as CSSProperties}
-              />
-            )
-          })}
-          {slices.map((s) => {
-            const mid = (s.a0 + s.a1) / 2
-            const [x, y] = polar(cx, cy, R * 0.64, mid)
-            return (
-              <text
-                key={`lab-${s.key}`}
-                className="rp-slice-label"
-                x={x}
-                y={y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-              >
-                {Math.round(s.frac * 100)}%
-              </text>
-            )
-          })}
-        </svg>
-      </div>
-      <ul className="rc-legend">
-        {slices.map((s) => (
-          <li key={s.key} className={s.key}>
-            <span className="rc-dot" />
-            <span>{t(`results.${s.key}`)}</span>
-            <b>{s.n}</b>
-            <em>{Math.round(s.frac * 100)}%</em>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
 
 /** Cumulative reveals across the round. `steps` = reveals per card, in order. */
 export function Pace({ steps }: { steps: number[] }) {
@@ -1098,130 +1003,6 @@ function ChartHaloTicks({ t }: { t: T }) {
   )
 }
 
-/** 16 — Halo · rings: concentric rings, one measure each. */
-function ChartHaloRings({ t }: { t: T }) {
-  const avg = SAMPLE.reveals / SAMPLE.studied
-  const metrics = [
-    {
-      key: 'new',
-      v: SAMPLE.newWords / SAMPLE.studied,
-      color: '#8fdca0',
-    },
-    {
-      key: 'review',
-      v: SAMPLE.reviewWords / SAMPLE.studied,
-      color: '#e6c877',
-    },
-    {
-      key: 'exposed',
-      v: SAMPLE.exposed / (SAMPLE.studied + SAMPLE.exposed),
-      color: '#7fb3d5',
-    },
-    { key: 'reveals', v: Math.min(1, avg / 3), color: '#7fd0c4' },
-  ]
-  const R0 = 106
-  const step = 22
-  const stroke = 14
-
-  return (
-    <div className="rc rc-halo-rings">
-      <div className="rhr-dial">
-        <svg viewBox="0 0 260 260" aria-hidden="true">
-          {metrics.map((m, i) => {
-            const r = R0 - i * step
-            const C = 2 * Math.PI * r
-            return (
-              <g key={m.key}>
-                <circle
-                  className="rhr-track"
-                  cx="130"
-                  cy="130"
-                  r={r}
-                  strokeWidth={stroke}
-                />
-                <circle
-                  className="rhr-val"
-                  cx="130"
-                  cy="130"
-                  r={r}
-                  strokeWidth={stroke}
-                  stroke={m.color}
-                  style={
-                    {
-                      '--len': m.v * C,
-                      '--circ': C,
-                      '--off': 0,
-                      animationDelay: `${i * 120}ms`,
-                    } as CSSProperties
-                  }
-                />
-              </g>
-            )
-          })}
-        </svg>
-        <div className="rhr-center">
-          <span className="rc-big">{SAMPLE.studied}</span>
-          <span className="rc-cap">{t('results.studied')}</span>
-        </div>
-      </div>
-      <ul className="rhr-legend">
-        {metrics.map((m) => (
-          <li key={m.key} style={{ '--c': m.color } as CSSProperties}>
-            <i />
-            <span>{t(`results.${m.key}`)}</span>
-            <b>{Math.round(m.v * 100)}</b>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-/** 17 — Pie · sweep: conic sweep-in; hover spotlights a slice. */
-function ChartPieSweep({ t }: { t: T }) {
-  const slices = slicesOf(SAMPLE.newWords, SAMPLE.reviewWords, SAMPLE.exposed)
-  return (
-    <div className="rc-pie rc-pie-sweep">
-      <div className="rps-wrap">
-        <svg viewBox="0 0 260 260" aria-hidden="true">
-          {slices.map((s) => (
-            <path
-              key={s.key}
-              className={`rp-slice ${s.key}`}
-              d={wedgePath(130, 130, 104, s.a0 + 1.2, s.a1 - 1.2)}
-            />
-          ))}
-          {slices.map((s) => {
-            const [x, y] = polar(130, 130, 104 * 0.64, s.mid)
-            return (
-              <text
-                key={`lab-${s.key}`}
-                className="rp-slice-label"
-                x={x}
-                y={y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-              >
-                {Math.round(s.frac * 100)}%
-              </text>
-            )
-          })}
-        </svg>
-      </div>
-      <ul className="rc-legend">
-        {slices.map((s) => (
-          <li key={s.key} className={s.key}>
-            <span className="rc-dot" />
-            <span>{t(`results.${s.key}`)}</span>
-            <b>{s.n}</b>
-            <em>{Math.round(s.frac * 100)}%</em>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
 /** Pie · explode: slices pull apart; hover pushes one further out. */
 export function PieExplode({
   newWords,
@@ -1285,77 +1066,17 @@ export function PieExplode({
   )
 }
 
-/** 19 — Pie · ring: gradient donut with a live center readout. */
-function ChartPieRing({ t }: { t: T }) {
-  const slices = slicesOf(SAMPLE.newWords, SAMPLE.reviewWords, SAMPLE.exposed)
-  const [hover, setHover] = useState<string | null>(null)
-  const active = slices.find((s) => s.key === hover)
-  return (
-    <div className="rc-pie rc-pie-ring">
-      <div className="rpr-dial">
-        <svg viewBox="0 0 260 260" aria-hidden="true">
-          <defs>
-            <linearGradient id="rprNew" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#c6f1cf" />
-              <stop offset="100%" stopColor="#57b477" />
-            </linearGradient>
-            <linearGradient id="rprReview" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#aecfec" />
-              <stop offset="100%" stopColor="#5f93b8" />
-            </linearGradient>
-            <linearGradient id="rprExposed" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#f7e3a8" />
-              <stop offset="100%" stopColor="#c9a84f" />
-            </linearGradient>
-          </defs>
-          {slices.map((s, i) => (
-            <path
-              key={s.key}
-              className={`rpr-seg ${s.key}${hover === s.key ? ' on' : ''}`}
-              d={ringWedgePath(130, 130, 56, 106, s.a0 + 1.5, s.a1 - 1.5)}
-              style={{ animationDelay: `${i * 150}ms` } as CSSProperties}
-              onMouseEnter={() => setHover(s.key)}
-              onMouseLeave={() => setHover(null)}
-            />
-          ))}
-        </svg>
-        <div className="rpr-center">
-          <span className="rc-big">{active ? active.n : SAMPLE.studied}</span>
-          <span className="rc-cap">
-            {active ? t(`results.${active.key}`) : t('results.studied')}
-          </span>
-        </div>
-      </div>
-      <ul className="rc-legend">
-        {slices.map((s) => (
-          <li
-            key={s.key}
-            className={`${s.key}${hover === s.key ? ' on' : ''}`}
-            onMouseEnter={() => setHover(s.key)}
-            onMouseLeave={() => setHover(null)}
-          >
-            <span className="rc-dot" />
-            <span>{t(`results.${s.key}`)}</span>
-            <b>{s.n}</b>
-            <em>{Math.round(s.frac * 100)}%</em>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-/** Creative: nineteen ways to chart a finished round. */
+/** Creative: fifteen ways to chart a finished round. */
 export default function ResultCharts() {
   const { t } = useI18n()
   return (
     <div className="charts">
       <Chart
         label={`01 · ${t('results.chart.pie')}`}
-        caption={t('results.chart.cap.pie')}
+        caption={t('results.chart.cap.pieExplode')}
       >
         <div className="rc">
-          <Pie
+          <PieExplode
             newWords={SAMPLE.newWords}
             reviewWords={SAMPLE.reviewWords}
             exposed={SAMPLE.exposed}
@@ -1449,34 +1170,6 @@ export default function ResultCharts() {
         caption={t('results.chart.cap.haloTicks')}
       >
         <ChartHaloTicks t={t} />
-      </Chart>
-      <Chart
-        label={`16 · ${t('results.chart.haloRings')}`}
-        caption={t('results.chart.cap.haloRings')}
-      >
-        <ChartHaloRings t={t} />
-      </Chart>
-      <Chart
-        label={`17 · ${t('results.chart.pieSweep')}`}
-        caption={t('results.chart.cap.pieSweep')}
-      >
-        <ChartPieSweep t={t} />
-      </Chart>
-      <Chart
-        label={`18 · ${t('results.chart.pieExplode')}`}
-        caption={t('results.chart.cap.pieExplode')}
-      >
-        <PieExplode
-          newWords={SAMPLE.newWords}
-          reviewWords={SAMPLE.reviewWords}
-          exposed={SAMPLE.exposed}
-        />
-      </Chart>
-      <Chart
-        label={`19 · ${t('results.chart.pieRing')}`}
-        caption={t('results.chart.cap.pieRing')}
-      >
-        <ChartPieRing t={t} />
       </Chart>
     </div>
   )
