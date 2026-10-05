@@ -129,6 +129,14 @@ const DICT: Record<Lang, Record<string, string>> = {
     'results.chart.dual': 'Dual bars',
     'results.chart.cap.dual':
       'Per round — exposure capped at the round size, reveals uncapped — plus two running totals',
+    'results.chart.dualCross': 'Crosshair',
+    'results.chart.cap.dualCross':
+      'Snap a guide to the round and read it in the corner',
+    'results.chart.dualTip': 'Tooltip',
+    'results.chart.cap.dualTip': "Float a card with the round's two numbers",
+    'results.chart.dualSpot': 'Spotlight',
+    'results.chart.cap.dualSpot':
+      'Light the hovered round and dim the rest',
     'results.chart.cumExposure': 'cum. exposure',
     'results.chart.cumReveal': 'cum. reveals',
     'rating.unknown': 'Unfamiliar',
@@ -264,6 +272,12 @@ const DICT: Record<Lang, Record<string, string>> = {
     'results.chart.comboLine': '累计',
     'results.chart.dual': '双柱组合',
     'results.chart.cap.dual': '每轮一条：曝光以一轮卡牌数为上限，翻开不限，两条累计线',
+    'results.chart.dualCross': '准星',
+    'results.chart.cap.dualCross': '对准当前轮，角落读数',
+    'results.chart.dualTip': '浮层',
+    'results.chart.cap.dualTip': '悬浮卡片显示该轮两个数值',
+    'results.chart.dualSpot': '聚光',
+    'results.chart.cap.dualSpot': '点亮当前轮，其余变暗',
     'results.chart.cumExposure': '累计曝光',
     'results.chart.cumReveal': '累计翻开',
     'rating.unknown': '陌生',

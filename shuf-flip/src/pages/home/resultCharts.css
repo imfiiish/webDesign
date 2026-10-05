@@ -539,6 +539,8 @@
   width: min(100%, 440px);
   height: auto;
   overflow: visible;
+  /* sits above the card with the same soft drop shadow as the exploded pie */
+  filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.45));
 }
 
 .rc-gauge-track {
@@ -554,7 +556,6 @@
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   animation: rc-draw-path 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  filter: drop-shadow(0 0 9px rgba(143, 220, 160, 0.5));
 }
 
 .rc-tick {
@@ -586,6 +587,19 @@
 .rc-gauge-goal {
   font-size: 1.1rem;
   color: #9db3a6;
+}
+
+/* exact percentage, resting under the goal caption until hover */
+.rc-gauge-pct {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--rc-new);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.rc-gauge:hover .rc-gauge-pct {
+  opacity: 1;
 }
 
 /* ============ 07 · Waffle ============ */
@@ -1033,6 +1047,119 @@
 
 .rc-dual-bar.reveal {
   fill: var(--rc-new);
+}
+
+/* shared hover behaviour: focus one round, dim the rest — emphasis only,
+   nothing moves. Works for both the pure-CSS (:hover) and state (.on) paths. */
+.rc-dual-slot {
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.rc-dual:hover .rc-dual-slot:not(:hover),
+.rc-dual.is-hover .rc-dual-slot:not(.on) {
+  opacity: 0.32;
+}
+
+.rc-dual-hi {
+  fill: rgba(255, 255, 255, 0.045);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.rc-dual-slot:hover .rc-dual-hi,
+.rc-dual-slot.on .rc-dual-hi {
+  opacity: 1;
+}
+
+.rc-dual-val {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.rc-dual-slot:hover .rc-dual-val,
+.rc-dual-slot.on .rc-dual-val {
+  opacity: 1;
+}
+
+.rc-dual-val.exposure {
+  fill: var(--rc-review);
+}
+
+.rc-dual-val.reveal {
+  fill: var(--rc-new);
+}
+
+/* 16 · crosshair — guide line + corner readout + enlarged running dots */
+.rc-dual-guide {
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
+.rc-dual-cross-dot {
+  fill: #0d1f19;
+  stroke-width: 2;
+}
+
+.rc-dual-cross-dot.exposure {
+  stroke: var(--rc-review);
+}
+
+.rc-dual-cross-dot.reveal {
+  stroke: var(--rc-new);
+}
+
+.rc-dual-read {
+  font-size: 12px;
+  font-weight: 600;
+  fill: #eef4ee;
+}
+
+.rc-dual-read .exp {
+  fill: var(--rc-review);
+}
+
+.rc-dual-read .rev {
+  fill: var(--rc-new);
+}
+
+/* 17 · tooltip — a small floating card above the active round */
+.rc-dual-tip rect {
+  fill: rgba(13, 31, 25, 0.94);
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1;
+}
+
+.rc-dual-tip .tip-t {
+  font-size: 11px;
+  font-weight: 700;
+  fill: #eef4ee;
+}
+
+.rc-dual-tip .tip-v {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.rc-dual-tip .exp {
+  fill: var(--rc-review);
+}
+
+.rc-dual-tip .rev {
+  fill: var(--rc-new);
+}
+
+.rc-dual-tip .sep {
+  fill: #9db3a6;
+}
+
+/* 18 · spotlight — a soft beam behind the active round */
+.rc-dual-beam {
+  fill: url(#dual-beam-grad);
 }
 
 .rc-dual-line {

@@ -217,6 +217,7 @@ export function GoalGauge({ value, goal }: { value: number; goal: number }) {
           <span className="rc-gauge-goal">/ {goal}</span>
         </div>
         <span className="rc-cap">{t('results.dailyGoal')}</span>
+        <span className="rc-gauge-pct">{Math.round(pct * 100)}%</span>
       </div>
     </div>
   )
@@ -743,11 +744,14 @@ function ChartRadar({ t }: { t: T }) {
 export function Dual({
   rounds,
   deck,
+  hover = 'values',
 }: {
   rounds: { e: number; r: number }[]
   deck: number
+  hover?: 'values' | 'crosshair' | 'tooltip' | 'spotlight'
 }) {
   const { t } = useI18n()
+  const [active, setActive] = useState<number | null>(null)
   const W = 720
   const H = 250
   const PX = 30
@@ -790,7 +794,12 @@ export function Dual({
   ]
 
   return (
-    <div className="rc rc-dual">
+    <div
+      className={`rc rc-dual rc-dual--${hover}${
+        active !== null ? ' is-hover' : ''
+      }`}
+      onMouseLeave={() => setActive(null)}
+    >
       <div className="rc-dual-top">
         <span className="rc-big">{totalRev}</span>
         <span className="rc-cap">{t('results.reveals')}</span>
@@ -814,8 +823,51 @@ export function Dual({
             y2={H - PY - f * (H - 2 * PY)}
           />
         ))}
+        {/* 16 · crosshair: a guide line snapped to the active round */}
+        {hover === 'crosshair' && active !== null && (
+          <line
+            className="rc-dual-guide"
+            x1={cx(active)}
+            y1={PY - 6}
+            x2={cx(active)}
+            y2={H - PY}
+          />
+        )}
+
+        {/* 18 · spotlight: a soft beam behind the active round */}
+        {hover === 'spotlight' && active !== null && (
+          <>
+            <defs>
+              <linearGradient id="dual-beam-grad" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stopColor="rgba(143,220,160,0.22)" />
+                <stop offset="100%" stopColor="rgba(143,220,160,0)" />
+              </linearGradient>
+            </defs>
+            <rect
+              className="rc-dual-beam"
+              x={cx(active) - slot / 2}
+              y={0}
+              width={slot}
+              height={H}
+            />
+          </>
+        )}
+
         {rounds.map((d, i) => (
-          <g key={i}>
+          <g
+            key={i}
+            className={`rc-dual-slot${active === i ? ' on' : ''}`}
+            onMouseEnter={() => setActive(i)}
+          >
+            {hover === 'values' && (
+              <rect
+                className="rc-dual-hi"
+                x={cx(i) - slot / 2}
+                y={PY}
+                width={slot}
+                height={H - 2 * PY}
+              />
+            )}
             <rect
               className="rc-dual-bar exposure"
               x={cx(i) - bw - 2}
@@ -834,6 +886,26 @@ export function Dual({
               rx={3}
               style={{ animationDelay: `${i * 40 + 60}ms` } as CSSProperties}
             />
+            {hover === 'values' && (
+              <>
+                <text
+                  className="rc-dual-val exposure"
+                  x={cx(i) - bw / 2 - 2}
+                  y={yExp(d.e) - 8}
+                  textAnchor="middle"
+                >
+                  {d.e}
+                </text>
+                <text
+                  className="rc-dual-val reveal"
+                  x={cx(i) + 2 + bw / 2}
+                  y={yRev(d.r) - 8}
+                  textAnchor="middle"
+                >
+                  {d.r}
+                </text>
+              </>
+            )}
           </g>
         ))}
         <path className="rc-dual-line exposure" d={lineExp} />
@@ -856,6 +928,49 @@ export function Dual({
             r={2.4}
           />
         ))}
+        {/* 16 · crosshair: enlarge the active round's running-total dots and
+            read the round out in the corner */}
+        {hover === 'crosshair' && active !== null && (
+          <>
+            <circle
+              className="rc-dual-cross-dot exposure"
+              cx={cx(active)}
+              cy={yCum(cumExp[active], totalExp)}
+              r={4.4}
+            />
+            <circle
+              className="rc-dual-cross-dot reveal"
+              cx={cx(active)}
+              cy={yCum(cumRev[active], totalRev)}
+              r={4.4}
+            />
+            <text
+              className="rc-dual-read"
+              x={W - PX}
+              y={PY - 12}
+              textAnchor="end"
+            >
+              R{active + 1}
+              <tspan className="exp"> · {rounds[active].e}</tspan>
+              <tspan className="rev"> · {rounds[active].r}</tspan>
+            </text>
+          </>
+        )}
+
+        {/* 17 · tooltip: a small card floating above the active round */}
+        {hover === 'tooltip' && active !== null && (
+          <g className="rc-dual-tip">
+            <rect x={cx(active) - 46} y={6} width={92} height={40} rx={9} />
+            <text x={cx(active)} y={23} textAnchor="middle" className="tip-t">
+              R{active + 1}
+            </text>
+            <text x={cx(active)} y={39} textAnchor="middle" className="tip-v">
+              <tspan className="exp">{rounds[active].e}</tspan>
+              <tspan className="sep"> · </tspan>
+              <tspan className="rev">{rounds[active].r}</tspan>
+            </text>
+          </g>
+        )}
       </svg>
     </div>
   )
@@ -1016,15 +1131,18 @@ export function PieExplode({
                   className={`rp-slice ${s.key}`}
                   d={wedgePath(130, 130, 104, s.a0 + 2.5, s.a1 - 2.5)}
                 />
-                <text
-                  className="rp-slice-label"
-                  x={lx}
-                  y={ly}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                >
-                  {Math.round(s.frac * 100)}%
-                </text>
+                {/* slices under 10% are too thin to read a label in */}
+                {s.frac >= 0.1 && (
+                  <text
+                    className="rp-slice-label"
+                    x={lx}
+                    y={ly}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    {Math.round(s.frac * 100)}%
+                  </text>
+                )}
               </g>
             )
           })}
@@ -1148,6 +1266,24 @@ export default function ResultCharts() {
         caption={t('results.chart.cap.haloTicks')}
       >
         <ChartHaloTicks t={t} />
+      </Chart>
+      <Chart
+        label={`16 · ${t('results.chart.dualCross')}`}
+        caption={t('results.chart.cap.dualCross')}
+      >
+        <Dual rounds={SAMPLE_ROUNDS} deck={12} hover="crosshair" />
+      </Chart>
+      <Chart
+        label={`17 · ${t('results.chart.dualTip')}`}
+        caption={t('results.chart.cap.dualTip')}
+      >
+        <Dual rounds={SAMPLE_ROUNDS} deck={12} hover="tooltip" />
+      </Chart>
+      <Chart
+        label={`18 · ${t('results.chart.dualSpot')}`}
+        caption={t('results.chart.cap.dualSpot')}
+      >
+        <Dual rounds={SAMPLE_ROUNDS} deck={12} hover="spotlight" />
       </Chart>
     </div>
   )

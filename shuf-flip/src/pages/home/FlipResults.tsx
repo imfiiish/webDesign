@@ -113,7 +113,7 @@ export default function FlipResults({ stats, onContinue, onStop }: Props) {
               <GoalGauge value={studied} goal={DAILY_GOAL} />
             </section>
             <section className="results-panel results-panel-dual">
-              <Dual rounds={rounds} deck={deck} />
+              <Dual rounds={rounds} deck={deck} hover="crosshair" />
             </section>
           </div>
         </main>
