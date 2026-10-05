@@ -106,6 +106,8 @@ export default function SceneFlip() {
   }, [centerName, copy])
 
   const nextRound = useCallback(() => {
+    // ignore while a hint is pending/open (rapid clicks must not skip rounds)
+    if (helpLockRef.current) return
     setDeck(shuffled(WORDS))
     setCenter(0)
     setRevealed(false)
