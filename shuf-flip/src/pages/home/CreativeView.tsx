@@ -6,6 +6,7 @@ import SentenceBoard from './SentenceBoard'
 import PromptAnimations from './PromptAnimations'
 import BoxStyles from './BoxStyles'
 import BlankStyles from './BlankStyles'
+import ResultsIdeas from './ResultsIdeas'
 
 type Item =
   | 'flip'
@@ -13,6 +14,7 @@ type Item =
   | 'cardAnimations'
   | 'boxStyles'
   | 'blankStyles'
+  | 'resultsIdeas'
 
 /** Creative presentation: a live flip demo, the sentence exercise, and three
  *  pickers for the sentence card's motion, tray and blanks. */
@@ -66,6 +68,14 @@ export default function CreativeView() {
             <span className="dot" />
             {t('anim.blankStyles')}
           </button>
+          <button
+            type="button"
+            className={`navitem${active === 'resultsIdeas' ? ' on' : ''}`}
+            onClick={() => setActive('resultsIdeas')}
+          >
+            <span className="dot" />
+            {t('results.ideas')}
+          </button>
         </>
       }
     >
@@ -77,8 +87,10 @@ export default function CreativeView() {
         <PromptAnimations />
       ) : active === 'boxStyles' ? (
         <BoxStyles />
-      ) : (
+      ) : active === 'blankStyles' ? (
         <BlankStyles />
+      ) : (
+        <ResultsIdeas />
       )}
     </HomeShell>
   )
