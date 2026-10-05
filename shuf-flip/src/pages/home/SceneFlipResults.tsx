@@ -11,6 +11,9 @@ import { WORDS } from '../flip/data'
 import FlipResults, { type ResultsStats, type ResultsWord } from './FlipResults'
 import '../flip/flip.css'
 
+/** Cards drawn per round from the full deck. */
+const ROUND_SIZE = 8
+
 /** Reveal counts that auto-open the summary (distinct words revealed). */
 const MILESTONES = [5, 20]
 
@@ -27,7 +30,10 @@ export default function SceneFlipResults() {
   const { t } = useI18n()
   const navigate = useNavigate()
 
-  const [deck, setDeck] = useState<CardData[]>(WORDS)
+  // every round draws a fresh random hand from the full deck
+  const [deck, setDeck] = useState<CardData[]>(() =>
+    shuffled(WORDS).slice(0, ROUND_SIZE),
+  )
   const [center, setCenter] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [revealCounts, setRevealCounts] = useState<Record<string, number>>({})
@@ -111,7 +117,7 @@ export default function SceneFlipResults() {
       reveals,
       words,
       rounds,
-      deck: WORDS.length,
+      deck: ROUND_SIZE,
     }
   }, [revealCounts, roundHistory])
 
@@ -128,7 +134,7 @@ export default function SceneFlipResults() {
     setRoundHistory((h) => [...h, done])
     roundCenteredRef.current = new Set()
     roundRevealsRef.current = 0
-    setDeck(shuffled(WORDS))
+    setDeck(shuffled(WORDS).slice(0, ROUND_SIZE))
     setCenter(0)
     setRevealed(false)
     setStageKey((k) => k + 1)
