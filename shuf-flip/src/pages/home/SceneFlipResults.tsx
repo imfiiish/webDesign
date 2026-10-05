@@ -41,7 +41,6 @@ export default function SceneFlipResults() {
   >([])
 
   // words that reached the centre this round (exposure, once each)
-  const centeredRef = useRef<Set<string>>(new Set())
   // per-round tallies, reset whenever a fresh round starts
   const roundCenteredRef = useRef<Set<string>>(new Set())
   const roundRevealsRef = useRef(0)
@@ -59,10 +58,7 @@ export default function SceneFlipResults() {
   // record exposure as the centre moves
   useEffect(() => {
     const w = deck[center]?.word
-    if (w) {
-      centeredRef.current.add(w)
-      roundCenteredRef.current.add(w)
-    }
+    if (w) roundCenteredRef.current.add(w)
   }, [deck, center])
 
   const go = useCallback(
@@ -96,19 +92,17 @@ export default function SceneFlipResults() {
     const words: ResultsWord[] = Object.entries(revealCounts).map(
       ([word, count]) => ({ word, count, kind: kindOf(word) }),
     )
-    const revealed = new Set(words.map((w) => w.word))
     const studied = words.length
     const newWords = words.filter((w) => w.kind === 'new').length
     const reviewWords = studied - newWords
     const reveals = words.reduce((n, w) => n + w.count, 0)
-    // exposed = reached the centre but never revealed
-    let exposed = 0
-    for (const word of centeredRef.current) if (!revealed.has(word)) exposed += 1
     // the round in progress plus the ones already banked
     const rounds = [
       ...roundHistory,
       { e: roundCenteredRef.current.size, r: roundRevealsRef.current },
     ]
+    // exposure accumulates: each round counts the cards it reached (1..deck)
+    const exposed = rounds.reduce((sum, d) => sum + d.e, 0)
     return {
       studied,
       newWords,

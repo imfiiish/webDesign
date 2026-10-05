@@ -197,13 +197,14 @@
 }
 
 /* the reusable charts are happy anywhere; nudge them to fit the panels */
-.results-panel-halo .rc-halo {
+.results-panel-halo .rc-pie {
   gap: 26px;
 }
 
-.results-panel-halo .rc-donut {
-  width: 190px;
-  height: 190px;
+.results-panel-halo .rp-dial,
+.results-panel-halo .rpe-dial {
+  width: 210px;
+  height: 210px;
 }
 
 .results-panel-halo .rc-legend {
@@ -213,10 +214,6 @@
 
 .results-panel-halo .rc-legend li {
   font-size: 0.88rem;
-}
-
-.results-panel-halo .rc-big {
-  font-size: 2.2rem;
 }
 
 .results-panel-gauge .rc-gauge svg {

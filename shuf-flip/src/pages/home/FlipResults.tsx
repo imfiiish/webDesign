@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { useI18n } from '../../i18n'
-import { Dual, GoalGauge, Halo } from './ResultCharts'
+import { Dual, GoalGauge, PieExplode } from './ResultCharts'
 import './flipResults.css'
 
 export type ResultsWord = {
@@ -79,8 +79,7 @@ export default function FlipResults({ stats, onContinue, onStop }: Props) {
 
         <div className="results-dashboard">
           <section className="results-panel results-panel-halo">
-            <Halo
-              studied={studied}
+            <PieExplode
               newWords={newWords}
               reviewWords={reviewWords}
               exposed={exposed}
