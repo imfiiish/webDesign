@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import BackButton from '../../components/BackButton'
 import FlipDeck, { type CardData, type Slot } from '../../components/FlipDeck'
 import { useCopyNotice } from '../../components/useCopyNotice'
@@ -7,24 +8,36 @@ import { useStageScale } from '../../components/useStageScale'
 import { useI18n } from '../../i18n'
 import { shuffled } from '../../utils'
 import { WORDS } from '../flip/data'
+import FlipResults, { type ResultsStats, type ResultsWord } from './FlipResults'
 import '../flip/flip.css'
 
-/** Scene: a copy of the Flip page, kept for the results / score state to be
- *  layered on later. Currently identical to the page. */
+/** Scene: the Flip page plus a full-screen round summary. Data is demo —
+ *  centered = exposure (once per round), revealed = review (repeat counts). */
 export default function SceneFlipResults() {
   const { t } = useI18n()
+  const navigate = useNavigate()
 
   const [deck, setDeck] = useState<CardData[]>(WORDS)
   const [center, setCenter] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [revealCounts, setRevealCounts] = useState<Record<string, number>>({})
   const [stageKey, setStageKey] = useState(0)
+  const [stats, setStats] = useState<ResultsStats | null>(null)
+
+  // words that reached the centre this round (exposure, once each)
+  const centeredRef = useRef<Set<string>>(new Set())
 
   const { copied, copy, clear: clearCopy } = useCopyNotice()
-
   const { stageRef, scale } = useStageScale()
   const TOTAL = deck.length
   const centerName = deck[center]?.word ?? null
+  const showResults = stats !== null
+
+  // record exposure as the centre moves
+  useEffect(() => {
+    const w = deck[center]?.word
+    if (w) centeredRef.current.add(w)
+  }, [deck, center])
 
   const go = useCallback(
     (delta: number) => {
@@ -42,7 +55,6 @@ export default function SceneFlipResults() {
     if (name) setRevealCounts((c) => ({ ...c, [name]: (c[name] || 0) + 1 }))
   }, [deck, center])
 
-  // reveal / flip back (no audio to replay, so a second click hides it)
   const toggleReveal = useCallback(() => {
     if (revealed) setRevealed(false)
     else reveal()
@@ -52,20 +64,69 @@ export default function SceneFlipResults() {
     if (centerName) copy(centerName)
   }, [centerName, copy])
 
-  const nextRound = useCallback(() => {
+  // build a plausible summary from the round (real words, demo numbers)
+  const makeStats = useCallback((): ResultsStats => {
+    const map = new Map<string, ResultsWord>()
+    const add = (word: string, count: number) => {
+      if (!word || map.has(word)) return
+      map.set(word, {
+        word,
+        count,
+        kind: Math.random() < 0.58 ? 'new' : 'review',
+      })
+    }
+    // words that reached the centre = encountered (exposure; count 0 = seen only)
+    for (const word of centeredRef.current) add(word, revealCounts[word] ?? 0)
+    // revealed words, in case any were missed
+    for (const [word, count] of Object.entries(revealCounts)) add(word, count)
+    // pad the rail so it does not look empty
+    const pool = WORDS.map((w) => w.word)
+    while (map.size < 12) {
+      const word = pool[Math.floor(Math.random() * pool.length)]
+      const count = Math.random() < 0.7 ? 1 + Math.floor(Math.random() * 3) : 0
+      add(word, count)
+    }
+
+    const words = [...map.values()].slice(0, 16)
+    const studied = words.filter((w) => w.count > 0).length
+    const newWords = words.filter((w) => w.count > 0 && w.kind === 'new').length
+    const reviewWords = studied - newWords
+    const exposed = words.filter((w) => w.count === 0).length
+    const reveals = words.reduce((n, w) => n + w.count, 0)
+    return { studied, newWords, reviewWords, exposed, reveals, words }
+  }, [revealCounts])
+
+  // finish the round -> full-screen summary
+  const finishRound = useCallback(() => {
+    if (showResults) return
+    setRevealed(false)
+    setStats(makeStats())
+  }, [showResults, makeStats])
+
+  // continue -> reshuffle a fresh round
+  const continueRound = useCallback(() => {
     setDeck(shuffled(WORDS))
     setCenter(0)
     setRevealed(false)
-    clearCopy()
+    setRevealCounts({})
     setStageKey((k) => k + 1)
+    clearCopy()
+    centeredRef.current.clear()
+    setStats(null)
   }, [clearCopy])
 
-  // wheel: down / right -> next, up / left -> previous
-  useWheelNav(go)
+  const stopSession = useCallback(() => navigate('/'), [navigate])
 
-  // keyboard: Space reveal / Enter next round / H L arrows navigate
+  // wheel: down / right -> next, up / left -> previous (paused on the summary)
+  useWheelNav(go, !showResults)
+
+  // keyboard: Space reveal / Enter summary / H L arrows navigate
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (showResults) {
+        e.preventDefault()
+        return
+      }
       const k = e.key
       if ((e.ctrlKey || e.metaKey) && !e.shiftKey && k.toLowerCase() === 'c') {
         e.preventDefault()
@@ -81,7 +142,7 @@ export default function SceneFlipResults() {
       if (k === 'Enter') {
         e.preventDefault()
         if (e.repeat) return
-        nextRound()
+        finishRound()
         return
       }
       const low = k.toLowerCase()
@@ -95,11 +156,10 @@ export default function SceneFlipResults() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [go, toggleReveal, nextRound, copyCurrent])
+  }, [go, toggleReveal, finishRound, copyCurrent, showResults])
 
-  // double right-click (trackpad two-finger double tap), anywhere including
-  // the center card
-  useDoubleRightClick(nextRound)
+  // double right-click (trackpad two-finger double tap) ends the round
+  useDoubleRightClick(finishRound)
 
   const onCardClick = useCallback(
     (_name: string, slot: Slot) => {
@@ -130,7 +190,7 @@ export default function SceneFlipResults() {
       <button
         type="button"
         className="deck-action"
-        onClick={nextRound}
+        onClick={finishRound}
         aria-label={t('flip.next')}
         title={t('flip.next')}
       >
@@ -158,6 +218,14 @@ export default function SceneFlipResults() {
           <kbd>Enter</kbd> {t('flip.next')}
         </span>
       </div>
+
+      {stats && (
+        <FlipResults
+          stats={stats}
+          onContinue={continueRound}
+          onStop={stopSession}
+        />
+      )}
     </div>
   )
 }
