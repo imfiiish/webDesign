@@ -148,6 +148,11 @@ function outward(mid: number, dist: number) {
   return { '--ox': `${ox}px`, '--oy': `${oy}px` }
 }
 
+/** Soft same-colour glow for a segment (borrowed from the composition pie). */
+function glow(color: string) {
+  return { '--glow': `${color}66` } as CSSProperties
+}
+
 /* ------------------------------------------------------------------ *
  * Charts
  * ------------------------------------------------------------------ */
@@ -222,6 +227,7 @@ function Sunburst() {
                   d={arc(C, C, R_IN, c.a0 + GAP, c.a1 - GAP)}
                   stroke={SHADES[c.key][1]}
                   strokeWidth={W_IN}
+                  style={glow(SHADES[c.key][1])}
                   onMouseEnter={() =>
                     setActive({ label: t(c.label), n: c.total, cat: c.key })
                   }
@@ -240,6 +246,7 @@ function Sunburst() {
                       d={arc(C, C, R_OUT, x.a0 + GAP, x.a1 - GAP)}
                       stroke={SHADES[c.key][x.i]}
                       strokeWidth={W_OUT}
+                      style={glow(SHADES[c.key][x.i])}
                       onMouseEnter={() =>
                         setActive({
                           label: t(x.label),
@@ -294,6 +301,7 @@ function LinkedSunburst() {
                   <path
                     className="pb-fill"
                     fill={SHADES[c.key][1]}
+                    style={glow(SHADES[c.key][1])}
                     d={sectorPath(C, C, R0, R1, c.a0 + 1.4, c.a1 - 1.4)}
                   />
                 </g>
@@ -325,6 +333,7 @@ function LinkedSunburst() {
                       <path
                         className="pb-fill"
                         fill={SHADES[c.key][x.i]}
+                        style={glow(SHADES[c.key][x.i])}
                         d={sectorPath(C, C, R1 + 4, R2, x.a0 + 1.4, x.a1 - 1.4)}
                       />
                     </g>
@@ -379,6 +388,7 @@ function RingSunburst() {
                     d={arc(C, C, R_IN, c.a0 + GAP, c.a1 - GAP)}
                     stroke={SHADES[c.key][1]}
                     strokeWidth={W_IN}
+                    style={glow(SHADES[c.key][1])}
                   />
                 </g>
                 {c.children.map((x) => {
@@ -403,6 +413,7 @@ function RingSunburst() {
                         d={arc(C, C, R_OUT, x.a0 + GAP, x.a1 - GAP)}
                         stroke={SHADES[c.key][x.i]}
                         strokeWidth={W_OUT}
+                        style={glow(SHADES[c.key][x.i])}
                       />
                     </g>
                   )

@@ -31,6 +31,8 @@
   width: 100%;
   height: 100%;
   overflow: visible;
+  /* the composition pie's soft lift (on the SVG only, not the centre text) */
+  filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.45));
 }
 
 /* centre readout — flexbox keeps the two lines optically centred in the hole */
@@ -58,28 +60,35 @@
   cursor: pointer;
 }
 
-/* stroked ring segment (01, 06): draws in, brightens on hover */
+/* stroked ring segment (01, 06): draws in, glows and brightens on hover */
 .pb-arc {
   fill: none;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   animation: rc-draw-path 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  filter: drop-shadow(0 0 9px var(--glow, transparent));
   transition: opacity 0.2s ease, filter 0.18s ease;
   cursor: pointer;
 }
 
 .pb-arc:hover {
-  filter: brightness(1.12);
+  filter: drop-shadow(0 0 13px var(--glow, transparent)) brightness(1.1);
 }
 
-/* filled segment (05): pops in from the centre */
+/* filled segment (05): pops in from the centre, with the same glow */
 .pb-fill {
   stroke: rgba(13, 31, 25, 0.35);
   stroke-width: 1;
   transform-box: view-box;
   transform-origin: center;
+  filter: drop-shadow(0 0 9px var(--glow, transparent));
   animation: pb-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
   cursor: pointer;
+  transition: filter 0.18s ease;
+}
+
+.pb-slot:hover .pb-fill {
+  filter: drop-shadow(0 0 13px var(--glow, transparent)) brightness(1.06);
 }
 
 @keyframes pb-pop {
