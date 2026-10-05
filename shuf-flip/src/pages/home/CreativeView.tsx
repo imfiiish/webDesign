@@ -7,6 +7,7 @@ import PromptAnimations from './PromptAnimations'
 import BoxStyles from './BoxStyles'
 import BlankStyles from './BlankStyles'
 import ResultsIdeas from './ResultsIdeas'
+import ResultCharts from './ResultCharts'
 
 type Item =
   | 'flip'
@@ -15,6 +16,7 @@ type Item =
   | 'boxStyles'
   | 'blankStyles'
   | 'resultsIdeas'
+  | 'resultCharts'
 
 /** Creative presentation: a live flip demo, the sentence exercise, and three
  *  pickers for the sentence card's motion, tray and blanks. */
@@ -76,6 +78,14 @@ export default function CreativeView() {
             <span className="dot" />
             {t('results.ideas')}
           </button>
+          <button
+            type="button"
+            className={`navitem${active === 'resultCharts' ? ' on' : ''}`}
+            onClick={() => setActive('resultCharts')}
+          >
+            <span className="dot" />
+            {t('results.charts')}
+          </button>
         </>
       }
     >
@@ -89,8 +99,10 @@ export default function CreativeView() {
         <BoxStyles />
       ) : active === 'blankStyles' ? (
         <BlankStyles />
-      ) : (
+      ) : active === 'resultsIdeas' ? (
         <ResultsIdeas />
+      ) : (
+        <ResultCharts />
       )}
     </HomeShell>
   )

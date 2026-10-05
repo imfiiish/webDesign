@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 import { useI18n } from '../../i18n'
+import { Dual, GoalGauge, Halo } from './ResultCharts'
 import './flipResults.css'
 
 export type ResultsWord = {
@@ -15,6 +16,10 @@ export type ResultsStats = {
   exposed: number
   reveals: number
   words: ResultsWord[]
+  /** One entry per round: e = cards exposed, r = reveals. */
+  rounds: { e: number; r: number }[]
+  /** Cards in a round — the exposure ceiling. */
+  deck: number
 }
 
 type Props = {
@@ -23,21 +28,43 @@ type Props = {
   onStop: () => void
 }
 
+/** Daily target the goal gauge measures against. */
+const DAILY_GOAL = 15
+
 /** Full-screen round summary for the Flip · Results scene. Words encountered
- *  live in a left rail; the summary and actions sit in the right column. Free
- *  of the app tokens on purpose — it is meant to feel like a reward screen. */
+ *  live in a left rail; the summary reads as a small report — a composition
+ *  halo, a daily-goal gauge and the round's reveal pace. Free of the app
+ *  tokens on purpose — it is meant to feel like a reward screen. */
 export default function FlipResults({ stats, onContinue, onStop }: Props) {
   const { t } = useI18n()
-  const { studied, newWords, reviewWords, exposed, reveals, words } = stats
-  const newPct = studied ? Math.round((newWords / studied) * 100) : 0
+  const { studied, newWords, reviewWords, exposed, words, rounds, deck } =
+    stats
+
+  // left rail doubles as a bar chart: sorted, with a proportional fill
+  const maxCount = Math.max(1, ...words.map((w) => w.count))
+  const rail = [...words].sort(
+    (a, b) => b.count - a.count || a.word.localeCompare(b.word),
+  )
 
   return (
     <div className="results">
       <aside className="results-side">
-        <h2 className="results-side-title">{t('results.encountered')}</h2>
+        <h2 className="results-side-title">
+          {t('results.encountered')}
+          <span className="results-side-count">{studied}</span>
+        </h2>
         <ul className="results-wordlist">
-          {words.map((w) => (
-            <li key={w.word} className={`rw ${w.kind}`}>
+          {rail.map((w, i) => (
+            <li
+              key={w.word}
+              className={`rw ${w.kind}`}
+              style={
+                {
+                  '--w': `${(w.count / maxCount) * 100}%`,
+                  '--d': `${Math.min(i, 14) * 26}ms`,
+                } as CSSProperties
+              }
+            >
               <span className="rw-dot" aria-hidden="true" />
               <span className="rw-word">{w.word}</span>
               <span className="rw-count">×{w.count}</span>
@@ -50,43 +77,21 @@ export default function FlipResults({ stats, onContinue, onStop }: Props) {
         <p className="results-kicker">{t('results.kicker')}</p>
         <h1 className="results-title">{t('results.title')}</h1>
 
-        <div className="results-hero">
-          <div
-            className="results-ring"
-            style={{ '--p': newPct } as CSSProperties}
-          >
-            <div className="results-ring-inner">
-              <span className="results-hero-num">{studied}</span>
-              <span className="results-hero-label">{t('results.studied')}</span>
-            </div>
-          </div>
-          <div className="results-hero-meta">
-            <p className="results-hero-line">
-              <strong>{newWords}</strong> {t('results.new')}
-              <span className="results-dot">·</span>
-              <strong>{reviewWords}</strong> {t('results.review')}
-            </p>
-            <p className="results-hero-line muted">
-              {exposed} {t('results.exposed')}
-              <span className="results-dot">·</span>
-              {reveals} {t('results.reveals')}
-            </p>
-          </div>
-        </div>
-
-        <div className="results-stats">
-          <div className="results-stat new">
-            <span className="results-stat-num">{newWords}</span>
-            <span className="results-stat-label">{t('results.new')}</span>
-          </div>
-          <div className="results-stat review">
-            <span className="results-stat-num">{reviewWords}</span>
-            <span className="results-stat-label">{t('results.review')}</span>
-          </div>
-          <div className="results-stat exposed">
-            <span className="results-stat-num">{exposed}</span>
-            <span className="results-stat-label">{t('results.exposed')}</span>
-          </div>
+        <div className="results-dashboard">
+          <section className="results-panel results-panel-halo">
+            <Halo
+              studied={studied}
+              newWords={newWords}
+              reviewWords={reviewWords}
+              exposed={exposed}
+            />
+          </section>
+          <section className="results-panel results-panel-gauge">
+            <GoalGauge value={studied} goal={DAILY_GOAL} />
+          </section>
+          <section className="results-panel results-panel-dual">
+            <Dual rounds={rounds} deck={deck} />
+          </section>
         </div>
 
         <div className="results-actions">

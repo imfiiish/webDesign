@@ -35,9 +35,16 @@ export default function SceneFlipResults() {
   const [stats, setStats] = useState<ResultsStats | null>(null)
   // milestones already consumed by opening the summary
   const [shownMilestones, setShownMilestones] = useState<number[]>([])
+  // banked per-round tallies (e = cards exposed, r = reveals)
+  const [roundHistory, setRoundHistory] = useState<
+    { e: number; r: number }[]
+  >([])
 
   // words that reached the centre this round (exposure, once each)
   const centeredRef = useRef<Set<string>>(new Set())
+  // per-round tallies, reset whenever a fresh round starts
+  const roundCenteredRef = useRef<Set<string>>(new Set())
+  const roundRevealsRef = useRef(0)
 
   const { copied, copy, clear: clearCopy } = useCopyNotice()
   const { stageRef, scale } = useStageScale()
@@ -52,7 +59,10 @@ export default function SceneFlipResults() {
   // record exposure as the centre moves
   useEffect(() => {
     const w = deck[center]?.word
-    if (w) centeredRef.current.add(w)
+    if (w) {
+      centeredRef.current.add(w)
+      roundCenteredRef.current.add(w)
+    }
   }, [deck, center])
 
   const go = useCallback(
@@ -67,6 +77,7 @@ export default function SceneFlipResults() {
 
   const reveal = useCallback(() => {
     setRevealed(true)
+    roundRevealsRef.current += 1
     const name = deck[center]?.word
     if (name) setRevealCounts((c) => ({ ...c, [name]: (c[name] || 0) + 1 }))
   }, [deck, center])
@@ -93,13 +104,36 @@ export default function SceneFlipResults() {
     // exposed = reached the centre but never revealed
     let exposed = 0
     for (const word of centeredRef.current) if (!revealed.has(word)) exposed += 1
-    return { studied, newWords, reviewWords, exposed, reveals, words }
-  }, [revealCounts])
+    // the round in progress plus the ones already banked
+    const rounds = [
+      ...roundHistory,
+      { e: roundCenteredRef.current.size, r: roundRevealsRef.current },
+    ]
+    return {
+      studied,
+      newWords,
+      reviewWords,
+      exposed,
+      reveals,
+      words,
+      rounds,
+      deck: WORDS.length,
+    }
+  }, [revealCounts, roundHistory])
 
   // Enter opens the summary, but only once the reveal count has reached the
   // next milestone (5, then 20)
   // a fresh shuffle; the session (and milestone counts) carry on
   const newRound = useCallback(() => {
+    // snapshot the round that just ended, then reset its tallies (the state
+    // updater would otherwise read the refs after they are cleared)
+    const done = {
+      e: roundCenteredRef.current.size,
+      r: roundRevealsRef.current,
+    }
+    setRoundHistory((h) => [...h, done])
+    roundCenteredRef.current = new Set()
+    roundRevealsRef.current = 0
     setDeck(shuffled(WORDS))
     setCenter(0)
     setRevealed(false)
