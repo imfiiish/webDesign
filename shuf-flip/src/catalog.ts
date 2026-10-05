@@ -90,6 +90,17 @@ export const SCENES: CatalogEntry[] = [
     status: 'ready',
     variants: [DEFAULT_VARIANT],
   },
+  {
+    id: 'flip-results',
+    kind: 'scene',
+    title: 'Flip · Results',
+    description: {
+      en: 'The Flip page, kept for the results / score state to be added.',
+      zh: 'Flip 页面副本，留作加入成绩 / 结算状态。',
+    },
+    status: 'ready',
+    variants: [DEFAULT_VARIANT],
+  },
 ]
 
 export const COMPONENTS: CatalogEntry[] = [
