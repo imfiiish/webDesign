@@ -223,9 +223,11 @@
   min-height: 0;
 }
 
-/* the pace chart flexes to whatever height row 2 has left */
+/* the pace chart flexes to whatever height row 2 has left; the panel already
+   supplies the backdrop, so drop the chart's own `.rc` skin */
 .results-panel-dual .rc-dual {
   min-height: 0;
+  background: none;
 }
 
 .results-panel-dual .rc-dual svg {
