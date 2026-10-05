@@ -1,0 +1,355 @@
+/* Creative: progress-page chart concepts. Shares the `.rc` dark skin and the
+   chart palette with the Results gallery. */
+
+/* a segment slot that can slide outward when its branch is active */
+.pb-slot {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pb-slot.move {
+  transform: translate(var(--ox, 0), var(--oy, 0));
+}
+
+.rc-pburst .dim {
+  opacity: 0.22;
+  transition: opacity 0.2s ease;
+}
+
+/* ============ 01 / 06 · Sunburst ============ */
+.rc-pburst {
+  gap: 44px;
+}
+
+.pb-dial {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  flex: 0 0 auto;
+}
+
+.pb-sun {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* centre readout — flexbox keeps the two lines optically centred in the hole */
+.pb-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  pointer-events: none;
+}
+
+.pb-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.05);
+}
+
+/* static hover targets — invisible, they never move with the segments, and
+   they carry the pointer cursor since they sit on top of the visual layer */
+.pb-hit {
+  fill: none;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+/* stroked ring segment (01, 06): draws in, brightens on hover */
+.pb-arc {
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: rc-draw-path 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transition: opacity 0.2s ease, filter 0.18s ease;
+  cursor: pointer;
+}
+
+.pb-arc:hover {
+  filter: brightness(1.12);
+}
+
+/* filled segment (05): pops in from the centre */
+.pb-fill {
+  stroke: rgba(13, 31, 25, 0.35);
+  stroke-width: 1;
+  transform-box: view-box;
+  transform-origin: center;
+  animation: pb-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  cursor: pointer;
+}
+
+@keyframes pb-pop {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pb-hole {
+  fill: rgba(0, 0, 0, 0.25);
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 1;
+}
+
+.pb-num {
+  color: #eef4ee;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.pb-cap {
+  color: #9db3a6;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pb-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pb-leg-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+}
+
+.pb-leg-row i {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex: 0 0 auto;
+}
+
+.pb-leg-row b {
+  margin-left: auto;
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.pb-leg-sub {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pb-leg-sub li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #9db3a6;
+}
+
+.pb-leg-sub li i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex: 0 0 auto;
+}
+
+.pb-leg-sub li b {
+  margin-left: auto;
+  color: #cfdcd3;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============ 02 · Calendar ============ */
+.rc-pcal {
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pc-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.pc-cal {
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+}
+
+.pc-l0 {
+  --pc: rgba(255, 255, 255, 0.06);
+}
+.pc-l1 {
+  --pc: rgba(143, 220, 160, 0.22);
+}
+.pc-l2 {
+  --pc: rgba(143, 220, 160, 0.45);
+}
+.pc-l3 {
+  --pc: rgba(143, 220, 160, 0.72);
+}
+.pc-l4 {
+  --pc: #8fdca0;
+}
+
+.pc-cell {
+  fill: var(--pc);
+}
+
+.pc-legend {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+.pc-legend i {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  background: var(--pc);
+}
+
+.pc-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+/* ============ 03 · Growth ============ */
+.rc-pgrowth {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+}
+
+.pg-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.pg-streak {
+  margin-left: auto;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 220, 160, 0.35);
+  color: #8fdca0;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+}
+
+.pg-svg {
+  width: 100%;
+  height: auto;
+}
+
+.pg-area {
+  fill: rgba(143, 220, 160, 0.14);
+}
+
+.pg-line {
+  fill: none;
+  stroke: #8fdca0;
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: rc-draw-path 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.pg-pt {
+  fill: #8fdca0;
+  stroke: #0d1f19;
+  stroke-width: 1.5;
+}
+
+/* ============ 04 · Mastery rings ============ */
+.pm-svg {
+  width: 300px;
+  height: 300px;
+}
+
+.pm-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 12;
+}
+
+.pm-arc {
+  fill: none;
+  stroke-width: 12;
+  stroke-linecap: round;
+  animation: pm-draw 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pm-draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+}
+
+.pm-num {
+  fill: #eef4ee;
+  font-size: 42px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pm-cap {
+  fill: #9db3a6;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pm-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pm-legend li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.pm-legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex: 0 0 auto;
+}
+
+.pm-legend b {
+  margin-left: auto;
+  color: #eef4ee;
+  font-variant-numeric: tabular-nums;
+}
