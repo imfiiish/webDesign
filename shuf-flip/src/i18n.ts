@@ -217,6 +217,7 @@ const DICT: Record<Lang, Record<string, string>> = {
     'settings.mix.title': 'Review vs new',
     'settings.mix.desc':
       'Spend more time reviewing, or push through new words faster.',
+    'settings.mix.default': 'Default',
     'settings.mix.faster': 'Faster new words',
     'settings.mix.moreReview': 'More review',
     'settings.mix.review': 'Review',
@@ -438,6 +439,7 @@ const DICT: Record<Lang, Record<string, string>> = {
     'settings.goal.today': '今天',
     'settings.mix.title': '复习与新词',
     'settings.mix.desc': '多花时间复习，还是更快地学新词。',
+    'settings.mix.default': '默认',
     'settings.mix.faster': '更快学新词',
     'settings.mix.moreReview': '更多复习',
     'settings.mix.review': '复习',

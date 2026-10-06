@@ -9,10 +9,29 @@ const GOALS = [5, 10, 20, 30, 50]
 /** Preview of today's progress toward the goal (appearance only). */
 const TODAY = 12
 
-/** Review / new balance presets. The first is the default. */
+/** Review / new balance presets. The default one is preselected. */
 const MIX = [
-  { value: 'new', labelKey: 'settings.mix.faster', new: 65, review: 35 },
-  { value: 'review', labelKey: 'settings.mix.moreReview', new: 35, review: 65 },
+  {
+    value: 'review',
+    labelKey: 'settings.mix.moreReview',
+    new: 35,
+    review: 65,
+    note: '注释1',
+  },
+  {
+    value: 'default',
+    labelKey: 'settings.mix.default',
+    new: 50,
+    review: 50,
+    note: '注释2',
+  },
+  {
+    value: 'new',
+    labelKey: 'settings.mix.faster',
+    new: 65,
+    review: 35,
+    note: '注释3',
+  },
 ]
 
 const ROUNDS = ['8', '16']
@@ -56,7 +75,7 @@ function Seg({
 export default function Settings() {
   const { t } = useI18n()
   const [goal, setGoal] = useState(20)
-  const [mix, setMix] = useState(0)
+  const [mix, setMix] = useState(1)
   const [round, setRound] = useState('16')
   const [lang, setLang] = useState('en')
 
@@ -142,6 +161,7 @@ export default function Settings() {
                   {t('settings.mix.review')} {o.review}% ·{' '}
                   {t('settings.mix.new')} {o.new}%
                 </span>
+                <span className="set-choice-note">{o.note}</span>
               </button>
             ))}
           </div>
