@@ -77,59 +77,108 @@
 }
 
 /* ---- daily goal ---- */
-.set-readout {
+.set-goal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.set-goal-step {
   flex: 0 0 auto;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 6px 13px;
-  border-radius: 999px;
-  border: 1px solid rgba(143, 220, 160, 0.35);
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #eef4ee;
+  font: inherit;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.set-goal-step:hover {
+  color: #8fdca0;
+  border-color: rgba(143, 220, 160, 0.55);
   background: rgba(143, 220, 160, 0.1);
 }
 
-.set-readout b {
-  font-size: 1.35rem;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  color: #8fdca0;
+.set-goal-step:active {
+  transform: translateY(1px);
 }
 
-.set-readout small {
-  font-size: 0.62rem;
+.set-goal-field {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 9px;
+  min-width: 196px;
+  padding: 7px 20px;
+  border-radius: 14px;
+  border: 1px solid rgba(143, 220, 160, 0.35);
+  background: rgba(143, 220, 160, 0.08);
+  cursor: text;
+}
+
+.set-goal-input {
+  width: 4ch;
+  border: 0;
+  background: transparent;
+  color: #8fdca0;
+  font: inherit;
+  font-size: 1.75rem;
+  font-weight: 650;
+  line-height: 1.1;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+.set-goal-input::-webkit-outer-spin-button,
+.set-goal-input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.set-goal-unit {
+  font-size: 0.65rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #9db3a6;
 }
 
-.set-chips {
+.set-presets {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
+  margin-top: 16px;
 }
 
-.set-chip {
-  flex: 1 1 auto;
-  min-width: 58px;
-  padding: 10px 0;
-  border-radius: 12px;
+.set-preset {
+  min-width: 52px;
+  padding: 8px 15px;
+  border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.03);
   color: #cfe0d4;
   font: inherit;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
   transition: color 0.15s ease, background 0.15s ease,
     border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.set-chip:hover {
+.set-preset:hover {
   color: #eef4ee;
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.set-chip.on {
+.set-preset.on {
   color: #08130f;
   background: #8fdca0;
   border-color: #8fdca0;
