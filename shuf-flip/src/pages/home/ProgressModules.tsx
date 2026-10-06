@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { useI18n } from '../../i18n'
 import './progressModules.css'
 
@@ -80,8 +81,26 @@ export function CalendarModule() {
   )
 }
 
-/** Creative: the calendar module, shown docked in a screen's right rail. */
-export default function ProgressModules() {
+/** Today: how many new words were learned and how many were reviewed. */
+function TodayModule() {
+  const { t } = useI18n()
+  return (
+    <div className="pm-today">
+      <div className="pm-stat new">
+        <b>3</b>
+        <span>{t('results.new')}</span>
+      </div>
+      <div className="pm-stat review">
+        <b>2</b>
+        <span>{t('results.review')}</span>
+      </div>
+    </div>
+  )
+}
+
+/** The whole composition: both modules docked in a screen's right rail. */
+function LayoutMock() {
+  const { t } = useI18n()
   return (
     <div className="pm-screen">
       <div className="pm-screen-body" aria-hidden="true">
@@ -93,8 +112,50 @@ export default function ProgressModules() {
         </div>
       </div>
       <aside className="pm-screen-rail">
-        <CalendarModule />
+        <div className="pm-rail-item">
+          <h3 className="pm-rail-label">{t('progress.mod.calendar')}</h3>
+          <CalendarModule />
+        </div>
+        <div className="pm-rail-item">
+          <h3 className="pm-rail-label">{t('progress.mod.today')}</h3>
+          <TodayModule />
+        </div>
       </aside>
+    </div>
+  )
+}
+
+function Item({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <section className="pm-item">
+      <h3 className="pm-item-label">{label}</h3>
+      {children}
+    </section>
+  )
+}
+
+/** Creative: the rail modules — the layout first, then each on its own. */
+export default function ProgressModules() {
+  const { t } = useI18n()
+  return (
+    <div className="pm-list">
+      <Item label={`01 · ${t('progress.mod.layout')}`}>
+        <LayoutMock />
+      </Item>
+      <Item label={`02 · ${t('progress.mod.calendar')}`}>
+        <div className="pm-mod-stage">
+          <div className="pm-mod">
+            <CalendarModule />
+          </div>
+        </div>
+      </Item>
+      <Item label={`03 · ${t('progress.mod.today')}`}>
+        <div className="pm-mod-stage">
+          <div className="pm-mod">
+            <TodayModule />
+          </div>
+        </div>
+      </Item>
     </div>
   )
 }
