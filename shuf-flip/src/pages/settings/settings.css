@@ -252,17 +252,10 @@
   background: linear-gradient(90deg, #8fdca0, #a9e6b6);
 }
 
-.set-choice-split {
-  font-size: 0.74rem;
+.set-choice-note {
+  font-size: 0.76rem;
   letter-spacing: 0.02em;
   color: #9db3a6;
-  font-variant-numeric: tabular-nums;
-}
-
-.set-choice-note {
-  font-size: 0.72rem;
-  font-style: italic;
-  color: #7f9488;
 }
 
 /* ---- round size + language ---- */

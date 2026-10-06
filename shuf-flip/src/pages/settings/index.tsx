@@ -157,10 +157,6 @@ export default function Settings() {
                   <span className="review" style={{ flexGrow: o.review }} />
                   <span className="new" style={{ flexGrow: o.new }} />
                 </span>
-                <span className="set-choice-split">
-                  {t('settings.mix.review')} {o.review}% ·{' '}
-                  {t('settings.mix.new')} {o.new}%
-                </span>
                 <span className="set-choice-note">{o.note}</span>
               </button>
             ))}
