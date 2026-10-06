@@ -19,29 +19,29 @@ export default function Progress() {
   return (
     <div className="progress-page">
       <BackButton />
+      <header className="progress-head">
+        <div>
+          <h1 className="progress-title">{t('progress.title')}</h1>
+          <p className="progress-desc">{t('progress.desc')}</p>
+        </div>
+        <div className="progress-tabs" role="tablist">
+          {ORDER.map((k) => (
+            <button
+              key={k}
+              type="button"
+              role="tab"
+              aria-selected={dim === k}
+              className={`progress-tab${dim === k ? ' on' : ''}`}
+              onClick={() => setDim(k)}
+            >
+              {t(DIMS[k].label)}
+            </button>
+          ))}
+        </div>
+      </header>
+
       <div className="progress-body">
         <main className="progress-main">
-          <header className="progress-head">
-            <div>
-              <h1 className="progress-title">{t('progress.title')}</h1>
-              <p className="progress-desc">{t('progress.desc')}</p>
-            </div>
-            <div className="progress-tabs" role="tablist">
-              {ORDER.map((k) => (
-                <button
-                  key={k}
-                  type="button"
-                  role="tab"
-                  aria-selected={dim === k}
-                  className={`progress-tab${dim === k ? ' on' : ''}`}
-                  onClick={() => setDim(k)}
-                >
-                  {t(DIMS[k].label)}
-                </button>
-              ))}
-            </div>
-          </header>
-
           <div className="progress-grid">
             {/* the pie only reads at the day zoom */}
             {dim === 'day' && d.pie && (
