@@ -163,20 +163,12 @@ const DICT: Record<Lang, Record<string, string>> = {
     'results.words.tweak.glow': 'Glow',
     'results.words.tweak.cap.glow':
       'Green ambient glow; hover lights a left edge',
-    'results.words.tweak.flat': 'Flat',
-    'results.words.tweak.cap.flat': 'No shadow or border, hairline rows',
     'results.words.tweak.recessed': 'Recessed',
     'results.words.tweak.cap.recessed':
       'Inset shadow; rows rise out of the dark',
     'results.words.tweak.glass': 'Glass',
     'results.words.tweak.cap.glass':
       'Blurred, translucent panel with a bright edge',
-    'results.words.tweak.hard': 'Hard shadow',
-    'results.words.tweak.cap.hard':
-      'Offset hard shadow; the card lifts on hover',
-    'results.words.tweak.underline': 'Underline',
-    'results.words.tweak.cap.underline':
-      "Hover draws the word's share as an underline",
     'results.words.tweak.grow': 'Grow',
     'results.words.tweak.cap.grow':
       'The share bar thickens and the count pops on hover',
@@ -387,16 +379,10 @@ const DICT: Record<Lang, Record<string, string>> = {
     'results.words.tweak.cap.current': '柔和投影，悬停整行右移',
     'results.words.tweak.glow': '柔光',
     'results.words.tweak.cap.glow': '绿色环境光晕，悬停亮起左边线',
-    'results.words.tweak.flat': '扁平',
-    'results.words.tweak.cap.flat': '无投影无边框，细分隔线',
     'results.words.tweak.recessed': '内凹',
     'results.words.tweak.cap.recessed': '内阴影下沉，悬停行浮起',
     'results.words.tweak.glass': '玻璃',
     'results.words.tweak.cap.glass': '毛玻璃半透明，亮边描边',
-    'results.words.tweak.hard': '硬影',
-    'results.words.tweak.cap.hard': '偏移硬阴影，悬停整卡上抬',
-    'results.words.tweak.underline': '下划线',
-    'results.words.tweak.cap.underline': '悬停按占比画词下划线',
     'results.words.tweak.grow': '条增长',
     'results.words.tweak.cap.grow': '悬停占比条加厚、次数放大',
     'progress.charts': '进度页：图表',

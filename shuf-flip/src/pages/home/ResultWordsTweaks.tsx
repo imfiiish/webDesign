@@ -9,11 +9,8 @@ type Tweak = { key: string; name: string; cap: string }
 const TWEAKS: Tweak[] = [
   { key: 'current', name: 'results.words.tweak.current', cap: 'results.words.tweak.cap.current' },
   { key: 'glow', name: 'results.words.tweak.glow', cap: 'results.words.tweak.cap.glow' },
-  { key: 'flat', name: 'results.words.tweak.flat', cap: 'results.words.tweak.cap.flat' },
   { key: 'recessed', name: 'results.words.tweak.recessed', cap: 'results.words.tweak.cap.recessed' },
   { key: 'glass', name: 'results.words.tweak.glass', cap: 'results.words.tweak.cap.glass' },
-  { key: 'hard', name: 'results.words.tweak.hard', cap: 'results.words.tweak.cap.hard' },
-  { key: 'underline', name: 'results.words.tweak.underline', cap: 'results.words.tweak.cap.underline' },
   { key: 'grow', name: 'results.words.tweak.grow', cap: 'results.words.tweak.cap.grow' },
 ]
 

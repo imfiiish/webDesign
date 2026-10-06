@@ -2,7 +2,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
   type MouseEvent,
   type ReactNode,
 } from 'react'
@@ -290,45 +289,6 @@ function RingDial({
   )
 }
 
-/** 06 · ring — arcs draw in; hovering a count dims the other slice, lights
- *  this one up, and swaps the centre to that number. */
-export function TodayRingWideModule({
-  dividers = true,
-}: {
-  dividers?: boolean
-} = {}) {
-  const { t } = useI18n()
-  const [active, setActive] = useState<Slice | null>(null)
-  const num = active ? DAY[active] : DAY_TOTAL
-  const cap = active
-    ? t(active === 'new' ? 'results.new' : 'results.review')
-    : t('progress.mod.todayWords')
-  return (
-    <div
-      className={`pm-today-card pm-ring-card${
-        dividers ? '' : ' no-dividers'
-      }`}
-      onMouseLeave={() => setActive(null)}
-    >
-      <div className="pm-ring-left">
-        <RingDial
-          newOffset={100 - NEW_PCT}
-          reviewOffset={100 - REVIEW_PCT}
-          newCls={`draw${active === 'new' ? ' on' : active ? ' dim' : ''}`}
-          reviewCls={`draw${active === 'review' ? ' on' : active ? ' dim' : ''}`}
-          onHover={setActive}
-        >
-          <b key={num} className={`pm-ring-num${active ? ` ${active}` : ''}`}>
-            {num}
-          </b>
-          <small key={cap}>{cap}</small>
-        </RingDial>
-      </div>
-      <CountsSide active={active} onHover={setActive} />
-    </div>
-  )
-}
-
 /** The live dial: thicker arcs with round caps, a light that sweeps the
  *  track as they draw in, and slices that grow / recede on hover. It
  *  remounts whenever `run` changes so the whole entrance replays. */
@@ -465,90 +425,6 @@ export function TodayPickWideModule() {
         </RingDial>
       </div>
       <CountsSide active={picked} onPick={pick} />
-    </div>
-  )
-}
-
-/** 11 · cycle — the focus rotates on its own; hovering pauses and previews,
- *  clicking pins a slice. The active arc pulses. */
-export function TodayCycleWideModule() {
-  const { t } = useI18n()
-  const [auto, setAuto] = useState(0)
-  const [hover, setHover] = useState<Slice | null>(null)
-  const [pinned, setPinned] = useState<Slice | null>(null)
-  const order: Slice[] = ['new', 'review']
-
-  useEffect(() => {
-    if (hover || pinned) return
-    const id = setInterval(() => setAuto((i) => (i + 1) % 2), 2600)
-    return () => clearInterval(id)
-  }, [hover, pinned])
-
-  const active = pinned ?? hover ?? order[auto]
-  const num = DAY[active]
-  const cap = t(active === 'new' ? 'results.new' : 'results.review')
-  const pick = (k: Slice) => setPinned((p) => (p === k ? null : k))
-
-  return (
-    <div
-      className="pm-today-card pm-ring-card"
-      onMouseLeave={() => setHover(null)}
-    >
-      <div className="pm-ring-left">
-        <RingDial
-          newOffset={100 - NEW_PCT}
-          reviewOffset={100 - REVIEW_PCT}
-          newCls={active === 'new' ? 'pulse' : 'dim'}
-          reviewCls={active === 'review' ? 'pulse' : 'dim'}
-          onHover={setHover}
-          onPick={pick}
-        >
-          <b key={num} className={`pm-ring-num ${active}`}>
-            {num}
-          </b>
-          <small key={cap}>{cap}</small>
-        </RingDial>
-      </div>
-      <CountsSide active={active} onHover={setHover} onPick={pick} />
-    </div>
-  )
-}
-
-/** 09 · units — one cell per word, green for new, blue for review. */
-export function TodayUnitsWideModule() {
-  const { t } = useI18n()
-  const fresh = 3
-  const review = 2
-  const total = fresh + review
-  const cells = [
-    ...Array.from({ length: fresh }, () => 'new' as const),
-    ...Array.from({ length: review }, () => 'review' as const),
-  ]
-  return (
-    <div className="pm-today-card pm-units-card">
-      <div className="pm-units-head">
-        <b>{total}</b>
-        <span>{t('progress.mod.todayWords')}</span>
-      </div>
-      <ul className="pm-units">
-        {cells.map((k, i) => (
-          <li
-            key={i}
-            className={k}
-            style={{ '--d': `${i * 70}ms` } as CSSProperties}
-          />
-        ))}
-      </ul>
-      <div className="pm-units-legend">
-        <span className="new">
-          <i aria-hidden="true" />
-          {t('results.new')} <b>{fresh}</b>
-        </span>
-        <span className="review">
-          <i aria-hidden="true" />
-          {t('results.review')} <b>{review}</b>
-        </span>
-      </div>
     </div>
   )
 }
@@ -788,20 +664,6 @@ export default function ProgressModules() {
           </div>
         </div>
       </Item>
-      <Item label={`06 · ${t('progress.mod.todayRingCard')}`}>
-        <div className="pm-mod-stage">
-          <div className="pm-card-mock">
-            <TodayRingWideModule />
-          </div>
-        </div>
-      </Item>
-      <Item label={`07 · ${t('progress.mod.todayUnitsCard')}`}>
-        <div className="pm-mod-stage">
-          <div className="pm-card-mock">
-            <TodayUnitsWideModule />
-          </div>
-        </div>
-      </Item>
       <Item label={`08 · ${t('progress.mod.todayRoll')}`}>
         <div className="pm-mod-stage">
           <div className="pm-card-mock">
@@ -820,13 +682,6 @@ export default function ProgressModules() {
         <div className="pm-mod-stage">
           <div className="pm-card-mock">
             <TodayPickWideModule />
-          </div>
-        </div>
-      </Item>
-      <Item label={`11 · ${t('progress.mod.todayCycle')}`}>
-        <div className="pm-mod-stage">
-          <div className="pm-card-mock">
-            <TodayCycleWideModule />
           </div>
         </div>
       </Item>

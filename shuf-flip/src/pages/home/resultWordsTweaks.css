@@ -199,26 +199,6 @@
   box-shadow: inset 3px 0 0 #8fdca0;
 }
 
-/* flat — no shadow or border, hairline rows */
-.wt-card--flat {
-  border-color: transparent;
-  border-radius: 12px;
-  background: #10251d;
-  box-shadow: none;
-  padding: 20px;
-}
-.wt-card--flat .wt-list {
-  gap: 0;
-}
-.wt-card--flat .wt-list li {
-  border-radius: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  background: transparent;
-}
-.wt-card--flat .wt-list li:hover {
-  background: rgba(143, 220, 160, 0.07);
-}
-
 /* recessed — pressed into the panel */
 .wt-card--recessed {
   background: rgba(0, 0, 0, 0.22);
@@ -248,62 +228,6 @@
 .wt-card--glass .wt-list li:hover {
   background: rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
-}
-
-/* hard — offset solid shadow; the card lifts on hover */
-.wt-card--hard {
-  border-radius: 8px;
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.55);
-}
-.wt-card--hard:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 14px 14px 0 rgba(0, 0, 0, 0.6);
-}
-.wt-card--hard .wt-list li {
-  border-radius: 6px;
-}
-.wt-card--hard .wt-list li:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* underline — minimal; hover draws the share as an underline */
-.wt-card--underline {
-  border-color: rgba(255, 255, 255, 0.08);
-  background: transparent;
-  box-shadow: none;
-}
-.wt-card--underline .wt-list {
-  gap: 2px;
-}
-.wt-card--underline .wt-list li {
-  padding: 7px 6px;
-  background: transparent;
-}
-.wt-card--underline .wt-fill {
-  opacity: 0;
-}
-.wt-card--underline .wt-list li::after {
-  content: '';
-  position: absolute;
-  left: 6px;
-  right: 6px;
-  bottom: 2px;
-  height: 2px;
-  background: #8fdca0;
-  transform: scaleX(var(--p));
-  transform-origin: left;
-  opacity: 0;
-  transition: opacity 200ms ease;
-}
-.wt-card--underline .wt-list li.review::after {
-  background: #e6c877;
-}
-.wt-card--underline .wt-list li:hover::after {
-  opacity: 1;
-}
-.wt-card--underline .wt-list li:hover .wt-word {
-  color: #fff;
 }
 
 /* grow — the share bar thickens and the count pops on hover */

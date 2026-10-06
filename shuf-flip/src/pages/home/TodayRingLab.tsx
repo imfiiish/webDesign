@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { useI18n } from '../../i18n'
-import { TodayRingLiveModule, TodayRingWideModule } from './ProgressModules'
+import { TodayRingLiveModule } from './ProgressModules'
 import './progressModules.css'
 
 /** A ring concept with the replay button in its title row, matching the
@@ -36,8 +36,8 @@ function LabItem({
   )
 }
 
-/** A dedicated bench for the Progress "today · ring" card — the no-divider
- *  takes, each with its own replay. */
+/** A dedicated bench for the Progress "today · ring" card — the live take,
+ *  with its own replay. */
 export default function TodayRingLab() {
   const { t } = useI18n()
   return (
@@ -46,20 +46,6 @@ export default function TodayRingLab() {
         {(run) => (
           <div className="pm-card-mock">
             <TodayRingLiveModule dividers={false} run={run} enterCounts />
-          </div>
-        )}
-      </LabItem>
-      <LabItem label={`02 · ${t('progress.mod.todayRingPlain')}`}>
-        {() => (
-          <div className="pm-card-mock">
-            <TodayRingWideModule dividers={false} />
-          </div>
-        )}
-      </LabItem>
-      <LabItem label={`04 · ${t('progress.mod.todayRingLivePlain')}`}>
-        {(run) => (
-          <div className="pm-card-mock">
-            <TodayRingLiveModule dividers={false} run={run} />
           </div>
         )}
       </LabItem>
