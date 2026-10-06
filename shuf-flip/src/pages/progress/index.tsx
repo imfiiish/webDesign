@@ -3,7 +3,10 @@ import BackButton from '../../components/BackButton'
 import { useI18n } from '../../i18n'
 import { Dual, GoalGauge, PieExplode } from '../home/ResultCharts'
 import { Sunburst } from '../home/ProgressCharts'
-import { CalendarModule } from '../home/ProgressModules'
+import {
+  CalendarModule,
+  TodayRingWideModule,
+} from '../home/ProgressModules'
 import { DIMS, type DimKey } from './data'
 import './progress.css'
 
@@ -43,14 +46,22 @@ export default function Progress() {
       <div className="progress-body">
         <main className="progress-main">
           <div className="progress-grid">
-            {/* the pie only reads at the day zoom */}
+            {/* the pie only reads at the day zoom; today's numbers ride
+                along on the same row */}
             {dim === 'day' && d.pie && (
-              <section className="progress-card progress-card-wide">
+              <section className="progress-card">
                 <PieExplode
                   newWords={d.pie.newWords}
                   reviewWords={d.pie.reviewWords}
                   exposed={d.pie.exposed}
+                  legend={false}
                 />
+              </section>
+            )}
+
+            {dim === 'day' && (
+              <section className="progress-card">
+                <TodayRingWideModule />
               </section>
             )}
 

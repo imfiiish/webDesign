@@ -12,6 +12,7 @@ import ResultWords from './ResultWords'
 import ResultWordsTweaks from './ResultWordsTweaks'
 import ProgressCharts from './ProgressCharts'
 import ProgressModules from './ProgressModules'
+import TodayRingLab from './TodayRingLab'
 
 type Item =
   | 'flip'
@@ -25,6 +26,7 @@ type Item =
   | 'resultWordsTweaks'
   | 'progressCharts'
   | 'progressModules'
+  | 'progressRing'
 
 /** Creative presentation: a live flip demo, the sentence exercise, and three
  *  pickers for the sentence card's motion, tray and blanks. */
@@ -126,6 +128,14 @@ export default function CreativeView() {
             <span className="dot" />
             {t('progress.modules')}
           </button>
+          <button
+            type="button"
+            className={`navitem${active === 'progressRing' ? ' on' : ''}`}
+            onClick={() => setActive('progressRing')}
+          >
+            <span className="dot" />
+            {t('progress.ring')}
+          </button>
         </>
       }
     >
@@ -149,6 +159,8 @@ export default function CreativeView() {
         <ResultWordsTweaks />
       ) : active === 'progressCharts' ? (
         <ProgressCharts />
+      ) : active === 'progressRing' ? (
+        <TodayRingLab />
       ) : (
         <ProgressModules />
       )}

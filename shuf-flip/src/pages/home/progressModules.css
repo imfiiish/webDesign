@@ -131,14 +131,21 @@
   color: #cfe3d6;
 }
 
-/* ---- today: two numbers, new vs review ---- */
-.pm-today {
-  display: flex;
+/* ---- the shared module shell: every rail module sits on this ---- */
+.pm-today,
+.pm-today-split,
+.pm-today-num,
+.pm-cal {
   padding: 18px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
   box-shadow: 0 26px 54px -32px rgba(0, 0, 0, 0.9);
+}
+
+/* ---- today: two numbers, new vs review ---- */
+.pm-today {
+  display: flex;
 }
 
 .pm-stat {
@@ -175,16 +182,734 @@
   color: #9db3a6;
 }
 
+/* ---- today · split: the day's total over a proportional bar ---- */
+.pm-today-split {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pm-ts-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pm-ts-head b {
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: #eef4ee;
+}
+
+.pm-ts-head span {
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+.pm-ts-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.pm-ts-bar span {
+  flex-basis: 0;
+  transition: flex-grow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pm-ts-bar .new {
+  background: #8fdca0;
+}
+
+.pm-ts-bar .review {
+  background: #7fb3d5;
+}
+
+.pm-ts-legend {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pm-ts-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+.pm-ts-legend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.pm-ts-legend .new i {
+  color: #8fdca0;
+}
+
+.pm-ts-legend .review i {
+  color: #7fb3d5;
+}
+
+.pm-ts-legend b {
+  color: #eef4ee;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- the numeric today shell (used by the rail hero) ---- */
+.pm-today-num {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: #eef4ee;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 05 · hero — a hero total beside two stacked blocks. */
+.pm-hero-main small,
+.pm-hero-side small {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9db3a6;
+  text-align: center;
+}
+
+.pm-hero {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+.pm-hero-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.pm-hero-main b {
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.pm-hero-side {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pm-hero-side > span {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 7px 0;
+}
+
+.pm-hero-side > span + span {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pm-hero-side b {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pm-hero-side .new b {
+  color: #8fdca0;
+}
+
+.pm-hero-side .review b {
+  color: #7fb3d5;
+}
+
+/* ---- card-scale today modules (06–07): for the Progress page's wide
+   card beside the pie, so the shell doesn't read as empty ---- */
+.pm-card-mock {
+  width: 411px;
+  min-height: 288px;
+  display: flex;
+  padding: 18px 20px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 24px 50px -34px rgba(0, 0, 0, 0.85);
+}
+
+.pm-today-card {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  color: #eef4ee;
+  font-variant-numeric: tabular-nums;
+}
+
+.pm-today-card small {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9db3a6;
+  text-align: center;
+}
+
+/* 02 · no dividers — keep the layout, hide the rules */
+.pm-ring-card.no-dividers .pm-hw-side {
+  border-left-color: transparent;
+}
+
+.pm-ring-card.no-dividers .pm-hw-side > span + span {
+  border-top-color: transparent;
+}
+
+/* the counts column — shared by the ring card */
+.pm-hw-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.pm-hw-side > span {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.pm-hw-side > span + span {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.pm-hw-side b {
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pm-hw-side .new b {
+  color: #8fdca0;
+}
+
+.pm-hw-side .review b {
+  color: #7fb3d5;
+}
+
+/* 06 · ring — the ring, then the stacked counts on the right */
+.pm-ring-card {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 16px;
+}
+
+/* the left block holds the ring and centres it, nudging it off the edge */
+.pm-ring-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* the right block: wide enough for three-digit counts */
+.pm-ring-card .pm-hw-side {
+  flex: 0 0 124px;
+}
+
+.pm-ring-dial {
+  position: relative;
+  flex: 0 0 auto;
+  width: 206px;
+  height: 206px;
+}
+
+.pm-ring-dial svg {
+  width: 100%;
+  height: 100%;
+  /* the hover glow spills past the viewBox — don't clip it */
+  overflow: visible;
+}
+
+.pm-ring-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 11;
+}
+
+.pm-ring-arc {
+  fill: none;
+  stroke-width: 11;
+  transition: stroke-dashoffset 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease, filter 0.2s ease;
+}
+
+.pm-ring-arc.new {
+  --glow: 143 220 160;
+  stroke: #8fdca0;
+}
+
+.pm-ring-arc.review {
+  --glow: 127 179 213;
+  stroke: #7fb3d5;
+}
+
+/* 06 · draws in from empty */
+.pm-ring-arc.draw {
+  animation: pm-ring-draw 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pm-ring-arc.review.draw {
+  animation-delay: 0.28s;
+}
+
+.pm-ring-arc.on,
+.pm-ring-arc.picked {
+  filter: drop-shadow(0 0 10px rgb(var(--glow) / 0.75)) brightness(1.08);
+}
+
+/* 11 · the focused slice breathes */
+.pm-ring-arc.pulse {
+  animation: pm-ring-pulse 1.7s ease-in-out infinite;
+}
+
+.pm-ring-arc.dim {
+  opacity: 0.22;
+}
+
+@keyframes pm-ring-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 4px rgb(var(--glow) / 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgb(var(--glow) / 0.95)) brightness(1.08);
+  }
+}
+
+/* invisible targets sitting on top of the arcs */
+.pm-ring-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 22;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+@keyframes pm-ring-draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+}
+
+.pm-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  pointer-events: none;
+}
+
+.pm-ring-num {
+  animation: pm-num-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pm-ring-num.new {
+  color: #8fdca0;
+}
+
+.pm-ring-num.review {
+  color: #7fb3d5;
+}
+
+.pm-ring-center small {
+  animation: pm-num-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pm-num-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* the right-hand counts light up and dim with the arcs */
+.pm-ring-card .pm-hw-side > span {
+  cursor: pointer;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.pm-ring-card .pm-hw-side.has-on > span:not(.on) {
+  opacity: 0.35;
+}
+
+.pm-ring-card .pm-hw-side > span.on {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pm-ring-center b {
+  font-size: 3.1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* 07 · units — one cell per word */
+.pm-units-card {
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.pm-units-head {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.pm-units-head b {
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pm-units-head span {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+.pm-units {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 12px;
+}
+
+.pm-units li {
+  flex: 1;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  animation: pm-unit-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+.pm-units li.new {
+  background: #8fdca0;
+  box-shadow: 0 10px 22px -10px rgba(143, 220, 160, 0.8);
+}
+
+.pm-units li.review {
+  background: #7fb3d5;
+  box-shadow: 0 10px 22px -10px rgba(127, 179, 213, 0.8);
+}
+
+@keyframes pm-unit-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pm-units-legend {
+  display: flex;
+  gap: 20px;
+}
+
+.pm-units-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+.pm-units-legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: currentColor;
+}
+
+.pm-units-legend .new i {
+  color: #8fdca0;
+}
+
+.pm-units-legend .review i {
+  color: #7fb3d5;
+}
+
+.pm-units-legend b {
+  color: #eef4ee;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 08 · roll — odometer digits */
+.pm-roll-card {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+}
+
+.pm-roll-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.pm-roll-value {
+  font-size: 4.4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #eef4ee;
+  transition: color 0.25s ease;
+}
+
+.pm-roll-value.new {
+  color: #8fdca0;
+}
+
+.pm-roll-value.review {
+  color: #7fb3d5;
+}
+
+.pm-roll-num {
+  display: inline-flex;
+  font-variant-numeric: tabular-nums;
+}
+
+.pm-roll-col {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+}
+
+.pm-roll-strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pm-roll-strip > span {
+  display: block;
+  height: 1em;
+  line-height: 1;
+}
+
+.pm-roll-cap {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9db3a6;
+  animation: pm-num-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pm-roll-pills {
+  display: flex;
+  gap: 12px;
+}
+
+.pm-roll-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #cfe0d5;
+  font: inherit;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.pm-roll-pill i {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: currentColor;
+}
+
+.pm-roll-pill b {
+  color: #eef4ee;
+  font-variant-numeric: tabular-nums;
+}
+
+.pm-roll-pill.new {
+  color: #8fdca0;
+}
+
+.pm-roll-pill.review {
+  color: #7fb3d5;
+}
+
+.pm-roll-pill:hover,
+.pm-roll-pill.on {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: currentColor;
+  transform: translateY(-1px);
+}
+
+/* 09 · spotlight — the cursor lights the colours up */
+.pm-spot-card {
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  --mx: 50%;
+  --my: 34%;
+  --rx: 0deg;
+  --ry: 0deg;
+}
+
+/* the torch glow, behind the numbers */
+.pm-spot-torch {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 150px at var(--mx) var(--my),
+    rgba(143, 220, 160, 0.18),
+    transparent 70%
+  );
+}
+
+.pm-spot-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: perspective(700px)
+    rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+.pm-spot-layer.base {
+  opacity: 0.62;
+  filter: grayscale(0.5);
+}
+
+.pm-spot-layer.lit {
+  -webkit-mask-image: radial-gradient(
+    circle 150px at var(--mx) var(--my),
+    #000 0%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(
+    circle 150px at var(--mx) var(--my),
+    #000 0%,
+    transparent 72%
+  );
+}
+
+.pm-spot-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.pm-spot-total {
+  font-size: 3.8rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #eef4ee;
+}
+
+.pm-spot-cap {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+.pm-spot-split {
+  display: flex;
+  gap: 22px;
+  margin-top: 10px;
+}
+
+.pm-spot-split span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+.pm-spot-split i {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: currentColor;
+}
+
+.pm-spot-split .new i {
+  color: #8fdca0;
+}
+
+.pm-spot-split .review i {
+  color: #7fb3d5;
+}
+
+.pm-spot-split b {
+  color: #eef4ee;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---- the calendar module ---- */
 .pm-cal {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 18px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 26px 54px -32px rgba(0, 0, 0, 0.9);
   color: #eef4ee;
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }

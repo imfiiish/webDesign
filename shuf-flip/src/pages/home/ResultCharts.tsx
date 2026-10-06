@@ -1138,10 +1138,12 @@ export function PieExplode({
   newWords,
   reviewWords,
   exposed,
+  legend = true,
 }: {
   newWords: number
   reviewWords: number
   exposed: number
+  legend?: boolean
 }) {
   const { t } = useI18n()
   const slices = slicesOf(newWords, reviewWords, exposed)
@@ -1185,16 +1187,18 @@ export function PieExplode({
           })}
         </svg>
       </div>
-      <ul className="rc-legend">
-        {slices.map((s) => (
-          <li key={s.key} className={s.key}>
-            <span className="rc-dot" />
-            <span>{t(`results.${s.key}`)}</span>
-            <b>{s.n}</b>
-            <em>{Math.round(s.frac * 100)}%</em>
-          </li>
-        ))}
-      </ul>
+      {legend && (
+        <ul className="rc-legend">
+          {slices.map((s) => (
+            <li key={s.key} className={s.key}>
+              <span className="rc-dot" />
+              <span>{t(`results.${s.key}`)}</span>
+              <b>{s.n}</b>
+              <em>{Math.round(s.frac * 100)}%</em>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
