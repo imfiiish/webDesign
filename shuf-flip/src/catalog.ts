@@ -53,6 +53,17 @@ export const PAGES: CatalogEntry[] = [
     variants: [DEFAULT_VARIANT],
   },
   {
+    id: 'books',
+    kind: 'page',
+    title: 'Wordbooks',
+    description: {
+      en: 'Pick a language and a word list, then trim what you already know.',
+      zh: '选语言、选词书，再排除已掌握的词汇。',
+    },
+    status: 'ready',
+    variants: [DEFAULT_VARIANT],
+  },
+  {
     id: 'flip',
     kind: 'page',
     title: 'Flip',

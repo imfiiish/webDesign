@@ -5,6 +5,7 @@ import HomeShell from './HomeShell'
 import { useI18n } from '../../i18n'
 import Login from '../login'
 import Shelf from '../shelf'
+import Books from '../books'
 import Flip from '../flip'
 import Rating from '../rating'
 import Results from '../results'
@@ -16,6 +17,7 @@ import Settings from '../settings'
 const PAGE_VIEWS: Record<string, ComponentType<{ variant?: string }>> = {
   login: Login,
   shelf: Shelf,
+  books: Books,
   flip: Flip,
   rating: Rating,
   results: Results,
