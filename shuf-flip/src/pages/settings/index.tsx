@@ -1,10 +1,10 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import BackButton from '../../components/BackButton'
 import { useI18n } from '../../i18n'
 import './settings.css'
 
 /** Words / day presets. */
-const GOALS = [5, 10, 20, 30, 50]
+const GOALS = [15, 25, 50]
 
 /** Custom goal bounds. */
 const MIN_GOAL = 5
@@ -82,25 +82,12 @@ function Seg({
 export default function Settings() {
   const { t } = useI18n()
   const [goal, setGoal] = useState(20)
-  const [goalDraft, setGoalDraft] = useState('20')
   const [mix, setMix] = useState(1)
   const [round, setRound] = useState('16')
   const [lang, setLang] = useState('en')
 
-  const goalRef = useRef<HTMLInputElement>(null)
-  const isCustom = !GOALS.includes(goal)
-
-  const applyGoal = (n: number) => {
-    const c = clampGoal(n)
-    setGoal(c)
-    setGoalDraft(String(c))
-  }
-
-  const onGoalDraft = (raw: string) => {
-    setGoalDraft(raw)
-    const n = Number(raw)
-    if (raw !== '' && Number.isFinite(n) && n > 0) setGoal(Math.round(n))
-  }
+  const applyGoal = (n: number) => setGoal(clampGoal(n))
+  const bumpGoal = (d: number) => setGoal((v) => clampGoal(v + d))
 
   const goalPct = Math.min(100, (TODAY / Math.max(1, goal)) * 100)
 
@@ -115,7 +102,7 @@ export default function Settings() {
 
       <div className="set-body">
         {/* daily goal */}
-        <section className="set-card">
+        <section className="set-card set-card-split">
           <div className="set-card-head">
             <div>
               <h2 className="set-card-title">{t('settings.goal.title')}</h2>
@@ -123,68 +110,62 @@ export default function Settings() {
             </div>
           </div>
 
-          <div className="set-goal">
-            <button
-              type="button"
-              className="set-goal-step"
-              aria-label={t('settings.goal.less')}
-              onClick={() => applyGoal(goal - 5)}
-            >
-              −
-            </button>
-            <label className="set-goal-field">
-              <input
-                ref={goalRef}
-                className="set-goal-input"
-                type="number"
-                min={MIN_GOAL}
-                max={MAX_GOAL}
-                step={5}
-                value={goalDraft}
-                aria-label={t('settings.goal.title')}
-                onChange={(e) => onGoalDraft(e.target.value)}
-                onBlur={() => applyGoal(Number(goalDraft) || goal)}
+          <div className="set-goal-body">
+            <div className="set-goal-top">
+              <div className="set-goal-value">
+                <b className="set-goal-num">{goal}</b>
+                <span className="set-goal-unit">
+                  {t('settings.goal.unit')}
+                </span>
+              </div>
+              <div className="set-stepgroup" role="group">
+                <button
+                  type="button"
+                  className="set-stepgroup-btn"
+                  aria-label={t('settings.goal.less')}
+                  onClick={() => bumpGoal(-5)}
+                >
+                  {'\u2212'}
+                </button>
+                <span className="set-stepgroup-sep" aria-hidden="true" />
+                <button
+                  type="button"
+                  className="set-stepgroup-btn"
+                  aria-label={t('settings.goal.more')}
+                  onClick={() => bumpGoal(5)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div className="set-meter">
+              <span
+                className="set-meter-fill"
+                style={{ width: `${goalPct}%` }}
               />
-              <span className="set-goal-unit">{t('settings.goal.unit')}</span>
-            </label>
-            <button
-              type="button"
-              className="set-goal-step"
-              aria-label={t('settings.goal.more')}
-              onClick={() => applyGoal(goal + 5)}
-            >
-              +
-            </button>
-          </div>
+            </div>
+            <div className="set-goal-foot">
+              <span>
+                {t('settings.goal.today')} · <b>{TODAY}</b> / {goal}
+              </span>
+              <span className="set-goal-pct">{Math.round(goalPct)}%</span>
+            </div>
 
-          <div className="set-presets">
-            {GOALS.map((g) => (
-              <button
-                key={g}
-                type="button"
-                className={`set-preset${g === goal ? ' on' : ''}`}
-                aria-pressed={g === goal}
-                onClick={() => applyGoal(g)}
-              >
-                {g}
-              </button>
-            ))}
-            <button
-              type="button"
-              className={`set-preset set-preset-custom${isCustom ? ' on' : ''}`}
-              aria-pressed={isCustom}
-              onClick={() => goalRef.current?.select()}
-            >
-              {t('settings.goal.custom')}
-            </button>
+            <div className="set-seg">
+              {GOALS.map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  className={g === goal ? 'on' : ''}
+                  aria-pressed={g === goal}
+                  onClick={() => applyGoal(g)}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
           </div>
-
-          <div className="set-meter">
-            <span className="set-meter-fill" style={{ width: `${goalPct}%` }} />
-          </div>
-          <p className="set-meter-note">
-            {t('settings.goal.today')} · <b>{TODAY}</b> / {goal}
-          </p>
         </section>
 
         {/* new vs review */}

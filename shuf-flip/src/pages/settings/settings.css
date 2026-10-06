@@ -77,116 +77,94 @@
 }
 
 /* ---- daily goal ---- */
-.set-goal {
+.set-card-split {
+  display: grid;
+  grid-template-columns: minmax(0, 210px) minmax(0, 1fr);
+  align-items: center;
+  gap: 34px;
+}
+
+.set-card-split .set-card-head {
+  margin-bottom: 0;
+}
+
+.set-goal-body {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.set-goal-top {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.set-goal-step {
-  flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
-  border-radius: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.04);
-  color: #eef4ee;
-  font: inherit;
-  font-size: 1.3rem;
-  line-height: 1;
-  cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.set-goal-step:hover {
-  color: #8fdca0;
-  border-color: rgba(143, 220, 160, 0.55);
-  background: rgba(143, 220, 160, 0.1);
-}
-
-.set-goal-step:active {
-  transform: translateY(1px);
-}
-
-.set-goal-field {
-  display: inline-flex;
+.set-goal-value {
+  display: flex;
   align-items: baseline;
-  justify-content: center;
   gap: 9px;
-  min-width: 196px;
-  padding: 7px 20px;
-  border-radius: 14px;
-  border: 1px solid rgba(143, 220, 160, 0.35);
-  background: rgba(143, 220, 160, 0.08);
-  cursor: text;
 }
 
-.set-goal-input {
-  width: 4ch;
-  border: 0;
-  background: transparent;
+.set-goal-num {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 600;
+  line-height: 1;
   color: #8fdca0;
-  font: inherit;
-  font-size: 1.75rem;
-  font-weight: 650;
-  line-height: 1.1;
-  text-align: center;
   font-variant-numeric: tabular-nums;
-  outline: none;
-}
-
-.set-goal-input::-webkit-outer-spin-button,
-.set-goal-input::-webkit-inner-spin-button {
-  margin: 0;
-  -webkit-appearance: none;
 }
 
 .set-goal-unit {
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #9db3a6;
 }
 
-.set-presets {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.set-preset {
-  min-width: 52px;
-  padding: 8px 15px;
+.set-stepgroup {
+  display: inline-flex;
+  align-items: center;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
-  color: #cfe0d4;
-  font: inherit;
-  font-size: 0.9rem;
-  font-variant-numeric: tabular-nums;
-  cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease,
-    border-color 0.15s ease, box-shadow 0.15s ease;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
 }
 
-.set-preset:hover {
+.set-stepgroup-btn {
+  width: 48px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
   color: #eef4ee;
-  border-color: rgba(255, 255, 255, 0.3);
+  font: inherit;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-.set-preset.on {
-  color: #08130f;
-  background: #8fdca0;
-  border-color: #8fdca0;
-  box-shadow: 0 10px 22px -12px rgba(143, 220, 160, 0.9);
+.set-stepgroup-btn:hover {
+  background: rgba(143, 220, 160, 0.16);
+  color: #8fdca0;
+}
+
+.set-stepgroup-btn:active {
+  background: rgba(143, 220, 160, 0.26);
+}
+
+.set-stepgroup-sep {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .set-meter {
-  margin-top: 18px;
   height: 8px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
@@ -201,15 +179,28 @@
   transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.set-meter-note {
-  margin: 9px 0 0;
+.set-goal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 0.78rem;
   color: #9db3a6;
   font-variant-numeric: tabular-nums;
 }
 
-.set-meter-note b {
+.set-goal-foot b {
   color: #eef4ee;
+}
+
+.set-goal-pct {
+  color: #8fdca0;
+}
+
+@media (max-width: 620px) {
+  .set-card-split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
 }
 
 /* ---- new vs review ---- */
