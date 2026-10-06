@@ -159,6 +159,17 @@ export const SCENES: CatalogEntry[] = [
     status: 'ready',
     variants: [DEFAULT_VARIANT],
   },
+  {
+    id: 'rail',
+    kind: 'scene',
+    title: 'Rail',
+    description: {
+      en: 'The Edge-float rail as a full page — ring avatar, nav at the foot, sliding single-color mark.',
+      zh: '整页的浮边导航——环像头像、选项沉底、滑动的单色标。',
+    },
+    status: 'ready',
+    variants: [DEFAULT_VARIANT],
+  },
 ]
 
 export const COMPONENTS: CatalogEntry[] = [
