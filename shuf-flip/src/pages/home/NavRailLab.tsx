@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { useState, type CSSProperties, type ReactNode } from 'react'
 import { useI18n } from '../../i18n'
 import './navRailLab.css'
 
@@ -12,6 +12,16 @@ const LABEL_KEY: Record<Tab, string> = {
   progress: 'nav.progress',
   settings: 'nav.settings',
 }
+
+/** Per-item hue for the color-coded take. */
+const COLOR: Record<Tab, string> = {
+  home: '#8fdca0',
+  progress: '#c9bb8e',
+  settings: '#8fa9c9',
+}
+
+/** A couple of counts for the badge take. */
+const BADGE: Partial<Record<Tab, number>> = { home: 2, progress: 3 }
 
 function HomeIcon() {
   return (
@@ -80,14 +90,16 @@ const ICON: Record<Tab, ReactNode> = {
   settings: <GearIcon />,
 }
 
+type Bi = { en: string; zh: string }
+
 type Ctx = {
   tab: Tab
   setTab: (t: Tab) => void
-  labels: boolean
   t: (key: string) => string
+  lang: string
 }
 
-/** The shared identity: avatar + online dot. */
+/** Avatar: the one constant across every take. */
 function Avatar({ ring = false }: { ring?: boolean }) {
   return (
     <span
@@ -100,286 +112,393 @@ function Avatar({ ring = false }: { ring?: boolean }) {
   )
 }
 
-/** The three nav options, restyled per take via `linkClass` / `navClass`. */
-function Items({
+/** Avatar wrapped in a progress ring. */
+function RingAvatar() {
+  const R = 21
+  const C = 2 * Math.PI * R
+  return (
+    <span className="nr-ring">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <circle className="nr-ring-track" cx="24" cy="24" r={R} />
+        <circle
+          className="nr-ring-arc"
+          cx="24"
+          cy="24"
+          r={R}
+          strokeDasharray={C}
+          strokeDashoffset={C * (1 - 0.68)}
+          transform="rotate(-90 24 24)"
+        />
+      </svg>
+      <span className="nr-ring-face">SF</span>
+      <i className="nr-online" />
+    </span>
+  )
+}
+
+/** The three options. Styling is entirely per-take via `cls` + options. */
+function Links({
   ctx,
-  navClass = '',
-  linkClass = '',
+  cls = '',
+  labels = true,
+  badges = false,
+  colors = false,
 }: {
   ctx: Ctx
-  navClass?: string
-  linkClass?: string
+  cls?: string
+  labels?: boolean
+  badges?: boolean
+  colors?: boolean
 }) {
-  const { tab, setTab, labels, t } = ctx
   return (
-    <nav className={`nr-items${navClass ? ' ' + navClass : ''}`}>
+    <>
       {TABS.map((id) => {
-        const on = tab === id
+        const on = ctx.tab === id
         return (
           <button
             key={id}
             type="button"
-            title={t(LABEL_KEY[id])}
-            aria-label={t(LABEL_KEY[id])}
+            title={ctx.t(LABEL_KEY[id])}
+            aria-label={ctx.t(LABEL_KEY[id])}
             aria-current={on ? 'page' : undefined}
-            className={`nr-link${linkClass ? ' ' + linkClass : ''}${
-              on ? ' on' : ''
-            }`}
-            onClick={() => setTab(id)}
+            className={`nr-link${cls ? ' ' + cls : ''}${on ? ' on' : ''}`}
+            style={colors ? ({ '--c': COLOR[id] } as CSSProperties) : undefined}
+            onClick={() => ctx.setTab(id)}
           >
             {ICON[id]}
-            {labels && <span className="nr-link-label">{t(LABEL_KEY[id])}</span>}
+            {labels && (
+              <span className="nr-link-label">{ctx.t(LABEL_KEY[id])}</span>
+            )}
+            {badges && BADGE[id] != null && (
+              <span className="nr-badge">{BADGE[id]}</span>
+            )}
           </button>
         )
       })}
+    </>
+  )
+}
+
+/** A `nav` wrapper so every take gets the same vertical rhythm. */
+function Nav({
+  ctx,
+  cls = '',
+  navClass = '',
+  ...rest
+}: {
+  ctx: Ctx
+  cls?: string
+  navClass?: string
+  labels?: boolean
+  badges?: boolean
+  colors?: boolean
+}) {
+  const { labels, badges, colors } = rest
+  return (
+    <nav className={`nr-items${navClass ? ' ' + navClass : ''}`}>
+      <Links
+        ctx={ctx}
+        cls={cls}
+        labels={labels}
+        badges={badges}
+        colors={colors}
+      />
     </nav>
   )
 }
 
-/** The soft page the rail floats over. Repeats the active tab's content so the
- *  rail reads as real navigation, and can go dense to test contrast. */
-function MockPage({
-  tab,
-  dense,
-  lang,
-  t,
-}: {
-  tab: Tab
-  dense: boolean
-  lang: string
-  t: (key: string) => string
-}) {
-  return (
-    <div className="nr-page" aria-hidden="true">
-      {tab === 'home' && (
-        <>
-          <div className="nr-p-greet">{t('scene.nav.greeting')}</div>
-          <div className="nr-p-sub">{t('scene.nav.homeSub')}</div>
-          <div className="nr-p-card">
-            <span className="nr-p-kicker">{t('scene.nav.today')}</span>
-            <div className="nr-p-big">
-              12 <em>/ 25 {t('books.words')}</em>
-            </div>
-            <span className="nr-p-meter">
-              <i style={{ width: '48%' }} />
-            </span>
-          </div>
-          <div className="nr-p-duo">
-            <div className="nr-p-tile">
-              <span className="nr-p-kicker">{t('scene.nav.streak')}</span>
-              <b>7</b>
-            </div>
-            <div className="nr-p-tile">
-              <span className="nr-p-kicker">{t('scene.nav.learned')}</span>
-              <b>1,240</b>
-            </div>
-          </div>
-        </>
-      )}
-
-      {tab === 'progress' && (
-        <>
-          <div className="nr-p-greet">{t('nav.progress')}</div>
-          <div className="nr-p-sub">{t('scene.nav.progressSub')}</div>
-          <div className="nr-p-card nr-p-chart">
-            {[42, 70, 55, 88, 64, 30, 76].map((h, i) => (
-              <span className="nr-p-bar" key={i}>
-                <i style={{ height: `${h}%` }} />
-              </span>
-            ))}
-          </div>
-        </>
-      )}
-
-      {tab === 'settings' && (
-        <>
-          <div className="nr-p-greet">{t('nav.settings')}</div>
-          <div className="nr-p-sub">{t('scene.nav.settingsSub')}</div>
-          <div className="nr-p-rows">
-            <div className="nr-p-line">
-              <span>{t('settings.goal.title')}</span>
-              <b>25 {t('settings.goal.unit')}</b>
-            </div>
-            <div className="nr-p-line">
-              <span>{t('scene.nav.language')}</span>
-              <b>{lang === 'zh' ? '中文' : 'English'}</b>
-            </div>
-            <div className="nr-p-line">
-              <span>{t('scene.nav.theme')}</span>
-              <b>{t('scene.nav.dark')}</b>
-            </div>
-          </div>
-        </>
-      )}
-
-      {dense && (
-        <div className="nr-p-dense">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <span className="nr-p-skel" key={i} />
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-/** One take: the mock page with a rail floating over it. */
-function Screen({
-  ctx,
-  dense,
-  lang,
-  children,
-}: {
-  ctx: Ctx
-  dense: boolean
-  lang: string
-  children: ReactNode
-}) {
-  return (
-    <div className={`nr-screen${dense ? ' dense' : ''}`}>
-      <MockPage tab={ctx.tab} dense={dense} lang={lang} t={ctx.t} />
-      {children}
-    </div>
-  )
-}
-
-/** A numbered bench row: caption above the mock screen. */
-function Idea({
-  no,
-  label,
-  children,
-}: {
+type Idea = {
   no: string
-  label: string
-  children: ReactNode
-}) {
-  return (
-    <section className="nr-idea">
-      <header className="nr-idea-head">
-        <span className="nr-idea-no">{no}</span>
-        <h3 className="nr-idea-label">{label}</h3>
-      </header>
-      <div className="nr-stage">{children}</div>
-    </section>
-  )
+  name: Bi
+  desc: Bi
+  render: (ctx: Ctx) => ReactNode
 }
 
-/** Creative bench for the left rail. Two controls up top, then six takes on a
- *  floating rail — avatar on top, Home / Progress / Settings below. */
+const pick = (b: Bi, lang: string) => (lang === 'zh' ? b.zh : b.en)
+
+/** The bench itself: many takes, each just the rail. */
+const IDEAS: Idea[] = [
+  {
+    no: '01',
+    name: { en: 'Pill', zh: '药丸' },
+    desc: {
+      en: 'Rounded rail; the active item is a filled pill.',
+      zh: '圆角竖栏，选中项填成实心药丸。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--pill">
+        <Avatar />
+        <Nav ctx={c} />
+      </aside>
+    ),
+  },
+  {
+    no: '02',
+    name: { en: 'Icon dock', zh: '图标坞' },
+    desc: {
+      en: 'Narrow icon-only bar; active is a square, hover shows the name.',
+      zh: '窄条纯图标，选中是方块，悬停出名字。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--dock">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--sq" labels={false} navClass="nr-items--fit" />
+      </aside>
+    ),
+  },
+  {
+    no: '03',
+    name: { en: 'Capsule', zh: '胶囊' },
+    desc: {
+      en: 'Fully rounded capsule; the active item is a green dot.',
+      zh: '全圆角窄栏，选中是一颗绿圆点。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--capsule">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--cap" labels={false} navClass="nr-items--fit" />
+      </aside>
+    ),
+  },
+  {
+    no: '04',
+    name: { en: 'Split cards', zh: '分卡片' },
+    desc: {
+      en: 'Avatar and nav live in two separate floating cards.',
+      zh: '头像和导航分成两张悬浮卡片。',
+    },
+    render: (c) => (
+      <div className="nr-stack">
+        <div className="nr-piece nr-piece--avatar">
+          <Avatar />
+        </div>
+        <div className="nr-piece nr-piece--nav">
+          <Nav ctx={c} cls="nr-link--piece" />
+        </div>
+      </div>
+    ),
+  },
+  {
+    no: '05',
+    name: { en: 'Ghost', zh: '无底' },
+    desc: {
+      en: 'No container — the items float directly on the page.',
+      zh: '没有容器，项直接浮在页面上。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--ghost">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--ghost" />
+      </aside>
+    ),
+  },
+  {
+    no: '06',
+    name: { en: 'Edge dock', zh: '贴边' },
+    desc: {
+      en: 'Docked to the screen edge: square left side, no float.',
+      zh: '贴住屏幕左缘：左侧直角、不悬浮。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--flush">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--flush" />
+      </aside>
+    ),
+  },
+  {
+    no: '07',
+    name: { en: 'Header', zh: '带头' },
+    desc: {
+      en: 'A titled header above the avatar; wider and more complete.',
+      zh: '顶部标题 + 头像，栏更宽、信息更完整。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--wide">
+        <div className="nr-wide-head">
+          <Avatar />
+          <div className="nr-wide-id">
+            <b>{pick({ en: 'Menu', zh: '菜单' }, c.lang)}</b>
+            <span>{pick({ en: 'Free plan', zh: '免费版' }, c.lang)}</span>
+          </div>
+        </div>
+        <Nav ctx={c} cls="nr-link--wide" />
+      </aside>
+    ),
+  },
+  {
+    no: '08',
+    name: { en: 'Indicator', zh: '指示条' },
+    desc: {
+      en: 'A vertical green bar marks the active item.',
+      zh: '选中项左侧一条竖直绿条 + 淡底。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--pill">
+        <Avatar ring />
+        <Nav ctx={c} cls="nr-link--ind" />
+      </aside>
+    ),
+  },
+  {
+    no: '09',
+    name: { en: 'Underline', zh: '下划线' },
+    desc: {
+      en: 'An underline marks the active item, tab-like.',
+      zh: '选中项底部一条下划线，像标签页。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--pill">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--ul" />
+      </aside>
+    ),
+  },
+  {
+    no: '10',
+    name: { en: 'Dots', zh: '圆点' },
+    desc: {
+      en: 'Collapsed to dots; the active dot grows and lights up.',
+      zh: '收起时只看圆点，选中的点变大变亮。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--pill">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--dot" labels={false} />
+      </aside>
+    ),
+  },
+  {
+    no: '11',
+    name: { en: 'Sliding pill', zh: '滑动块' },
+    desc: {
+      en: 'One highlight slides between the items.',
+      zh: '一块高亮在各项之间滑动。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--pill">
+        <Avatar />
+        <nav
+          className="nr-items nr-items--seg"
+          style={{ '--active': TABS.indexOf(c.tab) } as CSSProperties}
+        >
+          <span className="nr-seg-hi" aria-hidden="true" />
+          <Links ctx={c} cls="nr-link--seg" />
+        </nav>
+      </aside>
+    ),
+  },
+  {
+    no: '12',
+    name: { en: 'Outline', zh: '描边' },
+    desc: {
+      en: 'Every item outlined; the active one fills in.',
+      zh: '每项一个描边按钮，选中填实。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--pill">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--outline" />
+      </aside>
+    ),
+  },
+  {
+    no: '13',
+    name: { en: 'Grow', zh: '展开' },
+    desc: {
+      en: 'The active item stretches to reveal its name; the rest stay icons.',
+      zh: '选中的项撑开露出名字，其余只留图标。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--pill">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--grow" />
+      </aside>
+    ),
+  },
+  {
+    no: '14',
+    name: { en: 'Color-coded', zh: '彩标' },
+    desc: {
+      en: 'Each item has its own hue; the active one lights it up.',
+      zh: '每项自带颜色，选中点亮自己的色。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--pill">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--color" colors />
+      </aside>
+    ),
+  },
+  {
+    no: '15',
+    name: { en: 'Ring avatar', zh: '环像' },
+    desc: {
+      en: 'The avatar wears a progress ring.',
+      zh: '头像带一圈进度环。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--pill">
+        <RingAvatar />
+        <Nav ctx={c} />
+      </aside>
+    ),
+  },
+  {
+    no: '16',
+    name: { en: 'Badges', zh: '徽标' },
+    desc: {
+      en: 'Items carry small count badges.',
+      zh: '项右侧带小徽标（如待办数）。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--pill">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--badge" badges />
+      </aside>
+    ),
+  },
+]
+
+/** Creative bench for the left rail. Just the rail, many takes, one column;
+ *  each has an avatar on top and Home / Progress / Settings below. The one
+ *  control picks the active item so every take previews the same state. */
 export default function NavRailLab() {
   const { lang, t } = useI18n()
   const [tab, setTab] = useState<Tab>('home')
-  const [dense, setDense] = useState(false)
 
-  const ctx: Ctx = { tab, setTab, labels: true, t }
-  const iconCtx: Ctx = { ...ctx, labels: false }
-
-  const tabs: { id: Tab; label: string }[] = TABS.map((id) => ({
-    id,
-    label: t(LABEL_KEY[id]),
-  }))
+  const ctx: Ctx = { tab, setTab, t, lang }
 
   return (
     <div className="nr-lab">
       <div className="nr-picker">
-        <div className="nr-picker-row">
-          <span className="nr-picker-title">{t('nr.active')}</span>
-          <div className="nr-seg">
-            {tabs.map((x) => (
-              <button
-                key={x.id}
-                type="button"
-                className={`nr-seg-btn${tab === x.id ? ' on' : ''}`}
-                aria-pressed={tab === x.id}
-                onClick={() => setTab(x.id)}
-              >
-                {x.label}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="nr-picker-row">
-          <span className="nr-picker-title">{t('nr.backdrop')}</span>
-          <div className="nr-seg">
+        <span className="nr-picker-title">{t('nr.active')}</span>
+        <div className="nr-seg">
+          {TABS.map((id) => (
             <button
+              key={id}
               type="button"
-              className={`nr-seg-btn${!dense ? ' on' : ''}`}
-              aria-pressed={!dense}
-              onClick={() => setDense(false)}
+              className={`nr-seg-btn${tab === id ? ' on' : ''}`}
+              aria-pressed={tab === id}
+              onClick={() => setTab(id)}
             >
-              {t('nr.backdrop.calm')}
+              {t(LABEL_KEY[id])}
             </button>
-            <button
-              type="button"
-              className={`nr-seg-btn${dense ? ' on' : ''}`}
-              aria-pressed={dense}
-              onClick={() => setDense(true)}
-            >
-              {t('nr.backdrop.dense')}
-            </button>
-          </div>
+          ))}
         </div>
       </div>
 
-      <div className="nr-ideas">
-        <Idea no="01" label={t('nr.idea.pill')}>
-          <Screen ctx={ctx} dense={dense} lang={lang}>
-            <aside className="nr-rail nr-rail--pill">
-              <Avatar />
-              <Items ctx={ctx} />
-            </aside>
-          </Screen>
-        </Idea>
-
-        <Idea no="02" label={t('nr.idea.dock')}>
-          <Screen ctx={ctx} dense={dense} lang={lang}>
-            <aside className="nr-rail nr-rail--dock">
-              <Avatar />
-              <Items ctx={iconCtx} linkClass="nr-link--sq" navClass="nr-items--dock" />
-            </aside>
-          </Screen>
-        </Idea>
-
-        <Idea no="03" label={t('nr.idea.cards')}>
-          <Screen ctx={ctx} dense={dense} lang={lang}>
-            <div className="nr-stack">
-              <div className="nr-floating nr-floating--avatar">
-                <Avatar />
-              </div>
-              <div className="nr-floating nr-floating--nav">
-                <Items ctx={ctx} linkClass="nr-link--card" />
-              </div>
+      <div className="nr-list">
+        {IDEAS.map((idea) => (
+          <article className="nr-row" key={idea.no}>
+            <div className="nr-railwrap">{idea.render(ctx)}</div>
+            <div className="nr-meta">
+              <span className="nr-no">{idea.no}</span>
+              <h3>{pick(idea.name, lang)}</h3>
+              <p>{pick(idea.desc, lang)}</p>
             </div>
-          </Screen>
-        </Idea>
-
-        <Idea no="04" label={t('nr.idea.indicator')}>
-          <Screen ctx={ctx} dense={dense} lang={lang}>
-            <aside className="nr-rail nr-rail--indicator">
-              <Avatar ring />
-              <span className="nr-sep" />
-              <Items ctx={ctx} linkClass="nr-link--ind" />
-            </aside>
-          </Screen>
-        </Idea>
-
-        <Idea no="05" label={t('nr.idea.accent')}>
-          <Screen ctx={ctx} dense={dense} lang={lang}>
-            <aside className="nr-rail nr-rail--accent">
-              <Avatar />
-              <Items ctx={ctx} linkClass="nr-link--accent" />
-            </aside>
-          </Screen>
-        </Idea>
-
-        <Idea no="06" label={t('nr.idea.ghost')}>
-          <Screen ctx={ctx} dense={dense} lang={lang}>
-            <aside className="nr-rail nr-rail--ghost">
-              <Avatar />
-              <Items ctx={ctx} linkClass="nr-link--ghost" />
-            </aside>
-          </Screen>
-        </Idea>
+          </article>
+        ))}
       </div>
     </div>
   )
