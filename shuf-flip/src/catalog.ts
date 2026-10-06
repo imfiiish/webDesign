@@ -148,6 +148,17 @@ export const SCENES: CatalogEntry[] = [
     status: 'ready',
     variants: [DEFAULT_VARIANT],
   },
+  {
+    id: 'nav',
+    kind: 'scene',
+    title: 'Navigation',
+    description: {
+      en: 'Floating left rail: avatar on top, then Home / Progress / Wordbooks / Settings.',
+      zh: '左侧悬浮导航：顶部头像，下面是主页 / 进度 / 词书 / 设置。',
+    },
+    status: 'ready',
+    variants: [DEFAULT_VARIANT],
+  },
 ]
 
 export const COMPONENTS: CatalogEntry[] = [
