@@ -143,7 +143,7 @@
 }
 
 .modal.placement-right {
-  width: min(440px, 94vw);
+  width: min(520px, 96vw);
   max-width: none;
   max-height: none;
   height: 100%;

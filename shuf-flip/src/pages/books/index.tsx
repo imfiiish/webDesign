@@ -301,20 +301,42 @@ export default function Books() {
                 <ul className="bi-cands">
                   {excludes.map((c) => {
                     const on = cut.includes(c.id)
+                    const b = BOOKS.find((x) => x.id === c.id)
                     return (
                       <li key={c.id}>
                         <button
                           type="button"
                           className={`bi-cand${on ? ' on' : ''}`}
                           aria-pressed={on}
+                          style={
+                            {
+                              '--accent-lang': b
+                                ? LANG_COLOR[b.lang]
+                                : accent,
+                            } as CSSProperties
+                          }
                           onClick={() => toggleCut(c.id)}
                         >
-                          <span className="bi-cand-tick" aria-hidden="true">
-                            {on ? <Check /> : null}
+                          <span className="bi-cand-top">
+                            <span className="bi-cand-bar" aria-hidden="true">
+                              <span
+                                style={{ width: `${b ? pctOf(b) : 0}%` }}
+                              />
+                            </span>
+                            {on && (
+                              <span className="bi-cand-mark" aria-hidden="true">
+                                <Check />
+                              </span>
+                            )}
                           </span>
-                          <span className="bi-cand-name">{nameById(c.id)}</span>
-                          <span className="bi-cand-words">
-                            −{fmt(c.covers)}
+                          <span className="bi-cand-name">
+                            {nameById(c.id)}
+                          </span>
+                          <span className="bi-cand-foot">
+                            <span>{b ? fmt(b.total) : ''}</span>
+                            <span className="bi-cand-effect">
+                              −{fmt(c.covers)}
+                            </span>
                           </span>
                         </button>
                       </li>
@@ -335,20 +357,42 @@ export default function Books() {
                 <ul className="bi-cands">
                   {addons.map((c) => {
                     const on = added.includes(c.id)
+                    const b = BOOKS.find((x) => x.id === c.id)
                     return (
                       <li key={c.id}>
                         <button
                           type="button"
                           className={`bi-cand bi-cand-add${on ? ' on' : ''}`}
                           aria-pressed={on}
+                          style={
+                            {
+                              '--accent-lang': b
+                                ? LANG_COLOR[b.lang]
+                                : accent,
+                            } as CSSProperties
+                          }
                           onClick={() => toggleAdded(c.id)}
                         >
-                          <span className="bi-cand-tick" aria-hidden="true">
-                            {on ? <Check /> : null}
+                          <span className="bi-cand-top">
+                            <span className="bi-cand-bar" aria-hidden="true">
+                              <span
+                                style={{ width: `${b ? pctOf(b) : 0}%` }}
+                              />
+                            </span>
+                            {on && (
+                              <span className="bi-cand-mark" aria-hidden="true">
+                                <Check />
+                              </span>
+                            )}
                           </span>
-                          <span className="bi-cand-name">{nameById(c.id)}</span>
-                          <span className="bi-cand-words">
-                            +{fmt(c.covers)}
+                          <span className="bi-cand-name">
+                            {nameById(c.id)}
+                          </span>
+                          <span className="bi-cand-foot">
+                            <span>{b ? fmt(b.total) : ''}</span>
+                            <span className="bi-cand-effect">
+                              +{fmt(c.covers)}
+                            </span>
                           </span>
                         </button>
                       </li>

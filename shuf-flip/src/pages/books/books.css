@@ -460,10 +460,10 @@
   background:
     radial-gradient(
       120% 60% at 100% 0%,
-      rgba(143, 220, 160, 0.13),
+      rgba(143, 220, 160, 0.12),
       transparent 56%
     ),
-    linear-gradient(180deg, #17271f 0%, #101d17 58%, #14241c 100%);
+    linear-gradient(180deg, #16231d 0%, #0e1a15 60%, #121f19 100%);
   box-shadow: -40px 0 90px -50px rgba(0, 0, 0, 0.95);
 }
 
@@ -513,7 +513,7 @@
 .bi-dlg-desc {
   margin: 3px 0 0;
   font-size: 0.76rem;
-  color: #9db3a6;
+  color: #a9bcb0;
 }
 
 /* the live sum: a learned meter over the adjusted total */
@@ -620,102 +620,144 @@
 
 .bi-group-hint {
   font-size: 0.74rem;
-  color: #9db3a6;
+  color: #a9bcb0;
 }
 
+/* candidate cards — the rail card shape, two per row */
 .bi-cands {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.bi-cands > li {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
 }
 
 .bi-cand {
+  position: relative;
+  flex: 1;
   display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 11px 12px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.035);
-  color: #dbe7df;
-  font: inherit;
-  font-size: 0.86rem;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 80px;
+  padding: 11px 12px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #22332b;
+  color: #eef4ee;
   text-align: left;
+  font: inherit;
   cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease,
+    transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .bi-cand:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.34);
+  transform: translateY(-2px);
 }
 
-.bi-cand-tick {
+.bi-cand-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 16px;
+}
+
+.bi-cand-bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.bi-cand-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent-lang);
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bi-cand-mark {
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  width: 19px;
-  height: 19px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
   color: #08130f;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-/* exclude: checking takes the list out (sand) */
-.bi-cand.on {
-  border-color: rgba(201, 187, 142, 0.5);
-  background: rgba(201, 187, 142, 0.12);
-}
-
-.bi-cand.on .bi-cand-tick {
-  background: #c9bb8e;
-  border-color: #c9bb8e;
-}
-
-.bi-cand.on .bi-cand-name {
-  color: #c9bb8e;
-  text-decoration: line-through;
-  text-decoration-color: rgba(255, 255, 255, 0.28);
-}
-
-.bi-cand.on .bi-cand-words {
-  color: #c9bb8e;
-}
-
-/* add: checking folds it in (green) */
-.bi-cand-add.on {
-  border-color: rgba(143, 220, 160, 0.5);
-  background: rgba(143, 220, 160, 0.12);
-}
-
-.bi-cand-add.on .bi-cand-tick {
-  background: #8fdca0;
-  border-color: #8fdca0;
-}
-
-.bi-cand-add.on .bi-cand-words {
-  color: #8fdca0;
 }
 
 .bi-cand-name {
   flex: 1;
-  min-width: 0;
+  font-size: 0.84rem;
+  font-weight: 650;
+  line-height: 1.25;
+  word-break: break-word;
 }
 
-.bi-cand-words {
+.bi-cand-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.68rem;
   color: #9db3a6;
   font-variant-numeric: tabular-nums;
+}
+
+.bi-cand-effect {
+  color: #c9bb8e;
+}
+
+/* exclude: checked turns the card sand (no strike — keep it readable) */
+.bi-cand:not(.bi-cand-add).on {
+  border-color: #c9bb8e;
+  background: #38331f;
+  box-shadow: 0 12px 24px -16px rgba(201, 187, 142, 0.8);
+}
+
+.bi-cand:not(.bi-cand-add).on .bi-cand-mark {
+  background: #c9bb8e;
+}
+
+.bi-cand:not(.bi-cand-add).on .bi-cand-bar > span {
+  background: #c9bb8e;
+}
+
+.bi-cand:not(.bi-cand-add).on .bi-cand-name {
+  color: #eaddbe;
+}
+
+/* add: checked turns the card green */
+.bi-cand-add .bi-cand-effect {
+  color: #9db3a6;
+}
+
+.bi-cand-add.on {
+  border-color: #8fdca0;
+  background: #1d3a2b;
+  box-shadow: 0 12px 24px -16px rgba(143, 220, 160, 0.8);
+}
+
+.bi-cand-add.on .bi-cand-mark {
+  background: #8fdca0;
+}
+
+.bi-cand-add.on .bi-cand-effect {
+  color: #8fdca0;
 }
 
 .bi-group-empty {
   margin: 0;
   font-size: 0.8rem;
-  color: #9db3a6;
+  color: #a9bcb0;
 }
 
 /* footer: one full-width action */
