@@ -6,6 +6,9 @@ type Tab = 'home' | 'progress' | 'settings'
 
 const TABS: Tab[] = ['home', 'progress', 'settings']
 
+/** Bottom-to-top order for the take whose nav sits at the foot of the rail. */
+const ORDER: Tab[] = ['settings', 'progress', 'home']
+
 /** Nav labels reuse the page strings shipped with the app. */
 const LABEL_KEY: Record<Tab, string> = {
   home: 'nav.home',
@@ -143,16 +146,18 @@ function Links({
   labels = true,
   badges = false,
   colors = false,
+  order = TABS,
 }: {
   ctx: Ctx
   cls?: string
   labels?: boolean
   badges?: boolean
   colors?: boolean
+  order?: Tab[]
 }) {
   return (
     <>
-      {TABS.map((id) => {
+      {order.map((id) => {
         const on = ctx.tab === id
         return (
           <button
@@ -366,6 +371,26 @@ const IDEAS: Idea[] = [
       <aside className="nr-rail nr-rail--pill">
         <Avatar />
         <Nav ctx={c} cls="nr-link--badge" badges />
+      </aside>
+    ),
+  },
+  {
+    no: '11',
+    name: { en: 'Edge float', zh: '浮边' },
+    desc: {
+      en: 'The edge dock’s green left stripe, kept floating; the highlight slides, and the nav sinks to the foot — Settings up top, Home lowest.',
+      zh: '贴边的绿色左边条，但保持悬浮；高亮滑动，选项沉到底部——设置在上，主页在最下。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--edgerail">
+        <RingAvatar />
+        <nav
+          className="nr-items nr-items--seg nr-items--bottom"
+          style={{ '--active': ORDER.indexOf(c.tab) } as CSSProperties}
+        >
+          <span className="nr-seg-hi" aria-hidden="true" />
+          <Links ctx={c} cls="nr-link--seg" order={ORDER} />
+        </nav>
       </aside>
     ),
   },

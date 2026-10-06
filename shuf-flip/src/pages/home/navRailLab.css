@@ -462,6 +462,17 @@
   box-shadow: inset 2px 0 0 var(--c);
 }
 
+/* ---- 11 · edge float ---- */
+.nr-rail--edgerail {
+  border-radius: 3px 16px 16px 3px;
+  background: rgba(16, 28, 22, 0.92);
+  box-shadow: inset 3px 0 0 #8fdca0, 0 24px 46px -28px rgba(0, 0, 0, 0.95);
+}
+
+.nr-items--bottom {
+  margin-top: auto;
+}
+
 /* responsive */
 @media (max-width: 560px) {
   .nr-list {
