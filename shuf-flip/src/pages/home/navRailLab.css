@@ -1,0 +1,526 @@
+/* Creative bench for the left rail. Two controls, six takes. Each take is a
+   mini app screen — a soft page with a floating rail on the left: avatar on
+   top, then Home / Progress / Settings. Forest skin. */
+
+.nr-lab {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  padding-bottom: 24px;
+}
+
+/* ---- the shared controls ---- */
+.nr-picker {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nr-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.nr-picker-title {
+  min-width: 74px;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nr-seg {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.nr-seg-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.nr-seg-btn:hover {
+  color: var(--text);
+}
+
+.nr-seg-btn.on {
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+/* ---- the bench rows ---- */
+.nr-ideas {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.nr-idea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nr-idea-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.nr-idea-no {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: #7f9488;
+}
+
+.nr-idea-label {
+  margin: 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nr-stage {
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #1b2821, #131d18);
+  box-shadow: 0 24px 60px -42px rgba(0, 0, 0, 0.9);
+}
+
+.nr-lab button:focus-visible {
+  outline: 2px solid rgba(143, 220, 160, 0.75);
+  outline-offset: 2px;
+}
+
+/* ---- the mock screen every take sits on ---- */
+.nr-screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(
+      100% 70% at 60% -10%,
+      rgba(143, 220, 160, 0.14),
+      transparent 60%
+    ),
+    linear-gradient(160deg, #14332a, #0d1f19 60%, #10251d);
+}
+
+.nr-page {
+  position: absolute;
+  inset: 0;
+  padding: 18px 18px 18px 128px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  color: #dbe8dd;
+}
+
+.nr-p-greet {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 650;
+  line-height: 1.12;
+}
+
+.nr-p-sub {
+  margin-top: -4px;
+  font-size: 0.66rem;
+  color: #92a89b;
+}
+
+.nr-p-card {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px 14px;
+  border-radius: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nr-p-kicker {
+  font-size: 0.54rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #92a89b;
+}
+
+.nr-p-big {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.nr-p-big em {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: 0.62rem;
+  color: #92a89b;
+}
+
+.nr-p-meter {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  overflow: hidden;
+}
+
+.nr-p-meter i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8fdca0, #c9bb8e);
+}
+
+.nr-p-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.nr-p-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nr-p-tile b {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.nr-p-chart {
+  flex: 1;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 14px;
+}
+
+.nr-p-bar {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.nr-p-bar i {
+  width: 100%;
+  border-radius: 6px 6px 3px 3px;
+  background: linear-gradient(180deg, #8fdca0, #5f9a72);
+}
+
+.nr-p-rows {
+  display: flex;
+  flex-direction: column;
+  border-radius: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.nr-p-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  font-size: 0.72rem;
+}
+
+.nr-p-line + .nr-p-line {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nr-p-line b {
+  color: #cfe0d4;
+  font-weight: 600;
+}
+
+.nr-p-dense {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 2px;
+}
+
+.nr-p-skel {
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nr-p-skel:nth-child(2n) {
+  width: 82%;
+}
+
+.nr-p-skel:nth-child(3n) {
+  width: 64%;
+}
+
+/* ---- the rail shared by every take ---- */
+.nr-rail {
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 18px;
+  width: 96px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(18, 32, 26, 0.72);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 24px 50px -30px rgba(0, 0, 0, 0.95);
+}
+
+.nr-avatar {
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #8fdca0, #c9bb8e);
+  color: #0c1c14;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.nr-online {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #7de0a0;
+  border: 2px solid #16261f;
+}
+
+.nr-avatar--ring {
+  box-shadow: 0 0 0 2px rgba(143, 220, 160, 0.55),
+    0 0 0 5px rgba(143, 220, 160, 0.16);
+}
+
+.nr-items {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nr-link {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: #b9cabd;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.nr-link svg {
+  flex: 0 0 auto;
+}
+
+.nr-link:hover {
+  color: #eef4ee;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nr-link.on {
+  color: #08130f;
+  background: #8fdca0;
+  box-shadow: 0 12px 24px -14px rgba(143, 220, 160, 0.9);
+}
+
+.nr-link-label {
+  white-space: nowrap;
+}
+
+/* 02 — icon dock: square buttons, no labels */
+.nr-rail--dock {
+  width: auto;
+  padding: 14px 9px;
+}
+
+.nr-items--dock {
+  width: auto;
+  align-items: center;
+}
+
+.nr-link--sq {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 13px;
+}
+
+/* 03 — split cards: avatar and nav as separate floating cards */
+.nr-stack {
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 18px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nr-floating {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(18, 32, 26, 0.72);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 22px 44px -28px rgba(0, 0, 0, 0.95);
+}
+
+.nr-floating--avatar {
+  display: grid;
+  place-items: center;
+  padding: 10px;
+}
+
+.nr-floating--nav {
+  flex: 1;
+  width: 96px;
+  padding: 12px 10px;
+}
+
+.nr-link--card {
+  border-radius: 11px;
+}
+
+/* 04 — indicator: a left bar instead of a filled pill */
+.nr-rail--indicator {
+  width: 100px;
+  gap: 12px;
+}
+
+.nr-sep {
+  width: 40px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.nr-link--ind {
+  position: relative;
+  padding-left: 13px;
+  border-radius: 10px;
+}
+
+.nr-link--ind::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  border-radius: 999px;
+  background: #8fdca0;
+  transform: translateY(-50%);
+  transition: height 0.16s ease;
+}
+
+.nr-link--ind.on {
+  color: #eef4ee;
+  background: rgba(143, 220, 160, 0.1);
+}
+
+.nr-link--ind.on::before {
+  height: 22px;
+}
+
+/* 05 — accent: a solid green rail, active as a light block */
+.nr-rail--accent {
+  border-color: rgba(143, 220, 160, 0.35);
+  background: linear-gradient(
+    180deg,
+    rgba(143, 220, 160, 0.24),
+    rgba(18, 32, 26, 0.88)
+  );
+}
+
+.nr-link--accent.on {
+  color: #08130f;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 14px 26px -16px rgba(0, 0, 0, 0.8);
+}
+
+/* 06 — ghost: no container, just the avatar and options over the page */
+.nr-rail--ghost {
+  border-color: transparent;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.nr-link--ghost.on {
+  color: #eef4ee;
+  background: rgba(143, 220, 160, 0.14);
+  box-shadow: none;
+}
+
+@media (max-width: 780px) {
+  .nr-ideas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -15,6 +15,7 @@ import ProgressModules from './ProgressModules'
 import TodayRingLab from './TodayRingLab'
 import DailyGoalLab from './DailyGoalLab'
 import WordbooksLab from './WordbooksLab'
+import NavRailLab from './NavRailLab'
 
 type Item =
   | 'flip'
@@ -31,6 +32,7 @@ type Item =
   | 'progressRing'
   | 'dailyGoal'
   | 'wordbooks'
+  | 'navRail'
 
 /** Creative presentation: a live flip demo, the sentence exercise, and three
  *  pickers for the sentence card's motion, tray and blanks. */
@@ -59,6 +61,14 @@ export default function CreativeView() {
           >
             <span className="dot" />
             {t('creative.wordbooks')}
+          </button>
+          <button
+            type="button"
+            className={`navitem${active === 'navRail' ? ' on' : ''}`}
+            onClick={() => setActive('navRail')}
+          >
+            <span className="dot" />
+            {t('creative.navRail')}
           </button>
           <button
             type="button"
@@ -163,6 +173,8 @@ export default function CreativeView() {
         <FlipAnimations />
       ) : active === 'wordbooks' ? (
         <WordbooksLab />
+      ) : active === 'navRail' ? (
+        <NavRailLab />
       ) : active === 'sentence' ? (
         <SentenceBoard />
       ) : active === 'cardAnimations' ? (
