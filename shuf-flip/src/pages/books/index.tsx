@@ -1,12 +1,12 @@
 import { useState, type CSSProperties } from 'react'
 import BackButton from '../../components/BackButton'
+import Modal from '../../components/Modal'
 import { useI18n } from '../../i18n'
 import { BOOKS, LANGS, type Book, type LangId } from './data'
 import './books.css'
 
 const fmt = (n: number) => n.toLocaleString('en-US')
 const pctOf = (b: Book) => Math.round((b.learned / b.total) * 100)
-const PACE = 25
 
 /** One accent per language, kept inside the forest palette. */
 const LANG_COLOR: Record<LangId, string> = {
@@ -16,11 +16,11 @@ const LANG_COLOR: Record<LangId, string> = {
   ko: '#8fa9c9',
 }
 
-function Tick() {
+function Check() {
   return (
     <svg
-      width="12"
-      height="12"
+      width="14"
+      height="14"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -34,13 +34,38 @@ function Tick() {
   )
 }
 
-/** The Wordbooks page. A flat data sheet for the picked list — a capacity
- *  readout over a two-column index of every list. */
+function Sliders() {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <line x1="4" y1="8" x2="20" y2="8" />
+      <line x1="4" y1="16" x2="20" y2="16" />
+      <circle cx="9" cy="8" r="2.4" />
+      <circle cx="15" cy="16" r="2.4" />
+    </svg>
+  )
+}
+
+/** The Wordbooks page. The left panel is the picked list — total / learned /
+ *  exposed, a study action and a customize dialog; the right rail is the
+ *  index of every list. Appearance + local state only. */
 export default function Books() {
   const { lang, t } = useI18n()
   const [tab, setTab] = useState<LangId>('en')
   const [pickedId, setPickedId] = useState('en-cet4')
+  const [learningId, setLearningId] = useState<string | null>(null)
   const [cut, setCut] = useState<string[]>([])
+  const [added, setAdded] = useState<string[]>([])
+  const [dialog, setDialog] = useState(false)
 
   const list = BOOKS.filter((b) => b.lang === tab)
   const picked = BOOKS.find((b) => b.id === pickedId) ?? list[0]
@@ -55,25 +80,39 @@ export default function Books() {
   const pickLang = (id: LangId) => {
     setTab(id)
     setCut([])
+    setAdded([])
     const first = BOOKS.find((b) => b.lang === id)
     if (first) setPickedId(first.id)
   }
 
-  const toggle = (id: string) =>
+  const pickBook = (b: Book) => {
+    setPickedId(b.id)
+    setCut([])
+    setAdded([])
+  }
+
+  const toggleCut = (id: string) =>
     setCut((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id]))
+  const toggleAdded = (id: string) =>
+    setAdded((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id]))
 
   if (!picked) return null
 
-  const candidates = picked.excludes ?? []
-  const saved = candidates
+  const learning = learningId === picked.id
+  const excludes = picked.excludes ?? []
+  const addons = picked.addons ?? []
+  const saved = excludes
     .filter((c) => cut.includes(c.id))
     .reduce((sum, c) => sum + c.covers, 0)
-  const effective = Math.max(0, picked.total - saved)
-  const days = Math.ceil(effective / PACE)
-
-  const learnedW = (picked.learned / picked.total) * 100
-  const cutW = (saved / picked.total) * 100
+  const gained = addons
+    .filter((c) => added.includes(c.id))
+    .reduce((sum, c) => sum + c.covers, 0)
+  const adjusted = Math.max(0, picked.total - saved + gained)
+  const customized = saved > 0 || gained > 0
   const accent = LANG_COLOR[picked.lang]
+
+  const toggleLearning = () =>
+    setLearningId((id) => (id === picked.id ? null : picked.id))
 
   return (
     <div className="bi-page">
@@ -102,7 +141,7 @@ export default function Books() {
       </header>
 
       <div className="bi-body">
-        {/* the data sheet */}
+        {/* the picked list */}
         <main className="bi-sheet">
           <header className="bi-sheet-head">
             <span
@@ -121,79 +160,59 @@ export default function Books() {
             <span className="bi-pct">{pctOf(picked)}%</span>
           </header>
 
-          {/* how the list splits: learned · excluded · still to learn */}
-          <section className="bi-cap">
-            <div className="bi-cap-bar" aria-hidden="true">
-              <span
-                className="bi-seg bi-seg-learned"
-                style={{ width: `${learnedW}%` }}
-              />
-              <span
-                className="bi-seg bi-seg-cut"
-                style={{ width: `${cutW}%` }}
-              />
+          <div className="bi-stats">
+            <div className="bi-stat">
+              <span>{t('books.total')}</span>
+              <b>{fmt(picked.total)}</b>
             </div>
-            <div className="bi-legend">
-              <span className="bi-leg">
-                <i className="bi-dot bi-dot-learned" />
-                {t('books.index.learned')}
-                <b>{fmt(picked.learned)}</b>
-              </span>
-              <span className="bi-leg">
-                <i className="bi-dot bi-dot-cut" />
-                {t('books.index.excluded')}
-                <b>{fmt(saved)}</b>
-              </span>
-              <span className="bi-leg">
-                <i className="bi-dot bi-dot-left" />
-                {t('books.index.effective')}
-                <b style={{ color: accent }}>{fmt(effective)}</b>
-              </span>
+            <div className="bi-stat">
+              <span>{t('books.learned')}</span>
+              <b>{fmt(picked.learned)}</b>
             </div>
-          </section>
+            <div className="bi-stat">
+              <span>{t('books.exposed')}</span>
+              <b>{fmt(picked.exposed)}</b>
+            </div>
+          </div>
 
-          <div className="bi-result">
-            <span className="bi-result-num" style={{ color: accent }}>
-              {fmt(effective)}
+          <div className="bi-meter">
+            <span className="bi-meter-track" aria-hidden="true">
+              <span style={{ width: `${pctOf(picked)}%`, background: accent }} />
             </span>
-            <span className="bi-result-unit">{t('books.words')}</span>
-            <span className="bi-result-pace">
-              {t('books.index.pace')} <b>{days}</b> {t('books.index.days')}
+            <span className="bi-meter-meta">
+              {fmt(picked.learned)} / {fmt(picked.total)} {t('books.words')}
             </span>
           </div>
 
-          <section className="bi-trim-block">
-            <div className="bi-trim-head">
-              <h3 className="bi-trim-title">{t('books.customize')}</h3>
-              <p className="bi-trim-desc">{t('books.customizeDesc')}</p>
+          {customized && (
+            <div className="bi-adjust">
+              <span className="bi-adjust-dot" style={{ background: accent }} />
+              {t('books.customized')} · {t('books.adjusted')}{' '}
+              <b>{fmt(adjusted)}</b> {t('books.words')}
             </div>
+          )}
 
-            {candidates.length > 0 ? (
-              <ul className="bi-trims">
-                {candidates.map((c) => {
-                  const on = cut.includes(c.id)
-                  return (
-                    <li key={c.id}>
-                      <button
-                        type="button"
-                        className={`bi-trim${on ? ' on' : ''}`}
-                        aria-pressed={on}
-                        onClick={() => toggle(c.id)}
-                      >
-                        <span className="bi-trim-tick" aria-hidden="true">
-                          {on ? <Tick /> : null}
-                        </span>
-                        <span className="bi-trim-name">{nameById(c.id)}</span>
-                        <span className="bi-trim-cut">−{fmt(c.covers)}</span>
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
-            ) : (
-              <p className="bi-trim-empty">{t('books.noTrim')}</p>
-            )}
-          </section>
+          <div className="bi-actions">
+            <button
+              type="button"
+              className={`bi-start${learning ? ' on' : ''}`}
+              aria-pressed={learning}
+              onClick={toggleLearning}
+            >
+              <span className="bi-start-ico" aria-hidden="true">
+                {learning ? <Check /> : null}
+              </span>
+              {learning ? t('books.studying') : t('books.start')}
+            </button>
+            <button
+              type="button"
+              className="bi-custom"
+              onClick={() => setDialog(true)}
+            >
+              <Sliders />
+              {t('books.customize')}
+            </button>
+          </div>
         </main>
 
         {/* the index rail */}
@@ -206,6 +225,7 @@ export default function Books() {
           <div className="bi-grid">
             {list.map((b) => {
               const on = b.id === pickedId
+              const isLearning = b.id === learningId
               const color = LANG_COLOR[b.lang]
               return (
                 <button
@@ -214,13 +234,15 @@ export default function Books() {
                   className={`bi-card${on ? ' on' : ''}`}
                   aria-pressed={on}
                   style={{ '--accent-lang': color } as CSSProperties}
-                  onClick={() => {
-                    setPickedId(b.id)
-                    setCut([])
-                  }}
+                  onClick={() => pickBook(b)}
                 >
-                  <span className="bi-card-bar" aria-hidden="true">
-                    <span style={{ width: `${pctOf(b)}%` }} />
+                  <span className="bi-card-top">
+                    <span className="bi-card-bar" aria-hidden="true">
+                      <span style={{ width: `${pctOf(b)}%` }} />
+                    </span>
+                    {isLearning && (
+                      <span className="bi-card-tag">{t('books.studying')}</span>
+                    )}
                   </span>
                   <span className="bi-card-name">{nameOf(b)}</span>
                   <span className="bi-card-foot">
@@ -233,6 +255,105 @@ export default function Books() {
           </div>
         </aside>
       </div>
+
+      {dialog && (
+        <Modal
+          onClose={() => setDialog(false)}
+          ariaLabel={t('books.customize')}
+          className="bi-dialog"
+        >
+          <h2 className="modal-title">{t('books.customize')}</h2>
+          <p className="bi-dialog-sub">
+            <b>{nameOf(picked)}</b> · {t('books.customizeDesc')}
+          </p>
+
+          <div className="bi-groups">
+            <section className="bi-group">
+              <header className="bi-group-head">
+                <h3>{t('books.exclude')}</h3>
+                <span className="bi-group-hint">{t('books.excludeHint')}</span>
+              </header>
+              {excludes.length > 0 ? (
+                <ul className="bi-cands">
+                  {excludes.map((c) => {
+                    const on = cut.includes(c.id)
+                    return (
+                      <li key={c.id}>
+                        <button
+                          type="button"
+                          className={`bi-cand${on ? ' on' : ''}`}
+                          aria-pressed={on}
+                          onClick={() => toggleCut(c.id)}
+                        >
+                          <span className="bi-cand-tick" aria-hidden="true">
+                            {on ? <Check /> : null}
+                          </span>
+                          <span className="bi-cand-name">{nameById(c.id)}</span>
+                          <span className="bi-cand-words">
+                            −{fmt(c.covers)}
+                          </span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              ) : (
+                <p className="bi-group-empty">{t('books.noTrim')}</p>
+              )}
+            </section>
+
+            <section className="bi-group">
+              <header className="bi-group-head">
+                <h3>{t('books.add')}</h3>
+                <span className="bi-group-hint">{t('books.addHint')}</span>
+              </header>
+              {addons.length > 0 ? (
+                <ul className="bi-cands">
+                  {addons.map((c) => {
+                    const on = added.includes(c.id)
+                    return (
+                      <li key={c.id}>
+                        <button
+                          type="button"
+                          className={`bi-cand bi-cand-add${on ? ' on' : ''}`}
+                          aria-pressed={on}
+                          onClick={() => toggleAdded(c.id)}
+                        >
+                          <span className="bi-cand-tick" aria-hidden="true">
+                            {on ? <Check /> : null}
+                          </span>
+                          <span className="bi-cand-name">{nameById(c.id)}</span>
+                          <span className="bi-cand-words">
+                            +{fmt(c.covers)}
+                          </span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              ) : (
+                <p className="bi-group-empty">{t('books.noAdd')}</p>
+              )}
+            </section>
+          </div>
+
+          <div className="bi-dialog-sum">
+            <span className="bi-dialog-eq">
+              {fmt(picked.total)} − {fmt(saved)} + {fmt(gained)} =
+            </span>
+            <b style={{ color: accent }}>{fmt(adjusted)}</b>
+            <span className="bi-dialog-unit">{t('books.words')}</span>
+          </div>
+
+          <button
+            type="button"
+            className="bi-dialog-done"
+            onClick={() => setDialog(false)}
+          >
+            {t('common.done')}
+          </button>
+        </Modal>
+      )}
     </div>
   )
 }

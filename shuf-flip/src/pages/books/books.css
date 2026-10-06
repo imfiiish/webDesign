@@ -1,5 +1,6 @@
-/* Wordbooks · Index — a flat data sheet for the picked list, with a compact
-   two-column index of every list on the right. Forest skin. */
+/* Wordbooks page — the picked list on the left (total / learned / exposed,
+   a study action and a customize dialog), the index of every list on the
+   right. Wears the forest skin. */
 
 .bi-page {
   position: relative;
@@ -96,9 +97,12 @@
   gap: 24px;
 }
 
-/* ---- the sheet ---- */
+/* ---- the picked list ---- */
 .bi-sheet {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   padding: 24px 26px 26px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -157,197 +161,161 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* capacity split */
-.bi-cap {
-  margin-top: 24px;
+/* the three numbers you have: total / learned / exposed */
+.bi-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
 }
 
-.bi-cap-bar {
+.bi-stat {
   display: flex;
-  height: 16px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.07);
-}
-
-.bi-seg {
-  height: 100%;
-  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.bi-seg-learned {
-  background: linear-gradient(90deg, #8fdca0, #78c98a);
-}
-
-.bi-seg-cut {
-  background: linear-gradient(90deg, #c9bb8e, #b1a06e);
-}
-
-.bi-legend {
-  margin-top: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 20px;
-}
-
-.bi-leg {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 0.8rem;
-  color: #9db3a6;
-}
-
-.bi-leg b {
-  color: #eef4ee;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.bi-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 3px;
-}
-
-.bi-dot-learned {
-  background: #8fdca0;
-}
-
-.bi-dot-cut {
-  background: #c9bb8e;
-}
-
-.bi-dot-left {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-/* the headline result */
-.bi-result {
-  margin-top: 22px;
-  padding: 16px 18px;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 15px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.035);
 }
 
-.bi-result-num {
-  font-family: var(--font-display);
-  font-size: 2.4rem;
-  font-weight: 700;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.bi-result-unit {
+.bi-stat span {
   font-size: 0.68rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #9db3a6;
 }
 
-.bi-result-pace {
-  margin-left: auto;
-  font-size: 0.8rem;
-  color: #9db3a6;
-}
-
-.bi-result-pace b {
-  color: #cfe0d4;
+.bi-stat b {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.05;
   font-variant-numeric: tabular-nums;
 }
 
-/* trim */
-.bi-trim-block {
-  margin-top: 26px;
-}
-
-.bi-trim-title {
-  margin: 0;
-  font-size: 1.02rem;
-  font-weight: 650;
-}
-
-.bi-trim-desc {
-  margin: 5px 0 0;
-  font-size: 0.82rem;
-  color: #9db3a6;
-}
-
-.bi-trims {
-  list-style: none;
-  margin: 14px 0 0;
-  padding: 0;
+.bi-meter {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.bi-trim {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 11px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
-  color: #cfe0d4;
-  font: inherit;
-  font-size: 0.88rem;
-  text-align: left;
-  cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+.bi-meter-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
 }
 
-.bi-trim:hover {
-  border-color: rgba(255, 255, 255, 0.3);
+.bi-meter-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.bi-trim.on {
-  border-color: rgba(143, 220, 160, 0.6);
-  background: rgba(143, 220, 160, 0.12);
-  color: #eef4ee;
-}
-
-.bi-trim-tick {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #08130f;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.bi-trim.on .bi-trim-tick {
-  background: #8fdca0;
-  border-color: #8fdca0;
-}
-
-.bi-trim-name {
-  flex: 1;
-  min-width: 0;
-}
-
-.bi-trim-cut {
+.bi-meter-meta {
+  font-size: 0.76rem;
   color: #9db3a6;
   font-variant-numeric: tabular-nums;
 }
 
-.bi-trim.on .bi-trim-cut {
-  color: #8fdca0;
+.bi-adjust {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+  font-size: 0.78rem;
+  color: #9db3a6;
 }
 
-.bi-trim-empty {
-  margin: 12px 0 0;
-  font-size: 0.84rem;
-  color: #9db3a6;
+.bi-adjust-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.bi-adjust b {
+  color: #eef4ee;
+  font-variant-numeric: tabular-nums;
+}
+
+/* actions */
+.bi-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.bi-start {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: #eef4ee;
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease,
+    box-shadow 0.16s ease, color 0.16s ease;
+}
+
+.bi-start:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.bi-start-ico {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+}
+
+.bi-start.on {
+  color: #08130f;
+  background: #8fdca0;
+  border-color: #8fdca0;
+  box-shadow: 0 16px 30px -16px rgba(143, 220, 160, 0.9);
+}
+
+.bi-custom {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: #cfe0d4;
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.bi-custom:hover {
+  color: #eef4ee;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.bi-start:focus-visible,
+.bi-custom:focus-visible,
+.bi-lang:focus-visible,
+.bi-card:focus-visible,
+.bi-cand:focus-visible,
+.bi-dialog-done:focus-visible {
+  outline: 2px solid #8fdca0;
+  outline-offset: 2px;
 }
 
 /* ---- the index rail ---- */
@@ -420,14 +388,15 @@
   box-shadow: 0 14px 28px -18px var(--accent-lang);
 }
 
-.bi-card:focus-visible,
-.bi-trim:focus-visible,
-.bi-lang:focus-visible {
-  outline: 2px solid #8fdca0;
-  outline-offset: 2px;
+.bi-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 15px;
 }
 
 .bi-card-bar {
+  flex: 1;
   height: 4px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.09);
@@ -440,6 +409,18 @@
   border-radius: inherit;
   background: var(--accent-lang);
   transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bi-card-tag {
+  flex: 0 0 auto;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #8fdca0;
+  color: #08130f;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
 .bi-card-name {
@@ -468,6 +449,201 @@
   color: var(--accent-lang);
 }
 
+/* ---- the customize dialog ---- */
+.bi-dialog {
+  max-width: 680px;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.bi-dialog-sub {
+  margin: -6px 0 0;
+  text-align: center;
+  font-size: 0.86rem;
+  color: #9db3a6;
+}
+
+.bi-dialog-sub b {
+  color: #eef4ee;
+}
+
+.bi-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.bi-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.bi-group-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bi-group-head h3 {
+  margin: 0;
+  font-size: 0.94rem;
+  font-weight: 650;
+}
+
+.bi-group-hint {
+  font-size: 0.74rem;
+  color: #9db3a6;
+}
+
+.bi-cands {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bi-cand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #eef4ee;
+  font: inherit;
+  font-size: 0.86rem;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.bi-cand:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.bi-cand-tick {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #08130f;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+/* exclude: checking takes the list out (sand). add: checking folds it in
+   (green). */
+.bi-cand.on .bi-cand-tick {
+  background: #c9bb8e;
+  border-color: #c9bb8e;
+}
+
+.bi-cand.on {
+  border-color: rgba(201, 187, 142, 0.55);
+  background: rgba(201, 187, 142, 0.1);
+}
+
+.bi-cand.on .bi-cand-name {
+  color: #c9bb8e;
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 255, 255, 0.28);
+}
+
+.bi-cand.on .bi-cand-words {
+  color: #c9bb8e;
+}
+
+.bi-cand-add.on .bi-cand-tick {
+  background: #8fdca0;
+  border-color: #8fdca0;
+}
+
+.bi-cand-add.on {
+  border-color: rgba(143, 220, 160, 0.55);
+  background: rgba(143, 220, 160, 0.1);
+}
+
+.bi-cand-add.on .bi-cand-words {
+  color: #8fdca0;
+}
+
+.bi-cand-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.bi-cand-words {
+  color: #9db3a6;
+  font-variant-numeric: tabular-nums;
+}
+
+.bi-group-empty {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #9db3a6;
+}
+
+.bi-dialog-sum {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.bi-dialog-eq {
+  font-size: 1rem;
+  color: #9db3a6;
+}
+
+.bi-dialog-sum b {
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.bi-dialog-unit {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+.bi-dialog-done {
+  align-self: center;
+  padding: 11px 34px;
+  border-radius: 999px;
+  border: 1px solid #8fdca0;
+  background: #8fdca0;
+  color: #08130f;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.bi-dialog-done:hover {
+  box-shadow: 0 14px 28px -14px rgba(143, 220, 160, 0.9);
+}
+
+.bi-dialog-done:active {
+  transform: translateY(1px);
+}
+
 @media (max-width: 860px) {
   .bi-body {
     grid-template-columns: minmax(0, 1fr);
@@ -484,6 +660,10 @@
     -webkit-mask-image: none;
     mask-image: none;
   }
+
+  .bi-groups {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 @media (max-width: 560px) {
@@ -493,5 +673,13 @@
 
   .bi-head {
     align-items: flex-start;
+  }
+
+  .bi-stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bi-actions {
+    flex-direction: column;
   }
 }
