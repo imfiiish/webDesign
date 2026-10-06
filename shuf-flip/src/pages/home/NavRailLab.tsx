@@ -398,17 +398,23 @@ const IDEAS: Idea[] = [
     no: '12',
     name: { en: 'Mono mark', zh: '单色标' },
     desc: {
-      en: 'The edge float, but the active item is marked by a single-color tick and tint — no sliding pill, no per-item hues.',
-      zh: '在浮边的基础上，选中项改用单色左边条 + 淡底高亮，不用滑动药丸，也不换颜色。',
+      en: 'The edge float with the sliding block back, plus a single-color tick and tint on the active item.',
+      zh: '浮边 + 滑动块，选中项再用单色左边条 + 淡底点亮。',
     },
     render: (c) => (
       <aside className="nr-rail nr-rail--edgerail">
         <RingAvatar />
         <nav
-          className="nr-items nr-items--bottom"
-          style={{ '--c': '#8fdca0' } as CSSProperties}
+          className="nr-items nr-items--seg nr-items--seg-soft nr-items--bottom"
+          style={
+            {
+              '--active': ORDER.indexOf(c.tab),
+              '--c': '#8fdca0',
+            } as CSSProperties
+          }
         >
-          <Links ctx={c} cls="nr-link--color" order={ORDER} />
+          <span className="nr-seg-hi" aria-hidden="true" />
+          <Links ctx={c} cls="nr-link--seg nr-link--color" order={ORDER} />
         </nav>
       </aside>
     ),
