@@ -153,19 +153,8 @@ export const SCENES: CatalogEntry[] = [
     kind: 'scene',
     title: 'Navigation',
     description: {
-      en: 'Floating left rail: avatar on top, then Home / Progress / Wordbooks / Settings.',
-      zh: '左侧悬浮导航：顶部头像，下面是主页 / 进度 / 词书 / 设置。',
-    },
-    status: 'ready',
-    variants: [DEFAULT_VARIANT],
-  },
-  {
-    id: 'rail',
-    kind: 'scene',
-    title: 'Rail',
-    description: {
-      en: 'The Edge-float rail as a full page — ring avatar, nav at the foot, sliding single-color mark.',
-      zh: '整页的浮边导航——环像头像、选项沉底、滑动的单色标。',
+      en: 'Floating rail: ring avatar on top, Home / Progress / Settings at the foot, sliding single-color mark.',
+      zh: '悬浮导航：环像头像在上，主页 / 进度 / 设置沉底，滑动的单色标。',
     },
     status: 'ready',
     variants: [DEFAULT_VARIANT],
