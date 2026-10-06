@@ -99,6 +99,17 @@ export const PAGES: CatalogEntry[] = [
     status: 'ready',
     variants: [DEFAULT_VARIANT],
   },
+  {
+    id: 'settings',
+    kind: 'page',
+    title: 'Settings',
+    description: {
+      en: 'Daily goal, review / new balance, round size and language.',
+      zh: '每日目标、复习 / 新词配比、每轮词数与语言。',
+    },
+    status: 'ready',
+    variants: [DEFAULT_VARIANT],
+  },
 ]
 
 // Scenes: a page assembled with extra state (e.g. an end dialog) — more than

@@ -1,0 +1,335 @@
+/* Settings page — study preferences on the Progress / Results forest skin.
+   Appearance only: every control is held in local state. */
+
+.set-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 64px 44px 64px;
+  color: #eef4ee;
+  background:
+    radial-gradient(
+      120% 80% at 50% -10%,
+      rgba(143, 220, 160, 0.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      90% 70% at 88% 112%,
+      rgba(230, 200, 119, 0.14),
+      transparent 60%
+    ),
+    linear-gradient(160deg, #14332a 0%, #0d1f19 55%, #10251d 100%);
+}
+
+.set-head {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto 22px;
+}
+
+.set-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+.set-desc {
+  margin: 8px 0 0;
+  font-size: 0.92rem;
+  color: #9db3a6;
+}
+
+.set-body {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.set-card {
+  padding: 20px 22px 22px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 24px 50px -34px rgba(0, 0, 0, 0.85);
+}
+
+.set-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.set-card-title {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 650;
+}
+
+.set-card-desc {
+  margin: 5px 0 0;
+  font-size: 0.84rem;
+  color: #9db3a6;
+}
+
+/* ---- daily goal ---- */
+.set-readout {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 220, 160, 0.35);
+  background: rgba(143, 220, 160, 0.1);
+}
+
+.set-readout b {
+  font-size: 1.35rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: #8fdca0;
+}
+
+.set-readout small {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+.set-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.set-chip {
+  flex: 1 1 auto;
+  min-width: 58px;
+  padding: 10px 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #cfe0d4;
+  font: inherit;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease,
+    border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.set-chip:hover {
+  color: #eef4ee;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.set-chip.on {
+  color: #08130f;
+  background: #8fdca0;
+  border-color: #8fdca0;
+  box-shadow: 0 10px 22px -12px rgba(143, 220, 160, 0.9);
+}
+
+.set-meter {
+  margin-top: 18px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.set-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8fdca0, #c9bb8e);
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.set-meter-note {
+  margin: 9px 0 0;
+  font-size: 0.78rem;
+  color: #9db3a6;
+  font-variant-numeric: tabular-nums;
+}
+
+.set-meter-note b {
+  color: #eef4ee;
+}
+
+/* ---- new vs review ---- */
+.set-mix {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.set-mix-track {
+  position: relative;
+  height: 8px;
+  margin: 0 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7fb3d5, #8fdca0);
+}
+
+.set-mix-dots {
+  position: absolute;
+  inset: -11px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.set-mix-dot {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(10, 26, 20, 0.55);
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.set-mix-dot:hover {
+  transform: scale(1.2);
+}
+
+.set-mix-dot.on {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-color: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.18),
+    0 8px 18px -8px rgba(0, 0, 0, 0.8);
+}
+
+.set-mix-ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.set-mix-ends .review {
+  color: #7fb3d5;
+}
+
+.set-mix-ends .new {
+  color: #8fdca0;
+}
+
+.set-ratio {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.set-ratio span {
+  display: block;
+  transition: flex-grow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.set-ratio .review {
+  background: linear-gradient(90deg, #5e93b8, #7fb3d5);
+}
+
+.set-ratio .new {
+  background: linear-gradient(90deg, #8fdca0, #a9e6b6);
+}
+
+.set-legend {
+  display: flex;
+  gap: 20px;
+  font-size: 0.78rem;
+  color: #9db3a6;
+  font-variant-numeric: tabular-nums;
+}
+
+.set-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.set-legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: currentColor;
+}
+
+.set-legend .review {
+  color: #7fb3d5;
+}
+
+.set-legend .new {
+  color: #8fdca0;
+}
+
+.set-legend b {
+  color: #eef4ee;
+}
+
+/* ---- round size + language ---- */
+.set-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.set-seg {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.set-seg button {
+  flex: 1;
+  padding: 10px 8px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #9db3a6;
+  font: inherit;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.set-seg button:hover {
+  color: #eef4ee;
+}
+
+.set-seg button.on {
+  color: #08130f;
+  background: #8fdca0;
+}
+
+.set-note {
+  width: 100%;
+  max-width: 760px;
+  margin: 18px auto 0;
+  font-size: 0.78rem;
+  color: #7f9488;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .set-page {
+    padding: 56px 18px 48px;
+  }
+}

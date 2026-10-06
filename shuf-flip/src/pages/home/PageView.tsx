@@ -9,6 +9,7 @@ import Flip from '../flip'
 import Rating from '../rating'
 import Results from '../results'
 import Progress from '../progress'
+import Settings from '../settings'
 
 // Implemented pages render live in the panel. All take an optional `variant`
 // (currently only Flip uses it) — pages ignore it when they have no variants.
@@ -19,6 +20,7 @@ const PAGE_VIEWS: Record<string, ComponentType<{ variant?: string }>> = {
   rating: Rating,
   results: Results,
   progress: Progress,
+  settings: Settings,
 }
 
 type Selection = { page: string; variant: string }

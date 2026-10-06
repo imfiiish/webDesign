@@ -7,6 +7,7 @@ import Flip from './pages/flip'
 import Rating from './pages/rating'
 import Results from './pages/results'
 import Progress from './pages/progress'
+import Settings from './pages/settings'
 import Scene from './pages/scene'
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/rating" element={<Rating />} />
           <Route path="/results" element={<Results />} />
           <Route path="/progress" element={<Progress />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/scene/:id" element={<Scene />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
