@@ -9,13 +9,10 @@ const GOALS = [5, 10, 20, 30, 50]
 /** Preview of today's progress toward the goal (appearance only). */
 const TODAY = 12
 
-/** New / review balance stops, left (more review) → right (faster new). */
+/** Review / new balance presets. The first is the default. */
 const MIX = [
-  { new: 20, review: 80 },
-  { new: 35, review: 65 },
-  { new: 50, review: 50 },
-  { new: 65, review: 35 },
-  { new: 80, review: 20 },
+  { value: 'new', labelKey: 'settings.mix.faster', new: 65, review: 35 },
+  { value: 'review', labelKey: 'settings.mix.moreReview', new: 35, review: 65 },
 ]
 
 const ROUNDS = ['8', '16']
@@ -59,11 +56,10 @@ function Seg({
 export default function Settings() {
   const { t } = useI18n()
   const [goal, setGoal] = useState(20)
-  const [mix, setMix] = useState(2)
+  const [mix, setMix] = useState(0)
   const [round, setRound] = useState('16')
   const [lang, setLang] = useState('en')
 
-  const m = MIX[mix]
   const goalPct = Math.min(100, (TODAY / goal) * 100)
 
   return (
@@ -120,40 +116,34 @@ export default function Settings() {
             </div>
           </div>
 
-          <div className="set-mix">
-            <div className="set-mix-track">
-              <div className="set-mix-dots">
-                {MIX.map((s, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`set-mix-dot${i === mix ? ' on' : ''}`}
-                    aria-pressed={i === mix}
-                    aria-label={`${s.review} / ${s.new}`}
-                    onClick={() => setMix(i)}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="set-mix-ends">
-              <span className="review">{t('settings.mix.endsReview')}</span>
-              <span className="new">{t('settings.mix.endsNew')}</span>
-            </div>
-
-            <div className="set-ratio" aria-hidden="true">
-              <span className="review" style={{ flexGrow: m.review }} />
-              <span className="new" style={{ flexGrow: m.new }} />
-            </div>
-            <div className="set-legend">
-              <span className="review">
-                <i />
-                {t('settings.mix.review')} <b>{m.review}%</b>
-              </span>
-              <span className="new">
-                <i />
-                {t('settings.mix.new')} <b>{m.new}%</b>
-              </span>
-            </div>
+          <div
+            className="set-choices"
+            role="radiogroup"
+            aria-label={t('settings.mix.title')}
+          >
+            {MIX.map((o, i) => (
+              <button
+                key={o.value}
+                type="button"
+                role="radio"
+                aria-checked={i === mix}
+                className={`set-choice${i === mix ? ' on' : ''}`}
+                onClick={() => setMix(i)}
+              >
+                <span className="set-choice-head">
+                  <span className="set-choice-radio" aria-hidden="true" />
+                  <span className="set-choice-label">{t(o.labelKey)}</span>
+                </span>
+                <span className="set-choice-bar" aria-hidden="true">
+                  <span className="review" style={{ flexGrow: o.review }} />
+                  <span className="new" style={{ flexGrow: o.new }} />
+                </span>
+                <span className="set-choice-split">
+                  {t('settings.mix.review')} {o.review}% ·{' '}
+                  {t('settings.mix.new')} {o.new}%
+                </span>
+              </button>
+            ))}
           </div>
         </section>
 
