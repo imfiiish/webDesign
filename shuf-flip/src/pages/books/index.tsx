@@ -262,10 +262,22 @@ export default function Books() {
           ariaLabel={t('books.customize')}
           className="bi-dialog"
         >
-          <h2 className="modal-title">{t('books.customize')}</h2>
-          <p className="bi-dialog-sub">
-            <b>{nameOf(picked)}</b> · {t('books.customizeDesc')}
-          </p>
+          <header className="bi-dlg-head">
+            <span
+              className="bi-chip bi-dlg-chip"
+              style={{ background: accent }}
+              aria-hidden="true"
+            />
+            <div className="bi-dlg-id">
+              <span className="bi-dlg-kicker">{t('books.customize')}</span>
+              <h2 className="bi-dlg-name">{nameOf(picked)}</h2>
+              <p className="bi-dlg-desc">{t('books.customizeDesc')}</p>
+            </div>
+            <div className="bi-dlg-live">
+              <b style={{ color: accent }}>{fmt(adjusted)}</b>
+              <span>{t('books.words')}</span>
+            </div>
+          </header>
 
           <div className="bi-groups">
             <section className="bi-group">
@@ -337,21 +349,20 @@ export default function Books() {
             </section>
           </div>
 
-          <div className="bi-dialog-sum">
-            <span className="bi-dialog-eq">
+          <footer className="bi-dlg-foot">
+            <span className="bi-dlg-eq">
               {fmt(picked.total)} − {fmt(saved)} + {fmt(gained)} =
+              <b style={{ color: accent }}>{fmt(adjusted)}</b>
+              <em>{t('books.words')}</em>
             </span>
-            <b style={{ color: accent }}>{fmt(adjusted)}</b>
-            <span className="bi-dialog-unit">{t('books.words')}</span>
-          </div>
-
-          <button
-            type="button"
-            className="bi-dialog-done"
-            onClick={() => setDialog(false)}
-          >
-            {t('common.done')}
-          </button>
+            <button
+              type="button"
+              className="bi-dialog-done"
+              onClick={() => setDialog(false)}
+            >
+              {t('common.done')}
+            </button>
+          </footer>
         </Modal>
       )}
     </div>
