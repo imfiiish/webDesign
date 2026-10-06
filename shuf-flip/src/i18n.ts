@@ -242,12 +242,6 @@ const DICT: Record<Lang, Record<string, string>> = {
     'books.customizeDesc':
       "Exclude lists you already know — those words stay out.",
     'books.noTrim': 'Nothing to exclude from this list.',
-    'books.open.desc':
-      'The picked list opens on the desk — identity left, contents right.',
-    'books.open.contents': 'Contents',
-    'books.open.note': 'Strike out the lists you know; they stay out.',
-    'books.index.desc':
-      'A capacity readout for the picked list, with the full index on the right.',
     'books.index.lists': 'Lists',
     'books.index.learned': 'Learned',
     'books.index.excluded': 'Excluded',
@@ -498,10 +492,6 @@ const DICT: Record<Lang, Record<string, string>> = {
     'books.customize': '自定义',
     'books.customizeDesc': '排除已掌握的词汇表，这些词不会进入学习。',
     'books.noTrim': '这个词表没有可排除的项。',
-    'books.open.desc': '选中的词书摊在桌上——左边是它本身，右边是目录。',
-    'books.open.contents': '目录',
-    'books.open.note': '划掉已经掌握的，这些词不再进入学习。',
-    'books.index.desc': '选中的词书给出词量构成，右侧是全部词表的索引。',
     'books.index.lists': '词表',
     'books.index.learned': '已掌握',
     'books.index.excluded': '已排除',
