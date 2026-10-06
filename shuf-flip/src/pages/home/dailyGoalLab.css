@@ -1,0 +1,424 @@
+/* Creative bench for the daily-goal control. Four takes on picking a
+   words / day number; each stage wears the Settings forest skin. */
+
+.dg-list {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding-bottom: 20px;
+}
+
+.dg-idea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dg-idea-label {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dg-idea-stage {
+  position: relative;
+  min-height: 216px;
+  padding: 30px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.7);
+  color: #eef4ee;
+  background:
+    radial-gradient(
+      120% 80% at 50% -10%,
+      rgba(143, 220, 160, 0.2),
+      transparent 60%
+    ),
+    linear-gradient(160deg, #14332a 0%, #0d1f19 60%, #10251d 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+/* hide number spinners across the bench */
+.dg-list input[type='number']::-webkit-outer-spin-button,
+.dg-list input[type='number']::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+/* ---- shared bits ---- */
+.dg-round {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #eef4ee;
+  font: inherit;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.dg-round:hover {
+  color: #8fdca0;
+  border-color: rgba(143, 220, 160, 0.55);
+  background: rgba(143, 220, 160, 0.1);
+}
+
+.dg-round:active {
+  transform: translateY(1px);
+}
+
+.dg-unit {
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+.dg-presets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dg-chip {
+  min-width: 52px;
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #cfe0d4;
+  font: inherit;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.dg-chip:hover {
+  color: #eef4ee;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.dg-chip.on {
+  color: #08130f;
+  background: #8fdca0;
+  border-color: #8fdca0;
+  box-shadow: 0 10px 22px -12px rgba(143, 220, 160, 0.9);
+}
+
+.dg-chip-lg {
+  min-width: 64px;
+  padding: 11px 18px;
+  font-size: 1rem;
+}
+
+.dg-chip-ghost {
+  min-width: 52px;
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  color: #9db3a6;
+  font-size: 0.82rem;
+}
+
+.dg-chip-ghost.on {
+  color: #08130f;
+  background: #8fdca0;
+  border-style: solid;
+  border-color: #8fdca0;
+}
+
+/* ---- 01 · stepper ---- */
+.dg-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dg-step-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dg-step-field {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 9px;
+  min-width: 196px;
+  padding: 7px 20px;
+  border-radius: 14px;
+  border: 1px solid rgba(143, 220, 160, 0.35);
+  background: rgba(143, 220, 160, 0.08);
+  cursor: text;
+}
+
+.dg-step-input {
+  width: 4ch;
+  border: 0;
+  background: transparent;
+  color: #8fdca0;
+  font: inherit;
+  font-size: 1.75rem;
+  font-weight: 650;
+  line-height: 1.1;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+/* ---- 02 · chips ---- */
+.dg-chips-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.dg-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dg-chip-custom {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: text;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.dg-chip-custom.on {
+  border-style: solid;
+  border-color: rgba(143, 220, 160, 0.6);
+  background: rgba(143, 220, 160, 0.1);
+}
+
+.dg-chip-input {
+  width: 4ch;
+  border: 0;
+  background: transparent;
+  color: #8fdca0;
+  font: inherit;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+}
+
+.dg-hint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #9db3a6;
+  font-variant-numeric: tabular-nums;
+}
+
+.dg-hint b {
+  color: #eef4ee;
+}
+
+/* ---- 03 · gauge ---- */
+.dg-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.dg-gauge {
+  position: relative;
+  width: 168px;
+  height: 168px;
+}
+
+.dg-gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.dg-gauge-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 9;
+}
+
+.dg-gauge-arc {
+  fill: none;
+  stroke: #8fdca0;
+  stroke-width: 9;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dg-gauge-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.dg-gauge-input {
+  width: 4ch;
+  border: 0;
+  background: transparent;
+  color: #eef4ee;
+  font: inherit;
+  font-size: 2rem;
+  font-weight: 650;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+.dg-gauge-today {
+  margin-top: 5px;
+  font-size: 0.7rem;
+  color: #9db3a6;
+  font-variant-numeric: tabular-nums;
+}
+
+.dg-gauge-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ---- 04 · ruler ---- */
+.dg-ruler-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  width: 100%;
+}
+
+.dg-ruler {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  padding: 0 6px 34px;
+}
+
+.dg-ruler-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 10px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.22),
+    rgba(255, 255, 255, 0.06)
+  );
+}
+
+.dg-ruler-ticks {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 20px;
+}
+
+.dg-tick {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.dg-tick i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2b4a3c;
+  box-shadow: 0 0 0 3px rgba(13, 31, 25, 0.9);
+  transition: background 0.15s ease, transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.dg-tick.major i {
+  width: 12px;
+  height: 12px;
+}
+
+.dg-tick:hover i {
+  background: #8fdca0;
+}
+
+.dg-tick em {
+  position: absolute;
+  top: 24px;
+  font-style: normal;
+  font-size: 0.68rem;
+  color: #9db3a6;
+  font-variant-numeric: tabular-nums;
+}
+
+.dg-tick.on i {
+  background: #8fdca0;
+  transform: scale(1.6);
+  box-shadow: 0 0 0 4px rgba(143, 220, 160, 0.2),
+    0 0 16px rgba(143, 220, 160, 0.5);
+}
+
+.dg-tick.on em {
+  color: #eef4ee;
+  font-weight: 650;
+}
+
+.dg-ruler-readout {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 14px;
+  border-bottom: 1px solid rgba(143, 220, 160, 0.4);
+}
+
+.dg-ruler-input {
+  width: 4ch;
+  border: 0;
+  background: transparent;
+  color: #8fdca0;
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 650;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}

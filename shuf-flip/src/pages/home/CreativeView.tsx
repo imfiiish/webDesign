@@ -13,6 +13,7 @@ import ResultWordsTweaks from './ResultWordsTweaks'
 import ProgressCharts from './ProgressCharts'
 import ProgressModules from './ProgressModules'
 import TodayRingLab from './TodayRingLab'
+import DailyGoalLab from './DailyGoalLab'
 
 type Item =
   | 'flip'
@@ -27,6 +28,7 @@ type Item =
   | 'progressCharts'
   | 'progressModules'
   | 'progressRing'
+  | 'dailyGoal'
 
 /** Creative presentation: a live flip demo, the sentence exercise, and three
  *  pickers for the sentence card's motion, tray and blanks. */
@@ -40,6 +42,14 @@ export default function CreativeView() {
       sidebar={
         <>
           <h2>{t('design.misc')}</h2>
+          <button
+            type="button"
+            className={`navitem${active === 'dailyGoal' ? ' on' : ''}`}
+            onClick={() => setActive('dailyGoal')}
+          >
+            <span className="dot" />
+            {t('goal.lab')}
+          </button>
           <button
             type="button"
             className={`navitem${active === 'flip' ? ' on' : ''}`}
@@ -159,6 +169,8 @@ export default function CreativeView() {
         <ResultWordsTweaks />
       ) : active === 'progressCharts' ? (
         <ProgressCharts />
+      ) : active === 'dailyGoal' ? (
+        <DailyGoalLab />
       ) : active === 'progressRing' ? (
         <TodayRingLab />
       ) : (
