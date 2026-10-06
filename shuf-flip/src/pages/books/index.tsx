@@ -110,6 +110,8 @@ export default function Books() {
   const adjusted = Math.max(0, picked.total - saved + gained)
   const customized = saved > 0 || gained > 0
   const accent = LANG_COLOR[picked.lang]
+  const learnedW =
+    adjusted > 0 ? Math.min(100, (picked.learned / adjusted) * 100) : 0
 
   const toggleLearning = () =>
     setLearningId((id) => (id === picked.id ? null : picked.id))
@@ -258,6 +260,7 @@ export default function Books() {
 
       {dialog && (
         <Modal
+          placement="right"
           onClose={() => setDialog(false)}
           ariaLabel={t('books.customize')}
           className="bi-dialog"
@@ -273,11 +276,20 @@ export default function Books() {
               <h2 className="bi-dlg-name">{nameOf(picked)}</h2>
               <p className="bi-dlg-desc">{t('books.customizeDesc')}</p>
             </div>
-            <div className="bi-dlg-live">
-              <b style={{ color: accent }}>{fmt(adjusted)}</b>
-              <span>{t('books.words')}</span>
-            </div>
           </header>
+
+          <div className="bi-dlg-summary">
+            <div className="bi-dlg-bar" aria-hidden="true">
+              <span style={{ width: `${learnedW}%`, background: accent }} />
+            </div>
+            <div className="bi-dlg-sum">
+              <span className="bi-dlg-eq">
+                {fmt(picked.total)} − {fmt(saved)} + {fmt(gained)} =
+              </span>
+              <b style={{ color: accent }}>{fmt(adjusted)}</b>
+              <em>{t('books.words')}</em>
+            </div>
+          </div>
 
           <div className="bi-groups">
             <section className="bi-group">
@@ -350,11 +362,6 @@ export default function Books() {
           </div>
 
           <footer className="bi-dlg-foot">
-            <span className="bi-dlg-eq">
-              {fmt(picked.total)} − {fmt(saved)} + {fmt(gained)} =
-              <b style={{ color: accent }}>{fmt(adjusted)}</b>
-              <em>{t('books.words')}</em>
-            </span>
             <button
               type="button"
               className="bi-dialog-done"

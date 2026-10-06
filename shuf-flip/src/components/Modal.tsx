@@ -7,6 +7,8 @@ type Props = {
   onClose: () => void
   ariaLabel: string
   className?: string
+  /** Where the panel sits: a centered dialog (default) or a right drawer. */
+  placement?: 'center' | 'right'
   /** Set false to ignore Esc (e.g. while renaming). */
   closeOnEscape?: boolean
   /** Play the exit animation (caller keeps it mounted until it finishes). */
@@ -19,11 +21,13 @@ export default function Modal({
   onClose,
   ariaLabel,
   className = '',
+  placement = 'center',
   closeOnEscape = true,
   closing = false,
   children,
 }: Props) {
   const { t } = useI18n()
+  const place = placement === 'right' ? ' placement-right' : ''
 
   useEffect(() => {
     if (!closeOnEscape) return
@@ -35,9 +39,12 @@ export default function Modal({
   }, [closeOnEscape, onClose])
 
   return (
-    <div className={`modal-backdrop${closing ? ' closing' : ''}`} onClick={onClose}>
+    <div
+      className={`modal-backdrop${place}${closing ? ' closing' : ''}`}
+      onClick={onClose}
+    >
       <div
-        className={`modal${className ? ` ${className}` : ''}${
+        className={`modal${place}${className ? ` ${className}` : ''}${
           closing ? ' closing' : ''
         }`}
         role="dialog"

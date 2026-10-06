@@ -449,46 +449,42 @@
   color: var(--accent-lang);
 }
 
-/* ---- the customize dialog ---- */
+/* ---- the customize drawer ---- */
 .bi-dialog {
-  max-width: 700px;
-  max-height: 84vh;
   align-items: stretch;
   gap: 0;
   padding: 0;
   overflow: hidden;
-  border-radius: 20px;
-  border: 1px solid rgba(143, 220, 160, 0.2);
   color: #eef4ee;
+  border-left: 1px solid rgba(143, 220, 160, 0.18);
   background:
     radial-gradient(
-      130% 90% at 12% -10%,
-      rgba(143, 220, 160, 0.16),
-      transparent 58%
+      120% 60% at 100% 0%,
+      rgba(143, 220, 160, 0.13),
+      transparent 56%
     ),
-    linear-gradient(165deg, #1b2c24 0%, #11201a 58%, #15261e 100%);
-  box-shadow: 0 50px 110px -50px rgba(0, 0, 0, 0.95);
+    linear-gradient(180deg, #17271f 0%, #101d17 58%, #14241c 100%);
+  box-shadow: -40px 0 90px -50px rgba(0, 0, 0, 0.95);
 }
 
 .bi-dialog .modal-close {
-  top: 14px;
-  right: 14px;
+  top: 16px;
+  right: 16px;
   z-index: 2;
 }
 
-/* header: the book identity plus the live adjusted count */
+/* header: the book identity */
 .bi-dlg-head {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 22px 62px 18px 26px;
+  gap: 14px;
+  padding: 22px 60px 20px 22px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
 }
 
 .bi-dlg-chip {
-  width: 40px;
-  height: 54px;
+  width: 38px;
+  height: 52px;
 }
 
 .bi-dlg-id {
@@ -500,7 +496,7 @@
 }
 
 .bi-dlg-kicker {
-  font-size: 0.66rem;
+  font-size: 0.64rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #8fdca0;
@@ -509,7 +505,7 @@
 .bi-dlg-name {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: 1.4rem;
   font-weight: 650;
   line-height: 1.15;
 }
@@ -520,45 +516,75 @@
   color: #9db3a6;
 }
 
-.bi-dlg-live {
+/* the live sum: a learned meter over the adjusted total */
+.bi-dlg-summary {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 1px;
+  gap: 12px;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
 }
 
-.bi-dlg-live b {
+.bi-dlg-bar {
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.bi-dlg-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bi-dlg-sum {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
   font-family: var(--font-display);
-  font-size: 1.9rem;
-  font-weight: 700;
-  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
-.bi-dlg-live span {
-  font-size: 0.6rem;
+.bi-dlg-eq {
+  font-size: 0.95rem;
+  color: #9db3a6;
+}
+
+.bi-dlg-sum b {
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.bi-dlg-sum em {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #9db3a6;
 }
 
-/* the two groups, split by a hairline */
+/* the two groups, stacked and scrollable */
 .bi-groups {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow: auto;
 }
 
 .bi-group {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   min-width: 0;
-  padding: 20px 24px 22px;
+  padding: 18px 22px 20px;
 }
 
 .bi-group + .bi-group {
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .bi-group-head {
@@ -572,7 +598,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -692,50 +718,22 @@
   color: #9db3a6;
 }
 
-/* footer: the equation, then done */
+/* footer: one full-width action */
 .bi-dlg-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px 26px;
+  padding: 16px 22px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(0, 0, 0, 0.22);
 }
 
-.bi-dlg-eq {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  font-family: var(--font-display);
-  font-size: 1rem;
-  color: #9db3a6;
-  font-variant-numeric: tabular-nums;
-}
-
-.bi-dlg-eq b {
-  font-size: 1.6rem;
-  font-weight: 700;
-}
-
-.bi-dlg-eq em {
-  font-family: var(--font-ui);
-  font-style: normal;
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #9db3a6;
-}
-
 .bi-dialog-done {
-  flex: 0 0 auto;
-  padding: 11px 30px;
-  border-radius: 999px;
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
   border: 1px solid #8fdca0;
   background: #8fdca0;
   color: #08130f;
   font: inherit;
-  font-size: 0.9rem;
+  font-size: 0.94rem;
   font-weight: 650;
   cursor: pointer;
   transition: box-shadow 0.16s ease, transform 0.16s ease;
@@ -765,15 +763,6 @@
     -webkit-mask-image: none;
     mask-image: none;
   }
-
-  .bi-groups {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .bi-group + .bi-group {
-    border-left: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-  }
 }
 
 @media (max-width: 560px) {
@@ -791,9 +780,5 @@
 
   .bi-actions {
     flex-direction: column;
-  }
-
-  .bi-dlg-foot {
-    flex-wrap: wrap;
   }
 }
