@@ -157,7 +157,10 @@ export const SCENES: CatalogEntry[] = [
       zh: '悬浮导航：环像头像在上，主页 / 进度 / 设置沉底，滑动的单色标。',
     },
     status: 'ready',
-    variants: [DEFAULT_VARIANT],
+    variants: [
+      DEFAULT_VARIANT,
+      { id: 'capsule', name: { en: 'Capsule', zh: '胶囊' } },
+    ],
   },
 ]
 

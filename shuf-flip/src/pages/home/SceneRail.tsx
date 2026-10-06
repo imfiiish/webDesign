@@ -14,6 +14,9 @@ const LABEL_KEY: Record<Tab, string> = {
 /** Top-to-bottom order: the nav sinks to the foot, Home lowest. */
 const ORDER: Tab[] = ['settings', 'progress', 'home']
 
+/** Reading order for the capsule take. */
+const TABS: Tab[] = ['home', 'progress', 'settings']
+
 function HomeIcon() {
   return (
     <svg
@@ -108,9 +111,10 @@ function RingAvatar() {
 /** The scene: the Edge-float rail (from the bench's take 12) as a full page —
  *  green left stripe kept floating, ring avatar on top, nav at the foot, the
  *  highlight sliding and a single-color mark on the active item. */
-export default function SceneRail() {
+export default function SceneRail({ variant = 'default' }: { variant?: string }) {
   const { lang, t } = useI18n()
   const [tab, setTab] = useState<Tab>('home')
+  const capsule = variant === 'capsule'
 
   const week =
     lang === 'zh'
@@ -122,28 +126,55 @@ export default function SceneRail() {
     <div className="sr-scene">
       <BackButton className="deck-home sr-back" />
 
-      <aside className="sr-rail">
-        <RingAvatar />
+      {capsule ? (
+        <aside className="sr-rail sr-rail--capsule">
+          <span className="sr-cap-avatar" aria-hidden="true">
+            SF
+            <i className="sr-online" />
+          </span>
+          <nav className="sr-cap-items">
+            {TABS.map((id) => {
+              const on = tab === id
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  className={`sr-cap-link${on ? ' on' : ''}`}
+                  title={t(LABEL_KEY[id])}
+                  aria-label={t(LABEL_KEY[id])}
+                  aria-current={on ? 'page' : undefined}
+                  onClick={() => setTab(id)}
+                >
+                  {ICON[id]}
+                </button>
+              )
+            })}
+          </nav>
+        </aside>
+      ) : (
+        <aside className="sr-rail">
+          <RingAvatar />
 
-        <nav className="sr-items" style={{ '--active': ORDER.indexOf(tab) } as CSSProperties}>
-          <span className="sr-hi" aria-hidden="true" />
-          {ORDER.map((id) => {
-            const on = tab === id
-            return (
-              <button
-                key={id}
-                type="button"
-                className={`sr-link${on ? ' on' : ''}`}
-                aria-current={on ? 'page' : undefined}
-                onClick={() => setTab(id)}
-              >
-                {ICON[id]}
-                <span>{t(LABEL_KEY[id])}</span>
-              </button>
-            )
-          })}
-        </nav>
-      </aside>
+          <nav className="sr-items" style={{ '--active': ORDER.indexOf(tab) } as CSSProperties}>
+            <span className="sr-hi" aria-hidden="true" />
+            {ORDER.map((id) => {
+              const on = tab === id
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  className={`sr-link${on ? ' on' : ''}`}
+                  aria-current={on ? 'page' : undefined}
+                  onClick={() => setTab(id)}
+                >
+                  {ICON[id]}
+                  <span>{t(LABEL_KEY[id])}</span>
+                </button>
+              )
+            })}
+          </nav>
+        </aside>
+      )}
 
       <main className="sr-main">
         <div className="sr-inner" key={tab}>

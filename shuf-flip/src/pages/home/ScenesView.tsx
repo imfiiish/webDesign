@@ -44,7 +44,11 @@ export default function ScenesView() {
   return (
     <HomeShell
       panelClassName={View ? 'panel-preview' : ''}
-      openHref={View && scene ? `/scene/${scene.id}` : undefined}
+      openHref={
+        View && scene
+          ? `/scene/${scene.id}?variant=${active.variant}`
+          : undefined
+      }
       sidebar={sidebar}
     >
       {View ? (

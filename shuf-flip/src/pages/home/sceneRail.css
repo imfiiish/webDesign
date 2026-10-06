@@ -182,6 +182,68 @@
   outline-offset: 2px;
 }
 
+/* ---- capsule variant (bench take 02) ---- */
+.sr-rail--capsule {
+  width: auto;
+  height: auto;
+  gap: 12px;
+  padding: 14px 10px;
+  border-radius: 999px;
+  background: rgba(18, 32, 26, 0.86);
+  box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.95);
+}
+
+.sr-cap-avatar {
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #8fdca0, #c9bb8e);
+  color: #0c1c14;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.sr-cap-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sr-cap-link {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #b9cabd;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.sr-cap-link:hover {
+  color: #eef4ee;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sr-cap-link.on {
+  color: #08130f;
+  background: #8fdca0;
+  box-shadow: 0 12px 24px -14px rgba(143, 220, 160, 0.9);
+}
+
+.sr-cap-link:focus-visible {
+  outline: 2px solid #8fdca0;
+  outline-offset: 2px;
+}
+
 /* ---- content ---- */
 .sr-main {
   min-height: 100vh;
