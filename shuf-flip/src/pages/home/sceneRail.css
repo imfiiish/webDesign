@@ -39,8 +39,9 @@
 /* ---- the floating rail ---- */
 .sr-rail {
   position: fixed;
-  top: 24px;
+  top: 50%;
   left: 24px;
+  transform: translateY(-50%);
   width: 116px;
   height: min(440px, calc(100vh - 48px));
   z-index: 10;
