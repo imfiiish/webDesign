@@ -143,16 +143,20 @@ function Links({
   labels = true,
   badges = false,
   colors = false,
+  icons = true,
+  numbered = false,
 }: {
   ctx: Ctx
   cls?: string
   labels?: boolean
   badges?: boolean
   colors?: boolean
+  icons?: boolean
+  numbered?: boolean
 }) {
   return (
     <>
-      {TABS.map((id) => {
+      {TABS.map((id, i) => {
         const on = ctx.tab === id
         return (
           <button
@@ -165,7 +169,10 @@ function Links({
             style={colors ? ({ '--c': COLOR[id] } as CSSProperties) : undefined}
             onClick={() => ctx.setTab(id)}
           >
-            {ICON[id]}
+            {numbered && (
+              <span className="nr-num">{String(i + 1).padStart(2, '0')}</span>
+            )}
+            {icons && ICON[id]}
             {labels && (
               <span className="nr-link-label">{ctx.t(LABEL_KEY[id])}</span>
             )}
@@ -180,29 +187,20 @@ function Links({
 }
 
 /** A `nav` wrapper so every take gets the same vertical rhythm. */
-function Nav({
-  ctx,
-  cls = '',
-  navClass = '',
-  ...rest
-}: {
+function Nav(props: {
   ctx: Ctx
   cls?: string
   navClass?: string
   labels?: boolean
   badges?: boolean
   colors?: boolean
+  icons?: boolean
+  numbered?: boolean
 }) {
-  const { labels, badges, colors } = rest
+  const { ctx, cls, navClass, ...flags } = props
   return (
     <nav className={`nr-items${navClass ? ' ' + navClass : ''}`}>
-      <Links
-        ctx={ctx}
-        cls={cls}
-        labels={labels}
-        badges={badges}
-        colors={colors}
-      />
+      <Links ctx={ctx} cls={cls} {...flags} />
     </nav>
   )
 }
@@ -455,6 +453,83 @@ const IDEAS: Idea[] = [
       <aside className="nr-rail nr-rail--pill">
         <Avatar />
         <Nav ctx={c} cls="nr-link--badge" badges />
+      </aside>
+    ),
+  },
+  {
+    no: '17',
+    name: { en: 'Bento', zh: '便当格' },
+    desc: {
+      en: 'Chunky square tiles; the active tile lifts and fills with a gradient.',
+      zh: '大块方形瓷片，选中项浮起并填渐变。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--bento">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--bento" />
+      </aside>
+    ),
+  },
+  {
+    no: '18',
+    name: { en: 'Neon', zh: '霓虹' },
+    desc: {
+      en: 'Near-black rail; the active item glows green.',
+      zh: '近黑栏，选中项发绿光。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--neon">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--neon" />
+      </aside>
+    ),
+  },
+  {
+    no: '19',
+    name: { en: 'Band', zh: '色带' },
+    desc: {
+      en: 'The active item is a full-bleed band straight across the rail.',
+      zh: '选中项是一条贯穿整栏、直达边缘的色带。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--band">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--band" />
+      </aside>
+    ),
+  },
+  {
+    no: '20',
+    name: { en: 'Numerals', zh: '大数字' },
+    desc: {
+      en: 'Big index numbers instead of icons; the active one lights up.',
+      zh: '用大号序号替代图标，选中的点亮放大。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--num">
+        <Avatar />
+        <Nav ctx={c} cls="nr-link--num" numbered icons={false} />
+      </aside>
+    ),
+  },
+  {
+    no: '21',
+    name: { en: 'Node trail', zh: '节点线' },
+    desc: {
+      en: 'A progress line threads the items; the active node fills in.',
+      zh: '一条线串起各项，选中节点点亮并把线走到那里。',
+    },
+    render: (c) => (
+      <aside className="nr-rail nr-rail--nodes">
+        <Avatar />
+        <nav
+          className="nr-items nr-items--nodes"
+          style={{ '--active': TABS.indexOf(c.tab) } as CSSProperties}
+        >
+          <span className="nr-line" aria-hidden="true" />
+          <span className="nr-line-fill" aria-hidden="true" />
+          <Links ctx={c} cls="nr-link--node" />
+        </nav>
       </aside>
     ),
   },
