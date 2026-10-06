@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { useI18n } from '../../i18n'
+import BackButton from '../../components/BackButton'
 import { BOOKS } from '../books/data'
 import './sceneNav.css'
 
@@ -109,6 +110,8 @@ export default function SceneNav() {
 
   return (
     <div className="nv-scene">
+      <BackButton className="deck-home nv-back" />
+
       <aside className="nv-rail">
         <button type="button" className="nv-avatar" aria-label="profile">
           SF

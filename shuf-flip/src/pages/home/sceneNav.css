@@ -118,6 +118,23 @@
   outline-offset: 2px;
 }
 
+/* back-to-catalog chrome: the rail owns the top-left, so park it top-right
+   and give it the same glass skin as the rail. */
+.nv-back {
+  left: auto;
+  right: 24px;
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(18, 32, 26, 0.72);
+  color: #cfdcd2;
+  backdrop-filter: blur(16px);
+}
+
+.nv-back:hover {
+  color: #08130f;
+  background: #8fdca0;
+  border-color: #8fdca0;
+}
+
 /* ---- content ---- */
 .nv-main {
   min-height: 100vh;
