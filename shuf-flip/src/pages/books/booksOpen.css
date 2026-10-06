@@ -1,0 +1,590 @@
+/* Wordbooks · Open book — an open spread on a lit desk, with the shelf of
+   mini covers on the right. Same forest skin as the rest of the app. */
+
+.bo-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 64px 44px 72px;
+  color: #eef4ee;
+  background:
+    radial-gradient(
+      120% 80% at 50% -10%,
+      rgba(143, 220, 160, 0.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      90% 70% at 88% 112%,
+      rgba(230, 200, 119, 0.14),
+      transparent 60%
+    ),
+    linear-gradient(160deg, #14332a 0%, #0d1f19 55%, #10251d 100%);
+}
+
+.bo-head {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto 22px;
+}
+
+.bo-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+.bo-desc {
+  margin: 8px 0 0;
+  font-size: 0.92rem;
+  color: #9db3a6;
+}
+
+.bo-body {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 28px;
+}
+
+/* ---- the desk + the open book ---- */
+.bo-desk {
+  position: relative;
+  min-width: 0;
+}
+
+/* a soft pool of lamp light behind the book */
+.bo-lamp {
+  position: absolute;
+  inset: -6% -8% -14%;
+  background: radial-gradient(
+    58% 52% at 46% 38%,
+    rgba(201, 187, 142, 0.16),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.bo-book {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 14px;
+  background: linear-gradient(160deg, #2b3a2f, #24322a);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.9);
+  transform-origin: left center;
+  animation: bo-open 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes bo-open {
+  from {
+    opacity: 0;
+    transform: perspective(1400px) rotateY(-13deg) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.bo-gutter {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 50%;
+  width: 34px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 0, 0, 0.42) 46%,
+    rgba(0, 0, 0, 0.42) 54%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.bo-page {
+  position: relative;
+  min-height: 430px;
+  padding: 26px 26px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bo-verso {
+  border-right: 1px solid rgba(0, 0, 0, 0.35);
+  padding-right: 34px;
+}
+
+.bo-recto {
+  padding-left: 34px;
+}
+
+.bo-kicker {
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+/* the bookmark hanging over the verso, showing how far in you are */
+.bo-ribbon {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  width: 30px;
+  height: 76px;
+  display: flex;
+  justify-content: center;
+  padding-top: 9px;
+  background: linear-gradient(#c9bb8e, #a8996f);
+  color: #201a11;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
+  box-shadow: 0 10px 18px -10px rgba(0, 0, 0, 0.8);
+}
+
+.bo-ribbon-pct {
+  font-variant-numeric: tabular-nums;
+}
+
+/* the cover block on the verso */
+.bo-verso-cover {
+  position: relative;
+  width: 146px;
+  aspect-ratio: 2 / 3;
+  margin: 4px 0 20px;
+  padding: 14px 12px 12px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  border-radius: 5px 12px 12px 5px;
+  background: linear-gradient(150deg, #31432f, #25332a);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 34px -20px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+}
+
+.bo-cover-spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 9px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.bo-cover-spine > span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, #8fdca0, #c9bb8e);
+  transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bo-cover-name {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.bo-cover-meta {
+  position: relative;
+  font-size: 0.66rem;
+  color: #9db3a6;
+  font-variant-numeric: tabular-nums;
+}
+
+.bo-name {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 650;
+  line-height: 1.14;
+}
+
+.bo-progress {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bo-progress-track {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.bo-progress-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8fdca0, #c9bb8e);
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bo-progress-meta {
+  font-size: 0.78rem;
+  color: #9db3a6;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- recto: the contents ---- */
+.bo-contents-title {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 650;
+}
+
+.bo-contents-note {
+  margin: 5px 0 0;
+  font-size: 0.82rem;
+  color: #9db3a6;
+}
+
+.bo-chapters {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.bo-chapter {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 2px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: none;
+  color: #cfe0d4;
+  font: inherit;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.bo-chapter:hover {
+  color: #eef4ee;
+}
+
+.bo-chapter:focus-visible,
+.bo-mini:focus-visible,
+.bo-lang:focus-visible {
+  outline: 2px solid #8fdca0;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.bo-chapter-tick {
+  flex: 0 0 auto;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #08130f;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.bo-chapter.on .bo-chapter-tick {
+  background: #8fdca0;
+  border-color: #8fdca0;
+}
+
+.bo-chapter-name {
+  position: relative;
+}
+
+.bo-chapter.on .bo-chapter-name {
+  color: #788c7d;
+}
+
+/* the leader dots between a name and its count, like a contents page */
+.bo-chapter-lead {
+  flex: 1 1 auto;
+  min-width: 12px;
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.22);
+  transform: translateY(-3px);
+}
+
+.bo-chapter-cut {
+  font-variant-numeric: tabular-nums;
+  color: #9db3a6;
+}
+
+.bo-chapter.on .bo-chapter-cut {
+  color: #8fdca0;
+}
+
+.bo-empty {
+  margin: 16px 0 0;
+  font-size: 0.84rem;
+  color: #9db3a6;
+}
+
+.bo-sum {
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.bo-sum-eq {
+  font-size: 1.05rem;
+  color: #9db3a6;
+}
+
+.bo-sum-eff {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #8fdca0;
+}
+
+.bo-sum-unit {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9db3a6;
+}
+
+/* ---- the shelf rail ---- */
+.bo-rail {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.bo-langs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.bo-lang {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #cfe0d4;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.bo-lang:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.bo-lang.on {
+  color: #08130f;
+  background: #8fdca0;
+  border-color: #8fdca0;
+}
+
+.bo-shelf {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 66vh;
+  overflow: auto;
+  padding: 6px 4px 4px;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - 24px),
+    transparent
+  );
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent);
+}
+
+.bo-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding-bottom: 15px;
+}
+
+/* the shelf board each row of covers stands on */
+.bo-board {
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: 0;
+  height: 7px;
+  border-radius: 3px;
+  background: linear-gradient(#3c4d3e, #26332a);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 10px 18px -12px rgba(0, 0, 0, 0.95);
+}
+
+.bo-mini {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  padding: 13px 10px 11px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px 10px 10px 4px;
+  background: linear-gradient(150deg, #2e3f33, #24332a);
+  color: #eef4ee;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 10px 20px -14px rgba(0, 0, 0, 0.85);
+  transition: transform 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.bo-mini:hover {
+  transform: translateY(-4px);
+  border-color: #c9bb8e;
+}
+
+.bo-mini.on {
+  transform: translate(-5px, -5px);
+  border-color: #8fdca0;
+  box-shadow: 0 16px 30px -14px rgba(143, 220, 160, 0.7);
+}
+
+.bo-spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.bo-spine > span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, #8fdca0, #c9bb8e);
+  transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bo-mark {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #8fdca0;
+  color: #08130f;
+}
+
+.bo-mini-name {
+  position: relative;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.bo-mini-meta {
+  position: relative;
+  font-size: 0.62rem;
+  color: #9db3a6;
+  font-variant-numeric: tabular-nums;
+}
+
+/* the cover in flight, from the shelf to the open book */
+.bo-fly {
+  position: fixed;
+  z-index: 60;
+  margin: 0;
+  padding: 13px 10px 11px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px 10px 10px 4px;
+  background: linear-gradient(150deg, #2e3f33, #24332a);
+  color: #eef4ee;
+  pointer-events: none;
+  overflow: hidden;
+  transform-origin: top left;
+  animation: bo-fly 500ms cubic-bezier(0.5, 0, 0.2, 1) forwards;
+}
+
+@keyframes bo-fly {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(var(--sx), var(--sy));
+    opacity: 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .bo-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bo-rail {
+    position: static;
+  }
+
+  .bo-book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bo-verso {
+    border-right: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+    padding-right: 26px;
+  }
+
+  .bo-recto {
+    padding-left: 26px;
+  }
+
+  .bo-gutter {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .bo-page {
+    padding: 56px 18px 48px;
+  }
+}

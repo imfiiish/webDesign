@@ -61,7 +61,11 @@ export const PAGES: CatalogEntry[] = [
       zh: '选语言、选词书，再排除已掌握的词汇。',
     },
     status: 'ready',
-    variants: [DEFAULT_VARIANT],
+    variants: [
+      DEFAULT_VARIANT,
+      { id: 'open', name: { en: 'Open book', zh: '翻开' } },
+      { id: 'index', name: { en: 'Index', zh: '索引' } },
+    ],
   },
   {
     id: 'flip',
