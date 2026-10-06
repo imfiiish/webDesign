@@ -1,0 +1,23 @@
+/* Flip · Focus — the default flip screen wearing the Progress / Result theme.
+   The ring, next button and hints are the same elements; only the skin (the
+   accent, the backdrop and the card glow) changes. */
+
+.flip--forest {
+  /* the app accent is tan; the Progress / Result screens are green */
+  --accent: #8fdca0;
+  --accent-ring: rgba(143, 220, 160, 0.4);
+  --kbd-bg: rgba(143, 220, 160, 0.14);
+  --kbd-border: rgba(143, 220, 160, 0.4);
+  background:
+    radial-gradient(
+      120% 80% at 50% -10%,
+      rgba(143, 220, 160, 0.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      90% 70% at 88% 112%,
+      rgba(230, 200, 119, 0.14),
+      transparent 60%
+    ),
+    linear-gradient(160deg, #14332a 0%, #0d1f19 55%, #10251d 100%);
+}

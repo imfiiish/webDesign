@@ -61,7 +61,10 @@ export const PAGES: CatalogEntry[] = [
       zh: '环形卡片：展开释义、滚轮/按键翻页、下一轮。',
     },
     status: 'ready',
-    variants: [DEFAULT_VARIANT],
+    variants: [
+      DEFAULT_VARIANT,
+      { id: 'plain', name: { en: 'Plain', zh: '素色' } },
+    ],
   },
   {
     id: 'rating',

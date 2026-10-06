@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import BackButton from '../../components/BackButton'
 import FlipDeck, { type CardData, type Slot } from '../../components/FlipDeck'
 import { useCopyNotice } from '../../components/useCopyNotice'
@@ -8,11 +9,16 @@ import { useI18n } from '../../i18n'
 import { shuffled } from '../../utils'
 import { WORDS } from './data'
 import './flip.css'
+import './flipForest.css'
 
 /** The Flip page: a ring of cards you shuffle, reveal and flip through.
- *  Appearance + local interaction only (no audio, no progress, no sync). */
-export default function Flip() {
+ *  Appearance + local interaction only (no audio, no progress, no sync).
+ *  The default wears the Progress · Results forest theme; `plain` drops it. */
+export default function Flip({ variant }: { variant?: string }) {
   const { t } = useI18n()
+  // the panel passes the variant; the full-page route carries it in ?variant=
+  const [params] = useSearchParams()
+  const shown = variant ?? params.get('variant') ?? 'default'
 
   const [deck, setDeck] = useState<CardData[]>(WORDS)
   const [center, setCenter] = useState(0)
@@ -111,7 +117,7 @@ export default function Flip() {
   )
 
   return (
-    <div className="flip">
+    <div className={`flip${shown === 'plain' ? '' : ' flip--forest'}`}>
       <BackButton />
 
       <div className="deck-stage" ref={stageRef}>

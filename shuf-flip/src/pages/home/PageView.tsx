@@ -61,7 +61,13 @@ export default function PageView() {
   return (
     <HomeShell
       panelClassName={View ? 'panel-preview' : ''}
-      openHref={View && page ? `/${page.id}` : undefined}
+      openHref={
+        View && page
+          ? `/${page.id}${
+              active.variant !== 'default' ? `?variant=${active.variant}` : ''
+            }`
+          : undefined
+      }
       sidebar={sidebar}
     >
       {View ? (
