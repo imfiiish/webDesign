@@ -5,7 +5,7 @@ import { Dual, GoalGauge, PieExplode } from '../home/ResultCharts'
 import { Sunburst } from '../home/ProgressCharts'
 import {
   CalendarModule,
-  TodayRingWideModule,
+  TodayRingLiveModule,
 } from '../home/ProgressModules'
 import { DIMS, type DimKey } from './data'
 import './progress.css'
@@ -61,7 +61,7 @@ export default function Progress() {
 
             {dim === 'day' && (
               <section className="progress-card">
-                <TodayRingWideModule />
+                <TodayRingLiveModule dividers={false} enterCounts />
               </section>
             )}
 

@@ -179,19 +179,42 @@ const NEW_PCT = (DAY.new / DAY_TOTAL) * 100
 const REVIEW_PCT = 100 - NEW_PCT
 const REVIEW_TURN = -90 + NEW_PCT * 3.6
 
-/** The counts column on the right of every ring take. */
+/** Count from 0 to `target`, restarting whenever `run` changes. Used by the
+ *  live ring so its centre number rises along with the draw-in. */
+function useCountUp(target: number, run: number, duration = 950): number {
+  const [value, setValue] = useState(0)
+  useEffect(() => {
+    let raf = 0
+    const start = performance.now()
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration)
+      setValue(Math.round(target * (1 - Math.pow(1 - t, 3))))
+      if (t < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [target, run, duration])
+  return value
+}
+
+/** The counts column on the right of every ring take. `enter` staggers the
+ *  two counts in from the right when the card first mounts (and on replay). */
 function CountsSide({
   active,
   onHover,
   onPick,
+  enter,
 }: {
   active: Slice | null
   onHover?: (k: Slice) => void
   onPick?: (k: Slice) => void
+  enter?: boolean
 }) {
   const { t } = useI18n()
   return (
-    <span className={`pm-hw-side${active ? ' has-on' : ''}`}>
+    <span
+      className={`pm-hw-side${active ? ' has-on' : ''}${enter ? ' enter' : ''}`}
+    >
       {(['new', 'review'] as const).map((k) => (
         <span
           key={k}
@@ -302,6 +325,107 @@ export function TodayRingWideModule({
         </RingDial>
       </div>
       <CountsSide active={active} onHover={setActive} />
+    </div>
+  )
+}
+
+/** The live dial: thicker arcs with round caps, a light that sweeps the
+ *  track as they draw in, and slices that grow / recede on hover. It
+ *  remounts whenever `run` changes so the whole entrance replays. */
+function RingDialLive({
+  run,
+  active,
+  onHover,
+  children,
+}: {
+  run: number
+  active: Slice | null
+  onHover?: (k: Slice) => void
+  children: ReactNode
+}) {
+  const turn = (k: Slice) =>
+    k === 'new' ? 'rotate(-90 60 60)' : `rotate(${REVIEW_TURN} 60 60)`
+  const offset = (k: Slice) =>
+    k === 'new' ? 100 - NEW_PCT : 100 - REVIEW_PCT
+  return (
+    <div className="pm-live-dial" key={run}>
+      <span className="pm-live-sheen" aria-hidden="true" />
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <circle className="pm-live-track" cx="60" cy="60" r="50" />
+        {(['new', 'review'] as const).map((k) => (
+          <circle
+            key={k}
+            className={`pm-live-arc ${k} draw${
+              active === k ? ' on' : active ? ' dim' : ''
+            }`}
+            cx="60"
+            cy="60"
+            r="50"
+            pathLength={100}
+            strokeDasharray="100 100"
+            strokeDashoffset={offset(k)}
+            transform={turn(k)}
+          />
+        ))}
+        {onHover &&
+          (['new', 'review'] as const).map((k) => (
+            <circle
+              key={k}
+              className="pm-ring-hit"
+              cx="60"
+              cy="60"
+              r="50"
+              pathLength={100}
+              strokeDasharray="100 100"
+              strokeDashoffset={offset(k)}
+              transform={turn(k)}
+              onMouseEnter={() => onHover(k)}
+            />
+          ))}
+      </svg>
+      <span className="pm-ring-center">{children}</span>
+    </div>
+  )
+}
+
+/** 03 / 04 · live ring — the reworked dial: it springs in, the arcs sweep
+ *  behind a travelling light, hovering a slice fattens it while the other
+ *  recedes, and a replay button reruns the entrance. */
+export function TodayRingLiveModule({
+  dividers = true,
+  run = 0,
+  enterCounts = false,
+}: {
+  dividers?: boolean
+  run?: number
+  enterCounts?: boolean
+} = {}) {
+  const { t } = useI18n()
+  const [active, setActive] = useState<Slice | null>(null)
+  const total = useCountUp(DAY_TOTAL, run)
+  const num = active ? DAY[active] : total
+  const cap = active
+    ? t(active === 'new' ? 'results.new' : 'results.review')
+    : t('progress.mod.todayWords')
+  return (
+    <div
+      className={`pm-today-card pm-ring-card pm-live-card${
+        dividers ? '' : ' no-dividers'
+      }`}
+      onMouseLeave={() => setActive(null)}
+    >
+      <div className="pm-ring-left">
+        <RingDialLive run={run} active={active} onHover={setActive}>
+          <b
+            key={active ?? 'all'}
+            className={`pm-ring-num pm-live-num${active ? ` ${active}` : ''}`}
+          >
+            {num}
+          </b>
+          <small key={cap}>{cap}</small>
+        </RingDialLive>
+      </div>
+      <CountsSide active={active} onHover={setActive} enter={enterCounts} />
     </div>
   )
 }

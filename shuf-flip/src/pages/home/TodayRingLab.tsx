@@ -1,33 +1,68 @@
+import { useState, type ReactNode } from 'react'
 import { useI18n } from '../../i18n'
-import { TodayRingWideModule } from './ProgressModules'
+import { TodayRingLiveModule, TodayRingWideModule } from './ProgressModules'
 import './progressModules.css'
 
-/** A dedicated bench for the Progress "today · ring" card (06) — a single
- *  entry to iterate its UI/UX on, separate from the full module list. */
+/** A ring concept with the replay button in its title row, matching the
+ *  Results · charts gallery. The stage is keyed so replay remounts it. */
+function LabItem({
+  label,
+  children,
+}: {
+  label: string
+  children: (run: number) => ReactNode
+}) {
+  const { t } = useI18n()
+  const [run, setRun] = useState(0)
+  return (
+    <section className="pm-item">
+      <div className="pm-item-head">
+        <h3 className="pm-item-label">{label}</h3>
+        <button
+          type="button"
+          className="pm-play"
+          onClick={() => setRun((r) => r + 1)}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 5v14l11-7z" fill="currentColor" />
+          </svg>
+          {t('progress.replay')}
+        </button>
+      </div>
+      <div className="pm-mod-stage" key={run}>
+        {children(run)}
+      </div>
+    </section>
+  )
+}
+
+/** A dedicated bench for the Progress "today · ring" card — the no-divider
+ *  takes, each with its own replay. */
 export default function TodayRingLab() {
   const { t } = useI18n()
   return (
     <div className="pm-list">
-      <section className="pm-item">
-        <h3 className="pm-item-label">
-          {`01 · ${t('progress.mod.todayRingCard')}`}
-        </h3>
-        <div className="pm-mod-stage">
+      <LabItem label={`01 · ${t('progress.mod.todayRingLiveEnter')}`}>
+        {(run) => (
           <div className="pm-card-mock">
-            <TodayRingWideModule />
+            <TodayRingLiveModule dividers={false} run={run} enterCounts />
           </div>
-        </div>
-      </section>
-      <section className="pm-item">
-        <h3 className="pm-item-label">
-          {`02 · ${t('progress.mod.todayRingPlain')}`}
-        </h3>
-        <div className="pm-mod-stage">
+        )}
+      </LabItem>
+      <LabItem label={`02 · ${t('progress.mod.todayRingPlain')}`}>
+        {() => (
           <div className="pm-card-mock">
             <TodayRingWideModule dividers={false} />
           </div>
-        </div>
-      </section>
+        )}
+      </LabItem>
+      <LabItem label={`04 · ${t('progress.mod.todayRingLivePlain')}`}>
+        {(run) => (
+          <div className="pm-card-mock">
+            <TodayRingLiveModule dividers={false} run={run} />
+          </div>
+        )}
+      </LabItem>
     </div>
   )
 }
